@@ -12,17 +12,17 @@ function Users() {
 
   const [users, setUsers] = useState([
     {
-      id: 1,
+      id: 2,
       empCode: "EMP001",
-      name: "John Admin",
-      email: "john@corp.in",
+      name: "Srinithi",
+      email: "srinithi@gmail.com",
       mobile: "9876543210",
       role: "Admin",
       status: "Active",
       password: "123456",
     },
     {
-      id: 2,
+      id: 3,
       empCode: "EMP002",
       name: "Priya Sharma",
       email: "priya@corp.in",
@@ -32,7 +32,7 @@ function Users() {
       password: "123456",
     },
     {
-      id: 3,
+      id: 4,
       empCode: "EMP003",
       name: "Rahul Verma",
       email: "rahul@corp.in",
@@ -131,11 +131,18 @@ function Users() {
     setShowModal(true);
   };
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(search.toLowerCase()) ||
-      user.empCode.toLowerCase().includes(search.toLowerCase())
-  );
+ const filteredUsers = users.filter((user) => {
+   const value = search.toLowerCase();
+
+   return (
+     user.name.toLowerCase().includes(value) ||
+     user.empCode.toLowerCase().includes(value) ||
+     user.email.toLowerCase().includes(value) ||
+     user.mobile.toLowerCase().includes(value) ||
+     user.role.toLowerCase().includes(value) ||
+     user.status.toLowerCase().includes(value)
+   );
+ });
 
   return (
     <div className="users-page">
@@ -149,7 +156,6 @@ function Users() {
         <div className="table-top">
 
           <div className="search-box">
-            <FaSearch className="search-icon" />
 
             <input
               type="text"

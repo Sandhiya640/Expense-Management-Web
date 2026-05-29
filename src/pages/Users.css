@@ -4,111 +4,114 @@
   box-sizing: border-box;
 }
 
+/* PAGE LAYOUT (MATCHES ROLE PAGE) */
 .users-page {
-  padding: 35px;
-  background: #f5f5fb;
-  min-height: 100vh;
+  width: 100%;
+  min-height: calc(100vh - 78px);
+  background: #f8fafc;
+  padding: 20px;
   font-family: "Poppins", sans-serif;
 }
 
+/* HEADER */
 .users-header h2 {
   font-size: 30px;
   color: #1f1f5c;
   font-weight: bold;
-  margin-top: 20px;
-  margin-bottom: 30px;
+  margin: 20px 0 30px 0;
   text-align: left;
   font-family: "Times New Roman", Times, serif;
-
 }
 
+/* CARD (MATCH ROLE CARD) */
 .users-card {
+  width: 100%;
   background: white;
-  border-radius: 20px;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
   overflow: hidden;
-  border: 1px solid #e7e3f4;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
+/* TOP BAR */
 .table-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 20px;
-  border-bottom: 1px solid #ece8f7;
+  padding: 20px;
+  border-bottom: 1px solid #e2e8f0;
 }
 
+/* SEARCH */
 .search-box {
-  width: 280px;
-  height: 45px;
-  border: 1px solid #ddd7ef;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  padding: 0 14px;
-  background: #faf9ff;
+  width: 350px;
 }
 
 .search-box input {
-  border: none;
-  outline: none;
   width: 100%;
-  background: transparent;
-  font-size: 15px;
-  margin-left: 10px;
+  padding: 12px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: white;
+  color: #1e293b;
+  font-size: 14px;
+  outline: none;
 }
 
-.search-icon {
-  color: #9c9cb3;
+.search-box input:focus {
+  border-color: #8b5cf6;
 }
 
+/* ADD BUTTON */
 .add-btn {
-  background: linear-gradient(135deg, #7c3aed, #9333ea);
-  color: white;
   border: none;
+  background: linear-gradient(135deg, #8b5cf6, #d946ef);
+  color: white;
   padding: 12px 20px;
-  border-radius: 12px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 15px;
   cursor: pointer;
+  font-size: 14px;
   font-weight: 600;
-  transition: 0.3s;
 }
 
-.add-btn:hover {
-  transform: translateY(-2px);
-}
-
+/* TABLE */
 table {
   width: 100%;
   border-collapse: collapse;
 }
 
 thead {
-  background: #f6f4fb;
+  background: #f8fafc;
 }
 
 thead th {
+  padding: 20px;
   text-align: left;
-  padding: 18px;
-  color: #6d6d83;
+  color: #64748b;
   font-size: 14px;
   font-weight: 600;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 tbody td {
-  padding: 18px;
-  border-top: 1px solid #ece8f7;
-  color: #26265c;
-  font-size: 15px;
+  padding: 20px;
+  text-align: left;
+  color: #1e293b;
+  border-bottom: 1px solid #e2e8f0;
 }
 
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* BADGES */
 .role,
 .status {
   padding: 6px 14px;
-  border-radius: 30px;
+  border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
 }
@@ -124,92 +127,76 @@ tbody td {
 }
 
 .active {
-  background: #e6f8ec;
-  color: #16a34a;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
 }
 
 .inactive {
-  background: #fff1e8;
-  color: #ea580c;
+  background: rgba(251, 191, 36, 0.15);
+  color: #f59e0b;
 }
 
+/* EDIT BUTTON */
 .edit-btn {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border-radius: 10px;
-  border: 1px solid #e4def5;
+  border: 1px solid #dbe2ea;
   background: white;
+  color: #475569;
   cursor: pointer;
-  color: #66667e;
-  font-size: 15px;
-  transition: 0.3s;
 }
 
 .edit-btn:hover {
-  background: #f4f1ff;
+  background: #f8fafc;
 }
 
-/* MODAL */
-
+/* MODAL (UNCHANGED DESIGN) */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(55, 20, 90, 0.35);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(4px);
-  z-index: 999;
+  z-index: 2000;
 }
 
 .modal {
-  width: 950px;
+  width: 900px;
   background: white;
-  border-radius: 28px;
+  border-radius: 20px;
   overflow: hidden;
-  animation: popup 0.3s ease;
-}
-
-@keyframes popup {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 28px 40px;
-  border-bottom: 1px solid #ece8f7;
+  padding: 25px;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .modal-header h2 {
+  font-size: 24px;
   color: #1f1f5c;
-  font-size: 28px;
 }
 
 .close-btn {
   border: none;
   background: none;
-  font-size: 24px;
+  font-size: 22px;
   cursor: pointer;
-  color: #707082;
 }
 
 form {
-  padding: 35px 40px;
+  padding: 25px;
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 28px 30px;
+  gap: 20px 25px;
 }
 
 .form-group {
@@ -218,22 +205,17 @@ form {
 }
 
 .form-group label {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   font-size: 14px;
-  font-weight: 700;
-  color: #6c6c84;
+  color: #64748b;
 }
 
 .form-group input,
 .form-group select {
-  height: 60px;
-  border-radius: 18px;
-  border: 2px solid #e7e1f6;
-  padding: 0 22px;
-  font-size: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
   outline: none;
-  color: #23235b;
-  background: #faf9ff;
 }
 
 .form-group input:focus,
@@ -247,44 +229,29 @@ form {
 
 .modal-buttons {
   display: flex;
-  gap: 18px;
-  margin-top: 35px;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .save-btn {
-  background: linear-gradient(135deg, #7c3aed, #9333ea);
+  background: #8b5cf6;
   color: white;
   border: none;
-  height: 58px;
-  padding: 0 35px;
-  border-radius: 16px;
-  font-size: 18px;
-  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 10px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 12px;
 }
 
 .cancel-btn {
-  height: 58px;
-  padding: 0 35px;
-  border-radius: 16px;
-  border: 2px solid #e5dff5;
-  background: white;
-  font-size: 18px;
-  font-weight: 600;
-  color: #67677d;
+  background: #e2e8f0;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
   cursor: pointer;
 }
 
-.save-btn:hover,
-.cancel-btn:hover {
-  transform: translateY(-2px);
-}
-
 /* RESPONSIVE */
-
 @media (max-width: 900px) {
   .form-grid {
     grid-template-columns: 1fr;

@@ -20,15 +20,13 @@ function Sidebar() {
     useState(false);
 
   return (
-
     <div className="top-navbar">
       <div className="nav-left">
-
         <div className="logo-box">
           <img
-             src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png"
-             alt="logo"
-             className="custom-logo"
+            src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png"
+            alt="logo"
+            className="custom-logo"
           />
         </div>
 
@@ -36,25 +34,15 @@ function Sidebar() {
           <h2>ExpenseTrack</h2>
           <p>MANAGEMENT SUITE</p>
         </div>
-
       </div>
       <div className="nav-menu">
-
         <Link to="/" className="nav-link">
-
           <div className="nav-item">
             <MdDashboard className="icon" />
             <span>Dashboard</span>
           </div>
-
         </Link>
-        <div
-          className="nav-item"
-          onClick={() =>
-            setShowMaster(!showMaster)
-          }
-        >
-
+        <div className="nav-item" onClick={() => setShowMaster(!showMaster)}>
           <FaDatabase className="icon" />
           <span>Masters</span>
 
@@ -65,57 +53,46 @@ function Sidebar() {
           )}
 
           {showMaster && (
-
             <div className="dropdown">
+              <Link to="/users" className="dropdown-link">
+                <div className="dropdown-item">
+                  <FaUsers className="sub-icon users-icon" />
+                  Users
+                </div>
+              </Link>
 
-   <Link to="/users" className="dropdown-link">
-  <div className="dropdown-item">
-    <FaUsers className="sub-icon users-icon" />
-    Users
-  </div>
-</Link>
-
-              <Link
-                to="/roles"
-                className="dropdown-link"
-              >
-
+              <Link to="/roles" className="dropdown-link">
                 <div className="dropdown-item">
                   <FaUserShield className="sub-icon role-icon" />
                   Roles
                 </div>
-
               </Link>
 
-              <div className="dropdown-item">
-                <MdCategory className="sub-icon category-icon" />
-                Expense Category
-              </div>
+              <Link to="/expense-category" className="dropdown-link">
+                <div className="dropdown-item">
+                  <MdCategory className="sub-icon category-icon" />
+                  Expense Category
+                </div>
+              </Link>
 
-             <Link to="/expense-type" className="dropdown-link">
-              <div className="dropdown-item">
-               <BsCurrencyDollar className="sub-icon expense-icon" />
-                    Expense Type
-               </div>
-             </Link>
+              <Link to="/expense-type" className="dropdown-link">
+                <div className="dropdown-item">
+                  <BsCurrencyDollar className="sub-icon expense-icon" />
+                  Expense Type
+                </div>
+              </Link>
 
               <div className="dropdown-item">
                 <GiReceiveMoney className="sub-icon income-icon" />
                 Income Type
               </div>
-
             </div>
-
           )}
-
         </div>
         <div
           className="nav-item"
-          onClick={() =>
-            setShowTransaction(!showTransaction)
-          }
+          onClick={() => setShowTransaction(!showTransaction)}
         >
-
           <BiTransfer className="icon" />
           <span>Transactions</span>
 
@@ -126,58 +103,44 @@ function Sidebar() {
           )}
 
           {showTransaction && (
-
             <div className="dropdown">
-
               <div className="dropdown-item">
                 <HiTrendingUp className="sub-icon income-icon" />
                 Income
               </div>
 
               <Link to="/expense" className="dropdown-link">
-               <div className="dropdown-item">
-               <HiTrendingDown className="sub-icon expense-icon" />
-               Expenses
-               </div>
-               </Link>
+                <div className="dropdown-item">
+                  <HiTrendingDown className="sub-icon expense-icon" />
+                  Expenses
+                </div>
+              </Link>
 
-               <div className="dropdown-item">
+              <div className="dropdown-item">
                 <GiPiggyBank className="sub-icon loan-icon" />
                 Loan
               </div>
-
             </div>
-
           )}
-
         </div>
 
         <div className="nav-item">
           <HiOutlineDocumentReport className="icon" />
           <span>Reports</span>
         </div>
-
       </div>
 
       <div className="nav-right">
-
         <div className="notification-box">
           <MdOutlineNotifications />
         </div>
 
-
         <div
           className="profile-wrapper"
-          onClick={() =>
-            setShowProfile(!showProfile)
-          }
+          onClick={() => setShowProfile(!showProfile)}
         >
-
           <div className="profile-box">
-
-            <div className="profile-avatar">
-            S
-            </div>
+            <div className="profile-avatar">S</div>
 
             <div className="profile-info">
               <h4>SS</h4>
@@ -185,13 +148,10 @@ function Sidebar() {
             </div>
 
             <MdKeyboardArrowDown className="arrow" />
-
           </div>
 
           {showProfile && (
-
             <div className="profile-dropdown">
-
               <div className="profile-item">
                 <FaUserCircle />
                 My Profile
@@ -206,15 +166,10 @@ function Sidebar() {
                 <FaSignOutAlt />
                 Logout
               </div>
-
             </div>
-
           )}
-
         </div>
-
       </div>
-
     </div>
   );
 }

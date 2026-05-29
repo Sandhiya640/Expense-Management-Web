@@ -8,6 +8,7 @@ import Role from "./pages/Role";
 import ExpenseType from "./pages/ExpenseType";
 import Expense from "./pages/Expense";
 import Users from "./pages/Users";
+import ExpenseCategory from "./pages/ExpenseCategory";
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
           <Route path="roles" element={<Role />} />
 
           <Route path="users" element={<Users />} />
+
+          <Route path="expense-category" element={<ExpenseCategory />} />
 
           <Route path="expense-type" element={<ExpenseType />} />
 
