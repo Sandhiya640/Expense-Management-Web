@@ -1,4 +1,4 @@
-.role-page{
+.role-page {
   width: 100%;
   min-height: calc(100vh - 78px);
   background: #f8fafc;
@@ -12,18 +12,17 @@
   margin-bottom: 30px;
   text-align: left;
   font-family: "Times New Roman", Times, serif;
-
 }
-.role-card{
+.role-card {
   width: 100%;
   background: white;
   border-radius: 18px;
   border: 1px solid #e2e8f0;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-.card-header{
+.card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -31,11 +30,11 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
-.search-box{
+.search-box {
   width: 350px;
 }
 
-.search-box input{
+.search-box input {
   width: 100%;
   padding: 12px 16px;
   border: 1px solid #cbd5e1;
@@ -46,17 +45,13 @@
   outline: none;
 }
 
-.search-box input:focus{
+.search-box input:focus {
   border-color: #8b5cf6;
 }
 
-.add-btn{
+.add-btn {
   border: none;
-  background: linear-gradient(
-    135deg,
-    #8b5cf6,
-    #d946ef
-  );
+  background: linear-gradient(135deg, #8b5cf6, #d946ef);
   color: white;
   padding: 12px 20px;
   border-radius: 10px;
@@ -67,16 +62,16 @@
   font-size: 14px;
 }
 
-table{
+table {
   width: 100%;
   border-collapse: collapse;
 }
 
-thead{
+thead {
   background: #f8fafc;
 }
 
-th{
+th {
   padding: 18px;
   text-align: left;
   color: #64748b;
@@ -85,34 +80,35 @@ th{
   border-bottom: 1px solid #e2e8f0;
 }
 
-td{
-  padding: 20px 18px;
+td {
+  padding: 18px;
+  text-align: left;
   color: #1e293b;
   border-bottom: 1px solid #e2e8f0;
 }
 
-tbody tr:hover{
+tbody tr:hover {
   background: #f8fafc;
 }
 
-.status{
+.status {
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
 }
 
-.active{
-  background: rgba(34,197,94,0.15);
+.active {
+  background: rgba(34, 197, 94, 0.15);
   color: #22c55e;
 }
 
-.inactive{
-  background: rgba(251,191,36,0.15);
+.inactive {
+  background: rgba(251, 191, 36, 0.15);
   color: #f59e0b;
 }
 
-.edit-btn{
+.edit-btn {
   width: 40px;
   height: 40px;
   border-radius: 10px;
@@ -122,24 +118,24 @@ tbody tr:hover{
   cursor: pointer;
 }
 
-.modal-overlay{
+.modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2000;
 }
 
-.modal{
+.modal {
   width: 450px;
   background: white;
   border-radius: 18px;
   overflow: hidden;
 }
 
-.modal-header{
+.modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -147,34 +143,34 @@ tbody tr:hover{
   border-bottom: 1px solid #e2e8f0;
 }
 
-.modal-body{
+.modal-body {
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.modal-body label{
+.modal-body label {
   font-size: 14px;
   color: #64748b;
 }
 
 .modal-body input,
-.modal-body select{
+.modal-body select {
   padding: 12px;
   border: 1px solid #cbd5e1;
   border-radius: 10px;
   outline: none;
 }
 
-.modal-buttons{
+.modal-buttons {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 15px;
 }
 
-.save-btn{
+.save-btn {
   background: #8b5cf6;
   color: white;
   border: none;
@@ -183,7 +179,7 @@ tbody tr:hover{
   cursor: pointer;
 }
 
-.cancel-btn{
+.cancel-btn {
   background: #e2e8f0;
   border: none;
   padding: 10px 16px;
