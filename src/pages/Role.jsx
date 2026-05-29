@@ -29,15 +29,11 @@ function Role() {
     },
   ]);
 
-  /* ---------- FORM STATES ---------- */
-
   const [editData, setEditData] = useState(null);
 
   const [roleName, setRoleName] = useState("");
 
   const [status, setStatus] = useState("Active");
-
-  /* ---------- ADD MODAL ---------- */
 
   const openAddModal = () => {
     setEditData(null);
@@ -49,8 +45,6 @@ function Role() {
     setShowModal(true);
   };
 
-  /* ---------- EDIT MODAL ---------- */
-
   const handleEdit = (role) => {
     setEditData(role);
 
@@ -61,15 +55,11 @@ function Role() {
     setShowModal(true);
   };
 
-  /* ---------- SAVE ROLE ---------- */
-
   const saveRole = () => {
     if (!roleName.trim()) {
       alert("Role Name Required");
       return;
     }
-
-    /* ---------- UPDATE ---------- */
 
     if (editData) {
       const updatedRoles = roles.map((role) =>
@@ -84,8 +74,6 @@ function Role() {
 
       setRoles(updatedRoles);
     } else {
-      /* ---------- ADD ---------- */
-
       const newRole = {
         rid: `RO0${roles.length + 1}`,
         roleName,
@@ -105,8 +93,6 @@ function Role() {
     setShowModal(false);
   };
 
-  /* ---------- SEARCH ---------- */
-
   const filteredRoles = roles.filter(
     (role) =>
       role.roleName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -116,17 +102,11 @@ function Role() {
 
   return (
     <div className="role-page">
-      {/* ---------- PAGE HEADER ---------- */}
-
       <div className="role-header">
         <h2>Role Management</h2>
       </div>
 
-      {/* ---------- CARD ---------- */}
-
       <div className="role-card">
-        {/* ---------- CARD HEADER ---------- */}
-
         <div className="card-header">
           <div className="search-box">
             <input
@@ -142,8 +122,6 @@ function Role() {
             Add Role
           </button>
         </div>
-
-        {/* ---------- TABLE ---------- */}
 
         <table>
           <thead>
@@ -188,13 +166,9 @@ function Role() {
         </table>
       </div>
 
-      {/* ---------- MODAL ---------- */}
-
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
-            {/* ---------- MODAL HEADER ---------- */}
-
             <div className="modal-header">
               <h2>{editData ? "Edit Role" : "Add Role"}</h2>
 
@@ -206,8 +180,6 @@ function Role() {
                 }}
               />
             </div>
-
-            {/* ---------- MODAL BODY ---------- */}
 
             <div className="modal-body">
               <label>ROLE NAME</label>
@@ -228,8 +200,6 @@ function Role() {
                 <option>Active</option>
                 <option>Inactive</option>
               </select>
-
-              {/* ---------- BUTTONS ---------- */}
 
               <div className="modal-buttons">
                 <button className="save-btn" onClick={saveRole}>

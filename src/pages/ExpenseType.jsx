@@ -21,7 +21,7 @@ function ExpenseType() {
       ecId: 1,
       expenseName: "Lunch",
       status: "Active",
-      createdBy: "Admin",
+      createdBy: "User",
     },
     {
       etId: 3,
@@ -39,8 +39,6 @@ function ExpenseType() {
     },
   ]);
 
-  /* ---------- FORM STATES ---------- */
-
   const [editData, setEditData] = useState(null);
 
   const [editExpenseName, setEditExpenseName] = useState("");
@@ -48,8 +46,6 @@ function ExpenseType() {
   const [editCategoryId, setEditCategoryId] = useState("");
 
   const [editStatus, setEditStatus] = useState("Active");
-
-  /* ---------- OPEN ADD MODAL ---------- */
 
   const openAddModal = () => {
     setEditData(null);
@@ -63,8 +59,6 @@ function ExpenseType() {
     setShowModal(true);
   };
 
-  /* ---------- OPEN EDIT MODAL ---------- */
-
   const handleEdit = (item) => {
     setEditData(item);
 
@@ -77,15 +71,11 @@ function ExpenseType() {
     setShowModal(true);
   };
 
-  /* ---------- SAVE ---------- */
-
   const saveExpenseType = () => {
     if (editExpenseName.trim() === "" || editCategoryId === "") {
       alert("All fields required");
       return;
     }
-
-    /* ---------- UPDATE ---------- */
 
     if (editData) {
       const updatedList = expenseTypes.map((item) =>
@@ -101,8 +91,6 @@ function ExpenseType() {
 
       setExpenseTypes(updatedList);
     } else {
-      /* ---------- ADD ---------- */
-
       const newExpense = {
         etId: expenseTypes.length + 1,
         ecId: editCategoryId,
@@ -125,25 +113,17 @@ function ExpenseType() {
     setEditStatus("Active");
   };
 
-  /* ---------- SEARCH ---------- */
-
   const filteredExpenseTypes = expenseTypes.filter((item) =>
     item.expenseName.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
     <div className="expense-page">
-      {/* ---------- HEADER ---------- */}
-
       <div className="expense-header">
         <h2>ExpenseType Management</h2>
       </div>
 
-      {/* ---------- CARD ---------- */}
-
       <div className="expense-card">
-        {/* ---------- TOP BAR ---------- */}
-
         <div className="card-header">
           <div className="search-box">
             <input
@@ -159,8 +139,6 @@ function ExpenseType() {
             Add Expense Type
           </button>
         </div>
-
-        {/* ---------- TABLE ---------- */}
 
         <table>
           <thead>
@@ -208,13 +186,9 @@ function ExpenseType() {
         </table>
       </div>
 
-      {/* ---------- MODAL ---------- */}
-
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
-            {/* ---------- MODAL HEADER ---------- */}
-
             <div className="modal-header">
               <h2>{editData ? "Edit Expense Type" : "Add Expense Type"}</h2>
 
@@ -226,8 +200,6 @@ function ExpenseType() {
                 }}
               />
             </div>
-
-            {/* ---------- MODAL BODY ---------- */}
 
             <div className="modal-body">
               <label>Category ID</label>
@@ -255,8 +227,6 @@ function ExpenseType() {
                 <option>Active</option>
                 <option>Inactive</option>
               </select>
-
-              {/* ---------- BUTTONS ---------- */}
 
               <div className="modal-buttons">
                 <button className="save-btn" onClick={saveExpenseType}>

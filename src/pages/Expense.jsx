@@ -23,7 +23,7 @@ function Expense() {
       expValue: 250,
       expDate: "2026-05-02",
       remarks: "Lunch Expense",
-      createdBy: "Admin",
+      createdBy: "Manager",
     },
     {
       expId: 3,
@@ -39,11 +39,9 @@ function Expense() {
       expValue: 450,
       expDate: "2026-05-04",
       remarks: "Train Ticket Booking",
-      createdBy: "Admin",
+      createdBy: "User",
     },
   ]);
-
-  /* ---------- FORM STATES ---------- */
 
   const [editData, setEditData] = useState(null);
 
@@ -54,8 +52,6 @@ function Expense() {
   const [expDate, setExpDate] = useState("");
 
   const [remarks, setRemarks] = useState("");
-
-  /* ---------- OPEN ADD MODAL ---------- */
 
   const openAddModal = () => {
     setEditData(null);
@@ -71,8 +67,6 @@ function Expense() {
     setShowModal(true);
   };
 
-  /* ---------- OPEN EDIT MODAL ---------- */
-
   const handleEdit = (item) => {
     setEditData(item);
 
@@ -87,15 +81,11 @@ function Expense() {
     setShowModal(true);
   };
 
-  /* ---------- SAVE ---------- */
-
   const saveExpense = () => {
     if (!etId || !expValue || !expDate || !remarks) {
       alert("All fields are required");
       return;
     }
-
-    /* ---------- UPDATE ---------- */
 
     if (editData) {
       const updatedExpenses = expenses.map((item) =>
@@ -112,8 +102,6 @@ function Expense() {
 
       setExpenses(updatedExpenses);
     } else {
-      /* ---------- ADD ---------- */
-
       const newExpense = {
         expId: expenses.length + 1,
         etId,
@@ -139,25 +127,17 @@ function Expense() {
     setShowModal(false);
   };
 
-  /* ---------- SEARCH ---------- */
-
   const filteredExpenses = expenses.filter((item) =>
     item.remarks.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
     <div className="expense-page">
-      {/* ---------- HEADER ---------- */}
-
       <div className="expense-header">
         <h2>Expense Management</h2>
       </div>
 
-      {/* ---------- CARD ---------- */}
-
       <div className="expense-card">
-        {/* ---------- CARD HEADER ---------- */}
-
         <div className="card-header">
           <div className="search-box">
             <input
@@ -173,8 +153,6 @@ function Expense() {
             Add Expense
           </button>
         </div>
-
-        {/* ---------- TABLE ---------- */}
 
         <table>
           <thead>
@@ -215,8 +193,6 @@ function Expense() {
         </table>
       </div>
 
-      {/* ---------- MODAL ---------- */}
-
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
@@ -233,8 +209,6 @@ function Expense() {
                 }}
               />
             </div>
-
-            {/* ---------- MODAL BODY ---------- */}
 
             <div className="modal-body">
               <label>Expense Type ID</label>
@@ -268,8 +242,6 @@ function Expense() {
                 value={remarks}
                 onChange={(e) => setRemarks(e.target.value)}
               />
-
-              {/* ---------- BUTTONS ---------- */}
 
               <div className="modal-buttons">
                 <button className="save-btn" onClick={saveExpense}>
