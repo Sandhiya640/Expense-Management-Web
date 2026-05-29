@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import "./Role.css";
+import "./ExpenseType.css";
 
 import {FaPlus,FaEdit,FaTimes,FaSave} from "react-icons/fa";
 
-function Role() {
+function ExpenseType() {
 
   const [showModal, setShowModal] =
     useState(false);
@@ -11,78 +11,94 @@ function Role() {
   const [searchTerm, setSearchTerm] =
     useState("");
 
-  const [roles, setRoles] = useState([
-    {
-      rid: "RO01",
-      roleName: "Admin",
-      status: "Active",
-      createdOn: "01 Jan 2025"
-    },
-    {
-      rid: "RO02",
-      roleName: "User",
-      status: "Active",
-      createdOn: "01 Jan 2025"
-    },
-    {
-      rid: "RO03",
-      roleName: "Manager",
-      status: "Inactive",
-      createdOn: "15 Mar 2025"
-    }
-  ]);
+  const [expenseTypes, setExpenseTypes] =
+    useState([
+      {
+        etId: 1,
+        ecId: 1,
+        expenseName: "Breakfast",
+        status: "Active",
+        createdBy: "Admin"
+      },
+      {
+        etId: 2,
+        ecId: 1,
+        expenseName: "Lunch",
+        status: "Active",
+        createdBy: "Admin"
+      },
+      {
+        etId: 3,
+        ecId: 2,
+        expenseName: "Bus Ticket",
+        status: "Active",
+        createdBy: "Admin"
+      },
+      {
+        etId: 4,
+        ecId: 2,
+        expenseName: "Train Ticket",
+        status: "Active",
+        createdBy: "Admin"
+      }
+    ]);
 
-  const [roleName, setRoleName] =
+  const [expenseName, setExpenseName] =
+    useState("");
+
+  const [categoryId, setCategoryId] =
     useState("");
 
   const [status, setStatus] =
     useState("Active");
 
-  const saveRole = () => {
+  const saveExpenseType = () => {
 
-    if (!roleName.trim()) {
-      alert("Role Name Required");
+    if (
+      expenseName.trim() === "" ||
+      categoryId === ""
+    ) {
+      alert("All fields required");
       return;
     }
 
-    const newRole = {
-      rid: `RO0${roles.length + 1}`,
-      roleName,
+    const newExpense = {
+      etId: expenseTypes.length + 1,
+      ecId: categoryId,
+      expenseName,
       status,
-      createdOn: "28 May 2026"
+      createdBy: "Admin"
     };
 
-    setRoles([...roles, newRole]);
+    setExpenseTypes([
+      ...expenseTypes,
+      newExpense
+    ]);
 
-    setRoleName("");
+    setExpenseName("");
+    setCategoryId("");
     setStatus("Active");
     setShowModal(false);
   };
 
-  const filteredRoles = roles.filter(
-    (role) =>
-      role.roleName
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      role.rid
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      role.status
+  const filteredExpenseTypes =
+    expenseTypes.filter((item) =>
+      item.expenseName
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
-  );
+    );
 
   return (
-    <div className="role-page">
+    <div className="expense-page">
 
-      <div className="role-card">
+      <div className="expense-card">
 
         <div className="card-header">
 
           <div className="search-box">
             <input
               type="text"
-              placeholder="Search roles..."
+              placeholder="Search Expense Type..."
               value={searchTerm}
               onChange={(e) =>
                 setSearchTerm(e.target.value)
@@ -97,7 +113,7 @@ function Role() {
             }
           >
             <FaPlus />
-            Add Role
+            Add Expense Type
           </button>
 
         </div>
@@ -106,38 +122,39 @@ function Role() {
 
           <thead>
             <tr>
-              <th>RID</th>
-              <th>ROLE NAME</th>
+              <th>ET ID</th>
+              <th>EC ID</th>
+              <th>EXPENSE NAME</th>
               <th>STATUS</th>
-              <th>CREATED ON</th>
-              <th>ACTIONS</th>
+              <th>CREATED BY</th>
+              <th>ACTION</th>
             </tr>
           </thead>
 
           <tbody>
 
-            {filteredRoles.map(
-              (role, index) => (
+            {filteredExpenseTypes.map(
+              (item) => (
 
-              <tr key={index}>
+              <tr key={item.etId}>
 
-                <td>{role.rid}</td>
-
-                <td>{role.roleName}</td>
+                <td>{item.etId}</td>
+                <td>{item.ecId}</td>
+                <td>{item.expenseName}</td>
 
                 <td>
                   <span
                     className={
-                      role.status === "Active"
+                      item.status === "Active"
                         ? "status active"
                         : "status inactive"
                     }
                   >
-                    {role.status}
+                    {item.status}
                   </span>
                 </td>
 
-                <td>{role.createdOn}</td>
+                <td>{item.createdBy}</td>
 
                 <td>
                   <button className="edit-btn">
@@ -146,7 +163,6 @@ function Role() {
                 </td>
 
               </tr>
-
             ))}
           </tbody>
 
@@ -162,10 +178,10 @@ function Role() {
 
             <div className="modal-header">
 
-              <h2>Add Role</h2>
+              <h2>Add Expense Type</h2>
 
               <FaTimes
-                style={{cursor:"pointer"}}
+                className="close-icon"
                 onClick={() =>
                   setShowModal(false)
                 }
@@ -175,18 +191,27 @@ function Role() {
 
             <div className="modal-body">
 
-              <label>ROLE NAME</label>
+              <label>Category ID</label>
 
               <input
-                type="text"
-                value={roleName}
-                placeholder="Enter role name"
+                type="number"
+                value={categoryId}
                 onChange={(e) =>
-                  setRoleName(e.target.value)
+                  setCategoryId(e.target.value)
                 }
               />
 
-              <label>STATUS</label>
+              <label>Expense Name</label>
+
+              <input
+                type="text"
+                value={expenseName}
+                onChange={(e) =>
+                  setExpenseName(e.target.value)
+                }
+              />
+
+              <label>Status</label>
 
               <select
                 value={status}
@@ -202,9 +227,10 @@ function Role() {
 
                 <button
                   className="save-btn"
-                  onClick={saveRole}
+                  onClick={saveExpenseType}
                 >
-                  <FaSave /> Save
+                  <FaSave />
+                  Save
                 </button>
 
                 <button
@@ -230,4 +256,4 @@ function Role() {
   );
 }
 
-export default Role;
+export default ExpenseType;

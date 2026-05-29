@@ -1,37 +1,17 @@
 import React, { useState } from "react";
 import "./Sidebar.css";
 
-import {
-  MdDashboard,
-  MdKeyboardArrowDown,
-  MdKeyboardArrowRight,
-  MdCategory,
-  MdOutlineNotifications,
-} from "react-icons/md";
+import {MdDashboard,MdKeyboardArrowDown,MdKeyboardArrowRight,MdCategory,MdOutlineNotifications,} from "react-icons/md";
 
-import {
-  FaUsers,
-  FaUserShield,
-  FaDatabase,
-  FaWallet,
-  FaUserCircle,
-  FaCog,
-  FaSignOutAlt,
-} from "react-icons/fa";
+import {FaUsers,FaUserShield,FaDatabase,FaWallet,FaUserCircle,FaCog,FaSignOutAlt, FaHandHoldingUsd} from "react-icons/fa";
 
 import { BiTransfer } from "react-icons/bi";
 
-import {
-  BsCurrencyDollar,
-} from "react-icons/bs";
+import {BsCurrencyDollar,} from "react-icons/bs";
 
-import { GiReceiveMoney } from "react-icons/gi";
+import { GiReceiveMoney ,GiPiggyBank} from "react-icons/gi";
 
-import {
-  HiTrendingUp,
-  HiTrendingDown,
-  HiOutlineDocumentReport,
-} from "react-icons/hi";
+import {HiTrendingUp,HiTrendingDown,HiOutlineDocumentReport,} from "react-icons/hi";
 
 import { Link } from "react-router-dom";
 
@@ -49,8 +29,6 @@ function Sidebar() {
   return (
 
     <div className="top-navbar">
-
-      {/* LOGO */}
       <div className="nav-left">
 
         <div className="logo-box">
@@ -67,8 +45,6 @@ function Sidebar() {
         </div>
 
       </div>
-
-      {/* MENU */}
       <div className="nav-menu">
 
         <Link to="/" className="nav-link">
@@ -79,9 +55,6 @@ function Sidebar() {
           </div>
 
         </Link>
-
-        {/* MASTER */}
-
         <div
           className="nav-item"
           onClick={() =>
@@ -124,10 +97,12 @@ function Sidebar() {
                 Expense Category
               </div>
 
+             <Link to="/expense-type" className="dropdown-link">
               <div className="dropdown-item">
-                <BsCurrencyDollar className="sub-icon expense-icon" />
-                Expense Type
-              </div>
+               <BsCurrencyDollar className="sub-icon expense-icon" />
+                    Expense Type
+               </div>
+             </Link>
 
               <div className="dropdown-item">
                 <GiReceiveMoney className="sub-icon income-icon" />
@@ -139,9 +114,6 @@ function Sidebar() {
           )}
 
         </div>
-
-        {/* TRANSACTIONS */}
-
         <div
           className="nav-item"
           onClick={() =>
@@ -167,9 +139,16 @@ function Sidebar() {
                 Income
               </div>
 
-              <div className="dropdown-item">
-                <HiTrendingDown className="sub-icon expense-icon" />
-                Expenses
+              <Link to="/expense" className="dropdown-link">
+               <div className="dropdown-item">
+               <HiTrendingDown className="sub-icon expense-icon" />
+               Expenses
+               </div>
+               </Link>
+
+               <div className="dropdown-item">
+                <GiPiggyBank className="sub-icon loan-icon" />
+                Loan
               </div>
 
             </div>
@@ -185,15 +164,12 @@ function Sidebar() {
 
       </div>
 
-      {/* RIGHT SIDE */}
-
       <div className="nav-right">
 
         <div className="notification-box">
           <MdOutlineNotifications />
         </div>
 
-        {/* PROFILE */}
 
         <div
           className="profile-wrapper"
@@ -205,11 +181,11 @@ function Sidebar() {
           <div className="profile-box">
 
             <div className="profile-avatar">
-              JA
+            S
             </div>
 
             <div className="profile-info">
-              <h4>John Admin</h4>
+              <h4>SRINITHI</h4>
               <p>Administrator</p>
             </div>
 

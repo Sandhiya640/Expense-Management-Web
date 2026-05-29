@@ -5,52 +5,35 @@
   padding: 0;
   box-sizing: border-box;
 }
-
 body{
   font-family: 'Poppins', sans-serif;
   background: #070b1d;
 }
-
-/* NAVBAR */
-
 .top-navbar{
   width: 100%;
   height: 78px;
-
   position: fixed;
   top: 0;
   left: 0;
-
   z-index: 1000;
-
   background: #111827;
-
   border-bottom: 1px solid rgba(255,255,255,0.08);
-
   display: flex;
   align-items: center;
-
   padding: 0 24px;
 }
-
-/* LEFT */
-
 .nav-left{
   display: flex;
   align-items: center;
   gap: 14px;
 }
-
 .logo-box{
   width: 50px;
   height: 50px;
-
   border-radius: 14px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   background: linear-gradient(
     135deg,
     #8b5cf6,
@@ -66,133 +49,92 @@ body{
   color: white;
   font-size: 24px;
 }
-
 .logo-text h2{
   color: white;
   font-size: 24px;
 }
-
 .logo-text p{
   color: #94a3b8;
   font-size: 11px;
   letter-spacing: 1px;
 }
-
-/* MENU */
-
 .nav-menu{
   display: flex;
   align-items: center;
   gap: 8px;
-
   margin-left: 50px;
 }
 .nav-right{
   display: flex;
   align-items: center;
   gap: 16px;
-
   margin-left: auto;
 }
-
 .nav-link{
   text-decoration: none;
 }
-
 .nav-item{
   position: relative;
-
   display: flex;
   align-items: center;
   gap: 10px;
-
   padding: 12px 18px;
-
   border-radius: 12px;
-
   cursor: pointer;
-
   transition: 0.3s;
 }
-
 .nav-item:hover{
   background: rgba(255,255,255,0.06);
 }
-
 .icon{
   color: #c084fc;
   font-size: 18px;
 }
-
 .nav-item span{
   color: white;
   font-size: 15px;
 }
-
 .arrow{
   color: #94a3b8;
 }
-
-/* DROPDOWN */
-
 .dropdown{
   position: absolute;
-
   top: 62px;
   left: 0;
-
   width: 280px;
-
   background: #111827;
-
   border: 1px solid rgba(255,255,255,0.08);
-
   border-radius: 16px;
-
   padding: 10px;
-
   box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-
   z-index: 999;
 }
-
 .dropdown-link{
   text-decoration: none;
 }
-
 .dropdown-item{
   display: flex;
   align-items: center;
   gap: 12px;
-
   padding: 14px;
-
   border-radius: 12px;
-
   color: white;
-
   transition: 0.3s;
-
   cursor: pointer;
-
   white-space: nowrap;
 }
 .dropdown-item:hover{
   background: rgba(255,255,255,0.05);
 }
-
 .sub-icon{
   font-size: 18px;
 }
-
 .users-icon{
   color: #38bdf8;
 }
-
 .role-icon{
   color: #c084fc;
 }
-
 .category-icon{
   color: #ec4899;
 }
@@ -204,98 +146,69 @@ body{
 .income-icon{
   color: #4ade80;
 }
-
-/* RIGHT */
-
+.loan-icon{
+  color: #38bdf8;
+}
 .nav-right{
   display: flex;
   align-items: center;
   gap: 16px;
 }
-
 .notification-box{
   width: 42px;
   height: 42px;
-
   border-radius: 12px;
-
   background: rgba(255,255,255,0.06);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   color: #c084fc;
   font-size: 20px;
-
   cursor: pointer;
 }
-
 .profile-wrapper{
   position: relative;
 }
-
 .profile-box{
   display: flex;
   align-items: center;
   gap: 12px;
-
   background: rgba(255,255,255,0.06);
-
   padding: 10px 16px;
-
   border-radius: 16px;
-
   cursor: pointer;
 }
-
 .profile-avatar{
   width: 42px;
   height: 42px;
-
   border-radius: 12px;
-
   background: linear-gradient(
     135deg,
     #8b5cf6,
     #ec4899
   );
-
   color: white;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   font-weight: 600;
 }
-
 .profile-info h4{
   color: white;
   font-size: 15px;
 }
-
 .profile-info p{
   color: #94a3b8;
   font-size: 12px;
 }
-
-
-
 .profile-dropdown{
   position: absolute;
-
   top: 70px;
   right: 0;
-
   width: 220px;
-
   background: #111827;
-
   border: 1px solid rgba(255,255,255,0.08);
-
   border-radius: 16px;
-
   overflow: hidden;
 }
 
@@ -303,13 +216,9 @@ body{
   display: flex;
   align-items: center;
   gap: 12px;
-
   padding: 16px;
-
   color: white;
-
   cursor: pointer;
-
   transition: 0.3s;
 }
 

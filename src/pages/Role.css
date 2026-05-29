@@ -21,8 +21,6 @@
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
-/* HEADER */
-
 .card-header{
   display: flex;
   justify-content: space-between;
@@ -82,8 +80,6 @@
 
   font-size: 14px;
 }
-
-/* TABLE */
 
 table{
   width: 100%;
@@ -154,8 +150,6 @@ tbody tr:hover{
 
   cursor: pointer;
 }
-
-/* MODAL */
 
 .modal-overlay{
   position: fixed;
