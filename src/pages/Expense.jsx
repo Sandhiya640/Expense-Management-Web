@@ -1,127 +1,160 @@
 import React, { useState } from "react";
 import "./Expense.css";
 
-import {FaPlus,FaEdit,FaTimes,FaSave} from "react-icons/fa";
+import { FaPlus, FaEdit, FaTimes, FaSave } from "react-icons/fa";
 
 function Expense() {
+  const [showModal, setShowModal] = useState(false);
 
-  const [showModal, setShowModal] =
-    useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const [searchTerm, setSearchTerm] =
-    useState("");
+  const [expenses, setExpenses] = useState([
+    {
+      expId: 1,
+      etId: 1,
+      expValue: 120.5,
+      expDate: "2026-05-01",
+      remarks: "Breakfast Expense",
+      createdBy: "Admin",
+    },
+    {
+      expId: 2,
+      etId: 2,
+      expValue: 250,
+      expDate: "2026-05-02",
+      remarks: "Lunch Expense",
+      createdBy: "Manager",
+    },
+    {
+      expId: 3,
+      etId: 3,
+      expValue: 80,
+      expDate: "2026-05-03",
+      remarks: "Bus Travel",
+      createdBy: "Admin",
+    },
+    {
+      expId: 4,
+      etId: 4,
+      expValue: 450,
+      expDate: "2026-05-04",
+      remarks: "Train Ticket Booking",
+      createdBy: "User",
+    },
+  ]);
 
-  const [expenses, setExpenses] =
-    useState([
-      {
-        expId: 1,
-        etId: 1,
-        expValue: 120.50,
-        expDate: "2026-05-01",
-        remarks: "Breakfast Expense",
-        createdBy: "Admin"
-      },
-      {
-        expId: 2,
-        etId: 2,
-        expValue: 250.00,
-        expDate: "2026-05-02",
-        remarks: "Lunch Expense",
-        createdBy: "Admin"
-      },
-      {
-        expId: 3,
-        etId: 3,
-        expValue: 80.00,
-        expDate: "2026-05-03",
-        remarks: "Bus Travel",
-        createdBy: "Admin"
-      },
-      {
-        expId: 4,
-        etId: 4,
-        expValue: 450.00,
-        expDate: "2026-05-04",
-        remarks: "Train Ticket Booking",
-        createdBy: "Admin"
-      }
-    ]);
+  const [editData, setEditData] = useState(null);
 
   const [etId, setEtId] = useState("");
+
   const [expValue, setExpValue] = useState("");
+
   const [expDate, setExpDate] = useState("");
+
   const [remarks, setRemarks] = useState("");
 
-  const saveExpense = () => {
+  const openAddModal = () => {
+    setEditData(null);
 
-    if (
-      !etId ||
-      !expValue ||
-      !expDate ||
-      !remarks
-    ) {
+    setEtId("");
+
+    setExpValue("");
+
+    setExpDate("");
+
+    setRemarks("");
+
+    setShowModal(true);
+  };
+
+  const handleEdit = (item) => {
+    setEditData(item);
+
+    setEtId(item.etId);
+
+    setExpValue(item.expValue);
+
+    setExpDate(item.expDate);
+
+    setRemarks(item.remarks);
+
+    setShowModal(true);
+  };
+
+  const saveExpense = () => {
+    if (!etId || !expValue || !expDate || !remarks) {
       alert("All fields are required");
       return;
     }
 
-    const newExpense = {
-      expId: expenses.length + 1,
-      etId,
-      expValue,
-      expDate,
-      remarks,
-      createdBy: "Admin"
-    };
+    if (editData) {
+      const updatedExpenses = expenses.map((item) =>
+        item.expId === editData.expId
+          ? {
+              ...item,
+              etId,
+              expValue,
+              expDate,
+              remarks,
+            }
+          : item,
+      );
 
-    setExpenses([...expenses, newExpense]);
+      setExpenses(updatedExpenses);
+    } else {
+      const newExpense = {
+        expId: expenses.length + 1,
+        etId,
+        expValue,
+        expDate,
+        remarks,
+        createdBy: "Admin",
+      };
+
+      setExpenses([...expenses, newExpense]);
+    }
 
     setEtId("");
+
     setExpValue("");
+
     setExpDate("");
+
     setRemarks("");
+
+    setEditData(null);
 
     setShowModal(false);
   };
 
-  const filteredExpenses =
-    expenses.filter((item) =>
-      item.remarks
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
-    );
+  const filteredExpenses = expenses.filter((item) =>
+    item.remarks.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
   return (
     <div className="expense-page">
+      <div className="expense-header">
+        <h2>Expense Management</h2>
+      </div>
 
       <div className="expense-card">
-
         <div className="card-header">
-
           <div className="search-box">
             <input
               type="text"
               placeholder="Search Expenses..."
               value={searchTerm}
-              onChange={(e) =>
-                setSearchTerm(e.target.value)
-              }
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
-          <button
-            className="add-btn"
-            onClick={() =>
-              setShowModal(true)
-            }
-          >
+          <button className="add-btn" onClick={openAddModal}>
             <FaPlus />
             Add Expense
           </button>
-
         </div>
 
         <table>
-
           <thead>
             <tr>
               <th>EXP ID</th>
@@ -135,63 +168,55 @@ function Expense() {
           </thead>
 
           <tbody>
+            {filteredExpenses.map((item) => (
+              <tr key={item.expId}>
+                <td>{item.expId}</td>
 
-            {filteredExpenses.map(
-              (item) => (
-                <tr key={item.expId}>
+                <td>{item.etId}</td>
 
-                  <td>{item.expId}</td>
-                  <td>{item.etId}</td>
-                  <td>₹ {item.expValue}</td>
-                  <td>{item.expDate}</td>
-                  <td>{item.remarks}</td>
-                  <td>{item.createdBy}</td>
+                <td>₹ {item.expValue}</td>
 
-                  <td>
-                    <button className="edit-btn">
-                      <FaEdit />
-                    </button>
-                  </td>
+                <td>{item.expDate}</td>
 
-                </tr>
-              )
-            )}
+                <td>{item.remarks}</td>
 
+                <td>{item.createdBy}</td>
+
+                <td>
+                  <button className="edit-btn" onClick={() => handleEdit(item)}>
+                    <FaEdit />
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
-
         </table>
-
       </div>
 
       {showModal && (
-
         <div className="modal-overlay">
-
           <div className="modal">
+            {/* ---------- MODAL HEADER ---------- */}
 
             <div className="modal-header">
-
-              <h2>Add Expense</h2>
+              <h2>{editData ? "Edit Expense" : "Add Expense"}</h2>
 
               <FaTimes
                 className="close-icon"
-                onClick={() =>
-                  setShowModal(false)
-                }
+                onClick={() => {
+                  setShowModal(false);
+                  setEditData(null);
+                }}
               />
-
             </div>
 
             <div className="modal-body">
-
               <label>Expense Type ID</label>
 
               <input
                 type="number"
                 value={etId}
-                onChange={(e) =>
-                  setEtId(e.target.value)
-                }
+                onChange={(e) => setEtId(e.target.value)}
               />
 
               <label>Amount</label>
@@ -199,9 +224,7 @@ function Expense() {
               <input
                 type="number"
                 value={expValue}
-                onChange={(e) =>
-                  setExpValue(e.target.value)
-                }
+                onChange={(e) => setExpValue(e.target.value)}
               />
 
               <label>Date</label>
@@ -209,9 +232,7 @@ function Expense() {
               <input
                 type="date"
                 value={expDate}
-                onChange={(e) =>
-                  setExpDate(e.target.value)
-                }
+                onChange={(e) => setExpDate(e.target.value)}
               />
 
               <label>Remarks</label>
@@ -219,40 +240,29 @@ function Expense() {
               <input
                 type="text"
                 value={remarks}
-                onChange={(e) =>
-                  setRemarks(e.target.value)
-                }
+                onChange={(e) => setRemarks(e.target.value)}
               />
 
               <div className="modal-buttons">
-
-                <button
-                  className="save-btn"
-                  onClick={saveExpense}
-                >
+                <button className="save-btn" onClick={saveExpense}>
                   <FaSave />
                   Save
                 </button>
 
                 <button
                   className="cancel-btn"
-                  onClick={() =>
-                    setShowModal(false)
-                  }
+                  onClick={() => {
+                    setShowModal(false);
+                    setEditData(null);
+                  }}
                 >
                   Cancel
                 </button>
-
               </div>
-
             </div>
-
           </div>
-
         </div>
-
       )}
-
     </div>
   );
 }

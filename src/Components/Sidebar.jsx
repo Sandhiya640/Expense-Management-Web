@@ -1,23 +1,38 @@
 import React, { useState } from "react";
 import "./Sidebar.css";
-import {MdDashboard,MdKeyboardArrowDown,MdKeyboardArrowRight,MdCategory,MdOutlineNotifications,} from "react-icons/md";
-import {FaUsers,FaUserShield,FaDatabase,FaWallet,FaUserCircle,FaCog,FaSignOutAlt, FaHandHoldingUsd} from "react-icons/fa";
+import {
+  MdDashboard,
+  MdKeyboardArrowDown,
+  MdKeyboardArrowRight,
+  MdCategory,
+  MdOutlineNotifications,
+} from "react-icons/md";
+import {
+  FaUsers,
+  FaUserShield,
+  FaDatabase,
+  FaWallet,
+  FaUserCircle,
+  FaCog,
+  FaSignOutAlt,
+  FaHandHoldingUsd,
+} from "react-icons/fa";
 import { BiTransfer } from "react-icons/bi";
-import {BsCurrencyDollar,} from "react-icons/bs";
-import { GiReceiveMoney ,GiPiggyBank} from "react-icons/gi";
-import {HiTrendingUp,HiTrendingDown,HiOutlineDocumentReport,} from "react-icons/hi";
+import { BsCurrencyDollar } from "react-icons/bs";
+import { GiReceiveMoney, GiPiggyBank } from "react-icons/gi";
+import {
+  HiTrendingUp,
+  HiTrendingDown,
+  HiOutlineDocumentReport,
+} from "react-icons/hi";
 import { Link } from "react-router-dom";
 
 function Sidebar() {
+  const [showMaster, setShowMaster] = useState(false);
 
-  const [showMaster, setShowMaster] =
-    useState(false);
+  const [showTransaction, setShowTransaction] = useState(false);
 
-  const [showTransaction, setShowTransaction] =
-    useState(false);
-
-  const [showProfile, setShowProfile] =
-    useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
   return (
     <div className="top-navbar">
