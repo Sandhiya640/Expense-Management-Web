@@ -1,18 +1,11 @@
 import React, { useState } from "react";
 import "./Sidebar.css";
-
 import {MdDashboard,MdKeyboardArrowDown,MdKeyboardArrowRight,MdCategory,MdOutlineNotifications,} from "react-icons/md";
-
 import {FaUsers,FaUserShield,FaDatabase,FaWallet,FaUserCircle,FaCog,FaSignOutAlt, FaHandHoldingUsd} from "react-icons/fa";
-
 import { BiTransfer } from "react-icons/bi";
-
 import {BsCurrencyDollar,} from "react-icons/bs";
-
 import { GiReceiveMoney ,GiPiggyBank} from "react-icons/gi";
-
 import {HiTrendingUp,HiTrendingDown,HiOutlineDocumentReport,} from "react-icons/hi";
-
 import { Link } from "react-router-dom";
 
 function Sidebar() {
@@ -33,10 +26,10 @@ function Sidebar() {
 
         <div className="logo-box">
           <img
-  src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png"
-  alt="logo"
-  className="custom-logo"
-/>
+             src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png"
+             alt="logo"
+             className="custom-logo"
+          />
         </div>
 
         <div className="logo-text">
@@ -55,6 +48,7 @@ function Sidebar() {
           </div>
 
         </Link>
+
         <div
           className="nav-item"
           onClick={() =>

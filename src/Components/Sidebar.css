@@ -138,11 +138,9 @@ body{
 .category-icon{
   color: #ec4899;
 }
-
 .expense-icon{
   color: #fb923c;
 }
-
 .income-icon{
   color: #4ade80;
 }
@@ -211,7 +209,6 @@ body{
   border-radius: 16px;
   overflow: hidden;
 }
-
 .profile-item{
   display: flex;
   align-items: center;
@@ -221,11 +218,9 @@ body{
   cursor: pointer;
   transition: 0.3s;
 }
-
 .profile-item:hover{
   background: rgba(255,255,255,0.05);
 }
-
 .logout{
   color: #ef4444;
 }

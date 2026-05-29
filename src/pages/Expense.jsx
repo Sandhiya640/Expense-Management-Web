@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import "./Expense.css";
 
-import {
-  FaPlus,
-  FaEdit,
-  FaTimes,
-  FaSave
-} from "react-icons/fa";
+import {FaPlus,FaEdit,FaTimes,FaSave} from "react-icons/fa";
 
 function Expense() {
 
