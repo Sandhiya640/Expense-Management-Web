@@ -2,151 +2,244 @@ import React, { useState } from "react";
 import "./Sidebar.css";
 
 import {
-  MdDashboard,MdKeyboardArrowDown,MdKeyboardArrowRight,MdCategory,MdOutlineSavings,} from "react-icons/md";
+  MdDashboard,
+  MdKeyboardArrowDown,
+  MdKeyboardArrowRight,
+  MdCategory,
+  MdOutlineNotifications,
+} from "react-icons/md";
+
 import {
-HiTrendingUp,HiTrendingDown} from "react-icons/hi";
+  FaUsers,
+  FaUserShield,
+  FaDatabase,
+  FaWallet,
+  FaUserCircle,
+  FaCog,
+  FaSignOutAlt,
+} from "react-icons/fa";
+
+import { BiTransfer } from "react-icons/bi";
+
 import {
-  FaUsers,FaUserShield,FaDatabase,FaWallet,} from "react-icons/fa";
+  BsCurrencyDollar,
+} from "react-icons/bs";
 
-import {BiTransfer} from "react-icons/bi";
+import { GiReceiveMoney } from "react-icons/gi";
 
 import {
-  BsCashStack,BsCurrencyDollar,} from "react-icons/bs";
+  HiTrendingUp,
+  HiTrendingDown,
+  HiOutlineDocumentReport,
+} from "react-icons/hi";
 
-import {GiReceiveMoney} from "react-icons/gi";
-
-import {HiOutlineDocumentReport} from "react-icons/hi";
+import { Link } from "react-router-dom";
 
 function Sidebar() {
 
-  const [showMaster, setShowMaster] =useState(true);
-  const [showTransaction, setShowTransaction] =useState(false);
+  const [showMaster, setShowMaster] =
+    useState(false);
+
+  const [showTransaction, setShowTransaction] =
+    useState(false);
+
+  const [showProfile, setShowProfile] =
+    useState(false);
 
   return (
 
-    <div className="sidebar">
+    <div className="top-navbar">
 
-      <div className="logo-section">
-       
+      {/* LOGO */}
+      <div className="nav-left">
+
         <div className="logo-box">
-          <FaWallet className="logo-icon" />
+          <img
+  src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png"
+  alt="logo"
+  className="custom-logo"
+/>
         </div>
 
-        <div>
+        <div className="logo-text">
           <h2>ExpenseTrack</h2>
-          <p>Expense Management</p>
+          <p>MANAGEMENT SUITE</p>
         </div>
 
       </div>
 
-      <div className="menu-item active">
+      {/* MENU */}
+      <div className="nav-menu">
 
-        <div className="menu-left">
-          <MdDashboard className="icon" />
-          <span>Dashboard</span>
-        </div>
+        <Link to="/" className="nav-link">
 
-      </div>
+          <div className="nav-item">
+            <MdDashboard className="icon" />
+            <span>Dashboard</span>
+          </div>
 
-      <div
-        className="menu-item"
-        onClick={() =>
-          setShowMaster(!showMaster)
-        }
-      >
+        </Link>
 
-        <div className="menu-left">
+        {/* MASTER */}
+
+        <div
+          className="nav-item"
+          onClick={() =>
+            setShowMaster(!showMaster)
+          }
+        >
+
           <FaDatabase className="icon" />
           <span>Masters</span>
+
+          {showMaster ? (
+            <MdKeyboardArrowDown className="arrow" />
+          ) : (
+            <MdKeyboardArrowRight className="arrow" />
+          )}
+
+          {showMaster && (
+
+            <div className="dropdown">
+
+              <div className="dropdown-item">
+                <FaUsers className="sub-icon users-icon" />
+                Users
+              </div>
+
+              <Link
+                to="/roles"
+                className="dropdown-link"
+              >
+
+                <div className="dropdown-item">
+                  <FaUserShield className="sub-icon role-icon" />
+                  Roles
+                </div>
+
+              </Link>
+
+              <div className="dropdown-item">
+                <MdCategory className="sub-icon category-icon" />
+                Expense Category
+              </div>
+
+              <div className="dropdown-item">
+                <BsCurrencyDollar className="sub-icon expense-icon" />
+                Expense Type
+              </div>
+
+              <div className="dropdown-item">
+                <GiReceiveMoney className="sub-icon income-icon" />
+                Income Type
+              </div>
+
+            </div>
+
+          )}
+
         </div>
 
-        {showMaster ? (
-          <MdKeyboardArrowDown className="arrow" />
-        ) : (
-          <MdKeyboardArrowRight className="arrow" />
-        )}
+        {/* TRANSACTIONS */}
 
-      </div>
+        <div
+          className="nav-item"
+          onClick={() =>
+            setShowTransaction(!showTransaction)
+          }
+        >
 
-      {showMaster && (
-
-        <div className="submenu">
-
-          <div className="submenu-item">
-            <FaUsers className="sub-icon users-icon" />
-            <span>Users</span>
-          </div>
-
-          <div className="submenu-item">
-            <FaUserShield className="sub-icon role-icon" />
-            <span>Roles</span>
-          </div>
-
-          <div className="submenu-item">
-            <MdCategory className="sub-icon category-icon" />
-            <span>Expense Category</span>
-          </div>
-
-          <div className="submenu-item">
-            <BsCurrencyDollar className="sub-icon expense-icon" />
-            <span>Expense Type</span>
-          </div>
-
-          <div className="submenu-item">
-            <GiReceiveMoney className="sub-icon income-icon" />
-            <span>Income Type</span>
-          </div>
-
-        </div>
-
-      )}
-      <div
-        className="menu-item"
-        onClick={() =>
-          setShowTransaction(!showTransaction)
-        }
-      >
-
-        <div className="menu-left">
           <BiTransfer className="icon" />
           <span>Transactions</span>
+
+          {showTransaction ? (
+            <MdKeyboardArrowDown className="arrow" />
+          ) : (
+            <MdKeyboardArrowRight className="arrow" />
+          )}
+
+          {showTransaction && (
+
+            <div className="dropdown">
+
+              <div className="dropdown-item">
+                <HiTrendingUp className="sub-icon income-icon" />
+                Income
+              </div>
+
+              <div className="dropdown-item">
+                <HiTrendingDown className="sub-icon expense-icon" />
+                Expenses
+              </div>
+
+            </div>
+
+          )}
+
         </div>
 
-        {showTransaction ? (
-          <MdKeyboardArrowDown className="arrow" />
-        ) : (
-          <MdKeyboardArrowRight className="arrow" />
-        )}
+        <div className="nav-item">
+          <HiOutlineDocumentReport className="icon" />
+          <span>Reports</span>
+        </div>
 
       </div>
 
-      {showTransaction && (
+      {/* RIGHT SIDE */}
 
-        <div className="submenu">
+      <div className="nav-right">
 
-          <div className="submenu-item">
-           <HiTrendingUp className="sub-icon income-icon" />
-            <span>Income</span>
-          </div>
-
-          <div className="submenu-item">
-            <HiTrendingDown className="sub-icon expense-icon" />
-            <span>Expenses</span>
-          </div>
-
-          <div className="submenu-item">
-            <MdOutlineSavings className="sub-icon loan-icon" />
-            <span>Loans</span>
-          </div>
-
+        <div className="notification-box">
+          <MdOutlineNotifications />
         </div>
 
-      )}
-      <div className="menu-item">
+        {/* PROFILE */}
 
-        <div className="menu-left">
-          <HiOutlineDocumentReport className="icon" />
-          <span>Reports</span>
+        <div
+          className="profile-wrapper"
+          onClick={() =>
+            setShowProfile(!showProfile)
+          }
+        >
+
+          <div className="profile-box">
+
+            <div className="profile-avatar">
+              JA
+            </div>
+
+            <div className="profile-info">
+              <h4>John Admin</h4>
+              <p>Administrator</p>
+            </div>
+
+            <MdKeyboardArrowDown className="arrow" />
+
+          </div>
+
+          {showProfile && (
+
+            <div className="profile-dropdown">
+
+              <div className="profile-item">
+                <FaUserCircle />
+                My Profile
+              </div>
+
+              <div className="profile-item">
+                <FaCog />
+                Settings
+              </div>
+
+              <div className="profile-item logout">
+                <FaSignOutAlt />
+                Logout
+              </div>
+
+            </div>
+
+          )}
+
         </div>
 
       </div>
