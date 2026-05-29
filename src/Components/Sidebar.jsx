@@ -48,7 +48,6 @@ function Sidebar() {
           </div>
 
         </Link>
-
         <div
           className="nav-item"
           onClick={() =>
@@ -69,10 +68,12 @@ function Sidebar() {
 
             <div className="dropdown">
 
-              <div className="dropdown-item">
-                <FaUsers className="sub-icon users-icon" />
-                Users
-              </div>
+   <Link to="/users" className="dropdown-link">
+  <div className="dropdown-item">
+    <FaUsers className="sub-icon users-icon" />
+    Users
+  </div>
+</Link>
 
               <Link
                 to="/roles"
@@ -179,7 +180,7 @@ function Sidebar() {
             </div>
 
             <div className="profile-info">
-              <h4>SRINITHI</h4>
+              <h4>SS</h4>
               <p>Administrator</p>
             </div>
 

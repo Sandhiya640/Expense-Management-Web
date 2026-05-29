@@ -74,6 +74,9 @@ function Role() {
 
   return (
     <div className="role-page">
+       <div className="role-header">
+        <h2>Role Management</h2>
+      </div>
 
       <div className="role-card">
 

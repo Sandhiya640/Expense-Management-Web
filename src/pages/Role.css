@@ -4,7 +4,16 @@
   background: #f8fafc;
   padding: 20px;
 }
+.role-header h2 {
+  font-size: 30px;
+  color: #1f1f5c;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  text-align: left;
+  font-family: "Times New Roman", Times, serif;
 
+}
 .role-card{
   width: 100%;
   background: white;
