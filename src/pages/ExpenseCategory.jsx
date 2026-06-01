@@ -194,16 +194,25 @@ function ExpenseCategory() {
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>EC ID</label>
-
+              <div className="form-body">
+                <div className="form-row">
+                  <label>EC ID :</label>
                   <input name="ecId" value={formData.ecId} readOnly />
                 </div>
 
-                <div className="form-group">
-                  <label>STATUS</label>
+                <div className="form-row">
+                  <label>EXPENSE TYPE :</label>
+                  <input
+                    name="name"
+                    placeholder="Enter category name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
 
+                <div className="form-row">
+                  <label>STATUS :</label>
                   <select
                     name="status"
                     value={formData.status}
@@ -214,43 +223,28 @@ function ExpenseCategory() {
                   </select>
                 </div>
 
-                <div className="form-group">
-                  <label>CREATED BY</label>
-
+                <div className="form-row">
+                  <label>CREATED BY :</label>
                   <input
                     name="createdBy"
-                    placeholder="Enter created by"
                     value={formData.createdBy}
                     onChange={handleChange}
                     required
                   />
                 </div>
-
-                <div className="form-group full-width">
-                  <label>EXPENSE TYPE</label>
-
-                  <input
-                    name="name"
-                    placeholder="Enter category name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
               </div>
-
               <div className="modal-buttons">
-                <button type="submit" className="save-btn">
-                  <FaSave />
-                  Save
-                </button>
-
                 <button
                   type="button"
                   className="cancel-btn"
                   onClick={() => setShowModal(false)}
                 >
                   Cancel
+                </button>
+
+                <button type="submit" className="save-btn">
+                  <FaSave />
+                  Save
                 </button>
               </div>
             </form>

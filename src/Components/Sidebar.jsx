@@ -130,11 +130,13 @@ function Sidebar() {
                   Expenses
                 </div>
               </Link>
-
+             
+                <Link to="/loan-transaction">
               <div className="dropdown-item">
                 <GiPiggyBank className="sub-icon loan-icon" />
                 Loan
               </div>
+              </Link>
             </div>
           )}
         </div>

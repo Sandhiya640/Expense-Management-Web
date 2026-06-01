@@ -3,8 +3,6 @@
   padding: 0;
   box-sizing: border-box;
 }
-
-/* PAGE LAYOUT (MATCHES ROLE PAGE) */
 .users-page {
   width: 100%;
   min-height: calc(100vh - 78px);
@@ -13,7 +11,6 @@
   font-family: "Poppins", sans-serif;
 }
 
-/* HEADER */
 .users-header h2 {
   font-size: 30px;
   color: #1f1f5c;
@@ -23,7 +20,6 @@
   font-family: "Times New Roman", Times, serif;
 }
 
-/* CARD (MATCH ROLE CARD) */
 .users-card {
   width: 100%;
   background: white;
@@ -33,7 +29,6 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-/* TOP BAR */
 .table-top {
   display: flex;
   justify-content: space-between;
@@ -90,9 +85,9 @@ thead {
 thead th {
   padding: 20px;
   text-align: left;
-  color: #64748b;
+  color:  #000000 !important;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   border-bottom: 1px solid #e2e8f0;
 }
 
@@ -107,7 +102,6 @@ tbody tr:hover {
   background: #f8fafc;
 }
 
-/* BADGES */
 .role,
 .status {
   padding: 6px 14px;
@@ -136,7 +130,6 @@ tbody tr:hover {
   color: #f59e0b;
 }
 
-/* EDIT BUTTON */
 .edit-btn {
   width: 40px;
   height: 40px;
@@ -151,7 +144,6 @@ tbody tr:hover {
   background: #f8fafc;
 }
 
-/* MODAL (UNCHANGED DESIGN) */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -163,7 +155,7 @@ tbody tr:hover {
 }
 
 .modal {
-  width: 900px;
+  width: 750px;
   background: white;
   border-radius: 20px;
   overflow: hidden;
@@ -193,17 +185,43 @@ form {
   padding: 25px;
 }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px 25px;
+.modal {
+  width: 750px;
 }
 
-.form-group {
+.form-body {
+  padding: 10px 0;
+}
+
+.form-row {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
+.form-row label {
+  width: 180px;
+  min-width: 180px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #000;
+}
+
+.form-row input,
+.form-row select {
+  width: 350px;
+  height: 45px;
+  padding: 0 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-row input:focus,
+.form-row select:focus {
+  border-color: #8b5cf6;
+}
 .form-group label {
   margin-bottom: 8px;
   font-size: 14px;
@@ -230,7 +248,7 @@ form {
 .modal-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 12px;
   margin-top: 20px;
 }
 
@@ -251,7 +269,6 @@ form {
   cursor: pointer;
 }
 
-/* RESPONSIVE */
 @media (max-width: 900px) {
   .form-grid {
     grid-template-columns: 1fr;

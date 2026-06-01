@@ -202,38 +202,38 @@ function ExpenseType() {
             </div>
 
             <div className="modal-body">
-              <label>Category ID</label>
+              <div className="form-row">
+                <label>CATEGORY ID :</label>
+                <input
+                  type="number"
+                  value={editCategoryId}
+                  placeholder="Enter category id"
+                  onChange={(e) => setEditCategoryId(e.target.value)}
+                />
+              </div>
 
-              <input
-                type="number"
-                value={editCategoryId}
-                onChange={(e) => setEditCategoryId(e.target.value)}
-              />
+              <div className="form-row">
+                <label>EXPENSE NAME :</label>
+                <input
+                  type="text"
+                  value={editExpenseName}
+                  placeholder="Enter expense name"
+                  onChange={(e) => setEditExpenseName(e.target.value)}
+                />
+              </div>
 
-              <label>Expense Name</label>
-
-              <input
-                type="text"
-                value={editExpenseName}
-                onChange={(e) => setEditExpenseName(e.target.value)}
-              />
-
-              <label>Status</label>
-
-              <select
-                value={editStatus}
-                onChange={(e) => setEditStatus(e.target.value)}
-              >
-                <option>Active</option>
-                <option>Inactive</option>
-              </select>
+              <div className="form-row">
+                <label>STATUS :</label>
+                <select
+                  value={editStatus}
+                  onChange={(e) => setEditStatus(e.target.value)}
+                >
+                  <option>Active</option>
+                  <option>Inactive</option>
+                </select>
+              </div>
 
               <div className="modal-buttons">
-                <button className="save-btn" onClick={saveExpenseType}>
-                  <FaSave />
-                  Save
-                </button>
-
                 <button
                   className="cancel-btn"
                   onClick={() => {
@@ -242,6 +242,11 @@ function ExpenseType() {
                   }}
                 >
                   Cancel
+                </button>
+
+                <button className="save-btn" onClick={saveExpenseType}>
+                  <FaSave />
+                  Save
                 </button>
               </div>
             </div>

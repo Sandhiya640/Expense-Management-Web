@@ -146,17 +146,13 @@ function Users() {
 
   return (
     <div className="users-page">
-
       <div className="users-header">
         <h2>User Management</h2>
       </div>
 
       <div className="users-card">
-
         <div className="table-top">
-
           <div className="search-box">
-
             <input
               type="text"
               placeholder="Search users..."
@@ -169,11 +165,9 @@ function Users() {
             <FaPlus />
             Add User
           </button>
-
         </div>
 
         <table>
-
           <thead>
             <tr>
               <th>EMP CODE</th>
@@ -187,11 +181,8 @@ function Users() {
           </thead>
 
           <tbody>
-
             {filteredUsers.map((user) => (
-
               <tr key={user.id}>
-
                 <td>{user.empCode}</td>
                 <td>{user.name}</td>
                 <td>{user.email}</td>
@@ -200,9 +191,7 @@ function Users() {
                 <td>
                   <span
                     className={
-                      user.role === "Admin"
-                        ? "role admin"
-                        : "role user"
+                      user.role === "Admin" ? "role admin" : "role user"
                     }
                   >
                     {user.role}
@@ -222,52 +211,31 @@ function Users() {
                 </td>
 
                 <td>
-                  <button
-                    className="edit-btn"
-                    onClick={() => handleEdit(user)}
-                  >
+                  <button className="edit-btn" onClick={() => handleEdit(user)}>
                     <FaEdit />
                   </button>
                 </td>
-
               </tr>
-
             ))}
-
           </tbody>
-
         </table>
-
       </div>
 
       {showModal && (
-
         <div className="modal-overlay">
-
           <div className="modal">
-
             <div className="modal-header">
+              <h2>{editUser ? "Edit User" : "Add User"}</h2>
 
-              <h2>
-                {editUser ? "Edit User" : "Add User"}
-              </h2>
-
-              <button
-                className="close-btn"
-                onClick={() => setShowModal(false)}
-              >
+              <button className="close-btn" onClick={() => setShowModal(false)}>
                 <FaTimes />
               </button>
-
             </div>
 
             <form onSubmit={handleSubmit}>
-
-              <div className="form-grid">
-
-                <div className="form-group">
-                  <label>EMP CODE</label>
-
+              <div className="form-body">
+                <div className="form-row">
+                  <label>EMP CODE :</label>
                   <input
                     type="text"
                     name="empCode"
@@ -277,10 +245,8 @@ function Users() {
                   />
                 </div>
 
-                <div className="form-group">
-
-                  <label>ROLE</label>
-
+                <div className="form-row">
+                  <label>ROLE :</label>
                   <select
                     name="role"
                     value={formData.role}
@@ -289,13 +255,10 @@ function Users() {
                     <option>Admin</option>
                     <option>User</option>
                   </select>
-
                 </div>
 
-                <div className="form-group">
-
-                  <label>FULL NAME</label>
-
+                <div className="form-row">
+                  <label>FULL NAME :</label>
                   <input
                     type="text"
                     name="name"
@@ -304,13 +267,10 @@ function Users() {
                     onChange={handleChange}
                     required
                   />
-
                 </div>
 
-                <div className="form-group">
-
-                  <label>MOBILE</label>
-
+                <div className="form-row">
+                  <label>MOBILE :</label>
                   <input
                     type="text"
                     name="mobile"
@@ -319,13 +279,10 @@ function Users() {
                     onChange={handleChange}
                     required
                   />
-
                 </div>
 
-                <div className="form-group full-width">
-
-                  <label>EMAIL</label>
-
+                <div className="form-row">
+                  <label>EMAIL :</label>
                   <input
                     type="email"
                     name="email"
@@ -334,13 +291,10 @@ function Users() {
                     onChange={handleChange}
                     required
                   />
-
                 </div>
 
-                <div className="form-group">
-
-                  <label>PASSWORD</label>
-
+                <div className="form-row">
+                  <label>PASSWORD :</label>
                   <input
                     type="password"
                     name="password"
@@ -349,13 +303,10 @@ function Users() {
                     onChange={handleChange}
                     required
                   />
-
                 </div>
 
-                <div className="form-group">
-
-                  <label>STATUS</label>
-
+                <div className="form-row">
+                  <label>STATUS :</label>
                   <select
                     name="status"
                     value={formData.status}
@@ -364,21 +315,10 @@ function Users() {
                     <option>Active</option>
                     <option>Inactive</option>
                   </select>
-
                 </div>
-
               </div>
 
               <div className="modal-buttons">
-
-                <button
-                  type="submit"
-                  className="save-btn"
-                >
-                  <FaSave />
-                  Save
-                </button>
-
                 <button
                   type="button"
                   className="cancel-btn"
@@ -387,16 +327,15 @@ function Users() {
                   Cancel
                 </button>
 
+                <button type="submit" className="save-btn">
+                  <FaSave />
+                  Save
+                </button>
               </div>
-
             </form>
-
           </div>
-
         </div>
-
       )}
-
     </div>
   );
 }
