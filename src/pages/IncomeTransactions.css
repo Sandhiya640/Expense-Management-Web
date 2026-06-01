@@ -1,0 +1,229 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.income-page {
+    padding: 25px;
+    background: #f8fafc;
+    min-height: 100vh;
+    font-family: "Poppins", sans-serif;
+}
+
+.income-header h2 {
+    font-size: 30px;
+    color: #1f1f5c;
+    text-align: left;
+    font-weight: bold;
+    margin: 20px 0 30px 0;
+    font-family: "Times New Roman", Times, serif;     
+}
+
+.income-header p {
+    color: #64748b;
+    margin-top: 6px;
+}
+
+.tabs {
+    display: flex;
+    margin-top: 25px;
+    background: #ebe6f5;
+    width: fit-content;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.tabs button {
+    border: none;
+    padding: 14px 28px;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.tabs button.active {
+    background: linear-gradient(135deg,
+            #8b5cf6,
+            #a855f7);
+    color: white;
+}
+
+.income-card {
+    background: white;
+    margin-top: 25px;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.card-header h3 {
+    color: #23235b;
+}
+
+form {
+    padding: 25px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 30px;
+    row-gap: 25px;
+    align-items: start;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* labels stay left */
+    width: 100%;
+}
+
+.form-group label {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #475569;
+    letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    height: 56px;
+    padding: 0 18px;
+    border-radius: 14px;
+    border: 1px solid #cbd5e1;
+    outline: none;
+    font-size: 16px;
+    background: #fff;
+}
+
+.form-group textarea {
+    height: 130px;
+    padding: 15px 18px;
+    resize: none;
+}
+.form-card h2,
+.card-title,
+.income-form-title {
+    text-align: left !important;
+    margin-left: 0;
+}
+.form-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    /* reset left, save right */
+    align-items: center;
+    margin-top: 30px;
+    width: 100%;
+}
+
+.save-btn {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.reset-btn {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    padding: 12px 28px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+.upload-box {
+    text-align: center;
+    padding: 80px;
+}
+
+.upload-box h3 {
+    margin: 20px 0;
+}
+
+.table-top {
+    padding: 20px;
+}
+
+.search-box {
+    width: 300px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #dbe2ea;
+    border-radius: 12px;
+    padding: 10px 15px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #f8fafc;
+}
+
+thead th {
+    text-align: left;
+    padding: 16px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+tbody td {
+    padding: 16px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.edit-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid #dbe2ea;
+    background: white;
+    cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: span 1;
+    }
+}

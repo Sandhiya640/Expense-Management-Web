@@ -9,6 +9,8 @@ import ExpenseType from "./pages/ExpenseType";
 import Expense from "./pages/Expense";
 import Users from "./pages/Users";
 import ExpenseCategory from "./pages/ExpenseCategory";
+import IncomeType from "./pages/IncomeType";
+import IncomeTransactions from "./pages/IncomeTransactions";
 
 function App() {
   return (
@@ -26,6 +28,10 @@ function App() {
           <Route path="expense-type" element={<ExpenseType />} />
 
           <Route path="expense" element={<Expense />} />
+
+          <Route path="income-type" element={<IncomeType/>}/>
+
+          <Route path="income-transactions" element={<IncomeTransactions/>}/>
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Sidebar.css";
 import {
   MdDashboard,
@@ -11,11 +11,9 @@ import {
   FaUsers,
   FaUserShield,
   FaDatabase,
-  FaWallet,
   FaUserCircle,
   FaCog,
   FaSignOutAlt,
-  FaHandHoldingUsd,
 } from "react-icons/fa";
 import { BiTransfer } from "react-icons/bi";
 import { BsCurrencyDollar } from "react-icons/bs";
@@ -28,14 +26,36 @@ import {
 import { Link } from "react-router-dom";
 
 function Sidebar() {
-  const [showMaster, setShowMaster] = useState(false);
-
-  const [showTransaction, setShowTransaction] = useState(false);
-
+  const [activeMenu, setActiveMenu] = useState(null);
   const [showProfile, setShowProfile] = useState(false);
+
+  const menuRef = useRef();
+  const profileRef = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(e.target) &&
+        profileRef.current &&
+        !profileRef.current.contains(e.target)
+      ) {
+        setActiveMenu(null);
+        setShowProfile(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const toggleMenu = (menu) => {
+    setActiveMenu(activeMenu === menu ? null : menu);
+  };
 
   return (
     <div className="top-navbar">
+      {/* LEFT */}
       <div className="nav-left">
         <div className="logo-box">
           <img
@@ -50,24 +70,25 @@ function Sidebar() {
           <p>MANAGEMENT SUITE</p>
         </div>
       </div>
-      <div className="nav-menu">
+
+      <div className="nav-menu" ref={menuRef}>
         <Link to="/" className="nav-link">
           <div className="nav-item">
             <MdDashboard className="icon" />
             <span>Dashboard</span>
           </div>
         </Link>
-        <div className="nav-item" onClick={() => setShowMaster(!showMaster)}>
+
+        <div className="nav-item" onClick={() => toggleMenu("masters")}>
           <FaDatabase className="icon" />
           <span>Masters</span>
-
-          {showMaster ? (
+          {activeMenu === "masters" ? (
             <MdKeyboardArrowDown className="arrow" />
           ) : (
             <MdKeyboardArrowRight className="arrow" />
           )}
 
-          {showMaster && (
+          {activeMenu === "masters" && (
             <div className="dropdown">
               <Link to="/users" className="dropdown-link">
                 <div className="dropdown-item">
@@ -97,32 +118,33 @@ function Sidebar() {
                 </div>
               </Link>
 
-              <div className="dropdown-item">
-                <GiReceiveMoney className="sub-icon income-icon" />
-                Income Type
-              </div>
+              <Link to="/income-type" className="dropdown-link">
+                <div className="dropdown-item">
+                  <GiReceiveMoney className="sub-icon income-icon" />
+                  Income Type
+                </div>
+              </Link>
             </div>
           )}
         </div>
-        <div
-          className="nav-item"
-          onClick={() => setShowTransaction(!showTransaction)}
-        >
+
+        <div className="nav-item" onClick={() => toggleMenu("transactions")}>
           <BiTransfer className="icon" />
           <span>Transactions</span>
-
-          {showTransaction ? (
+          {activeMenu === "transactions" ? (
             <MdKeyboardArrowDown className="arrow" />
           ) : (
             <MdKeyboardArrowRight className="arrow" />
           )}
 
-          {showTransaction && (
+          {activeMenu === "transactions" && (
             <div className="dropdown">
-              <div className="dropdown-item">
-                <HiTrendingUp className="sub-icon income-icon" />
-                Income
-              </div>
+              <Link to="/income-transactions" className="dropdown-link">
+                <div className="dropdown-item">
+                  <HiTrendingUp className="sub-icon income-icon" />
+                  Income
+                </div>
+              </Link>
 
               <Link to="/expense" className="dropdown-link">
                 <div className="dropdown-item">
@@ -152,6 +174,7 @@ function Sidebar() {
 
         <div
           className="profile-wrapper"
+          ref={profileRef}
           onClick={() => setShowProfile(!showProfile)}
         >
           <div className="profile-box">
@@ -168,18 +191,13 @@ function Sidebar() {
           {showProfile && (
             <div className="profile-dropdown">
               <div className="profile-item">
-                <FaUserCircle />
-                My Profile
+                <FaUserCircle /> My Profile
               </div>
-
               <div className="profile-item">
-                <FaCog />
-                Settings
+                <FaCog /> Settings
               </div>
-
               <div className="profile-item logout">
-                <FaSignOutAlt />
-                Logout
+                <FaSignOutAlt /> Logout
               </div>
             </div>
           )}
