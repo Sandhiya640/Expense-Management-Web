@@ -8,29 +8,32 @@
 
 .category-page {
     width: 100%;
-    min-height: calc(100vh - 70px);
-    background: #f1f5f9;
-    padding: 25px;
+    min-height: calc(100vh - 60px);
+    background: #f8fafc;
+    padding: 0 20px 20px 20px;
+    margin-top: 60px;
     font-family: "Poppins", sans-serif;
 }
 
 .category-header h2 {
-     font-size: 30px;
-  color: #1f1f5c;
-  font-weight: bold;
-  margin: 20px 0 30px 0;
-  text-align: left;
-  font-family: "Times New Roman", Times, serif;
+    font-size: 30px;
+    color: #1f1f5c;
+    font-weight: bold;
+    text-align: left;
+    font-family: "Times New Roman", Times, serif;
+    margin: 0;
+    padding-top: 8px;
 }
 
 .category-card {
     width: 100%;
-    background: #fff;
+    background: white;
     border-radius: 18px;
+    border: 1px solid #e2e8f0;
     overflow: hidden;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-top: 8px;
 }
-
 .table-top {
     display: flex;
     justify-content: space-between;

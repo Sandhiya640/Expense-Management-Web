@@ -9,11 +9,8 @@ import ExpenseType from "./pages/ExpenseType";
 import Users from "./pages/Users";
 import ExpenseCategory from "./pages/ExpenseCategory";
 import LoanTransaction from "./pages/LoanTransaction";
-<<<<<<< Updated upstream
 import IncomeType from "./pages/IncomeType";
 import IncomeTransactions from "./pages/IncomeTransactions"
-=======
->>>>>>> Stashed changes
 
 function App() {
   return (
@@ -30,11 +27,7 @@ function App() {
 
           <Route path="expense-type" element={<ExpenseType />} />
 
-<<<<<<< Updated upstream
           <Route path="income-type" element={<IncomeType />} />
-=======
-          {/* <Route path="expense" element={<Expense />} /> */}
->>>>>>> Stashed changes
 
           <Route path="income-transactions" element={<IncomeTransactions />} />
           <Route path="expense" element={<ExpenseTransactions />} />

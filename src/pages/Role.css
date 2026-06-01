@@ -1,18 +1,22 @@
 .role-page {
   width: 100%;
-  min-height: calc(100vh - 78px);
+  min-height: calc(100vh - 60px);
   background: #f8fafc;
-  padding: 20px;
+  padding: 0 20px 20px 20px;
+  margin-top: 60px;
+  font-family: "Poppins", sans-serif;
 }
+
 .role-header h2 {
   font-size: 30px;
   color: #1f1f5c;
   font-weight: bold;
-  margin-top: 20px;
-  margin-bottom: 30px;
   text-align: left;
   font-family: "Times New Roman", Times, serif;
+  margin: 0;
+  padding-top: 8px;
 }
+
 .role-card {
   width: 100%;
   background: white;
@@ -20,6 +24,7 @@
   border: 1px solid #e2e8f0;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  margin-top: 8px;
 }
 
 .card-header {
