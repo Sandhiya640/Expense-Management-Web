@@ -9,6 +9,9 @@ import ExpenseType from "./pages/ExpenseType";
 import Users from "./pages/Users";
 import ExpenseCategory from "./pages/ExpenseCategory";
 import LoanTransaction from "./pages/LoanTransaction";
+import IncomeType from "./pages/IncomeType";
+import IncomeTransactions from "./pages/IncomeTransactions"
+
 function App() {
   return (
     <BrowserRouter>
@@ -24,11 +27,9 @@ function App() {
 
           <Route path="expense-type" element={<ExpenseType />} />
 
-          <Route path="expense" element={<Expense />} />
+          <Route path="income-type" element={<IncomeType />} />
 
-          <Route path="income-type" element={<IncomeType/>}/>
-
-          <Route path="income-transactions" element={<IncomeTransactions/>}/>
+          <Route path="income-transactions" element={<IncomeTransactions />} />
           <Route path="expense" element={<ExpenseTransactions />} />
           <Route path="/loan-transaction" element={<LoanTransaction />} />
         </Route>
