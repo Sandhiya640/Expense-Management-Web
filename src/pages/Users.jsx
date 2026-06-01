@@ -1,15 +1,8 @@
 import React, { useState } from "react";
 import "./Users.css";
-import {
-  FaPlus,
-  FaSearch,
-  FaEdit,
-  FaTimes,
-  FaSave,
-} from "react-icons/fa";
+import { FaPlus, FaSearch, FaEdit, FaTimes, FaSave } from "react-icons/fa";
 
 function Users() {
-
   const [users, setUsers] = useState([
     {
       id: 2,
@@ -91,17 +84,12 @@ function Users() {
     e.preventDefault();
 
     if (editUser) {
-
       setUsers(
         users.map((user) =>
-          user.id === editUser.id
-            ? { ...user, ...formData }
-            : user
-        )
+          user.id === editUser.id ? { ...user, ...formData } : user,
+        ),
       );
-
     } else {
-
       const newUser = {
         id: users.length + 1,
         ...formData,
@@ -115,7 +103,6 @@ function Users() {
   };
 
   const handleEdit = (user) => {
-
     setEditUser(user);
 
     setFormData({
@@ -131,18 +118,18 @@ function Users() {
     setShowModal(true);
   };
 
- const filteredUsers = users.filter((user) => {
-   const value = search.toLowerCase();
+  const filteredUsers = users.filter((user) => {
+    const value = search.toLowerCase();
 
-   return (
-     user.name.toLowerCase().includes(value) ||
-     user.empCode.toLowerCase().includes(value) ||
-     user.email.toLowerCase().includes(value) ||
-     user.mobile.toLowerCase().includes(value) ||
-     user.role.toLowerCase().includes(value) ||
-     user.status.toLowerCase().includes(value)
-   );
- });
+    return (
+      user.name.toLowerCase().includes(value) ||
+      user.empCode.toLowerCase().includes(value) ||
+      user.email.toLowerCase().includes(value) ||
+      user.mobile.toLowerCase().includes(value) ||
+      user.role.toLowerCase().includes(value) ||
+      user.status.toLowerCase().includes(value)
+    );
+  });
 
   return (
     <div className="users-page">
@@ -233,10 +220,9 @@ function Users() {
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>EMP CODE</label>
-
+              <div className="form-body">
+                <div className="form-row">
+                  <label>EMP CODE :</label>
                   <input
                     type="text"
                     name="empCode"
@@ -246,9 +232,8 @@ function Users() {
                   />
                 </div>
 
-                <div className="form-group">
-                  <label>ROLE</label>
-
+                <div className="form-row">
+                  <label>ROLE :</label>
                   <select
                     name="role"
                     value={formData.role}
@@ -259,9 +244,8 @@ function Users() {
                   </select>
                 </div>
 
-                <div className="form-group">
-                  <label>FULL NAME</label>
-
+                <div className="form-row">
+                  <label>FULL NAME :</label>
                   <input
                     type="text"
                     name="name"
@@ -272,9 +256,8 @@ function Users() {
                   />
                 </div>
 
-                <div className="form-group">
-                  <label>MOBILE</label>
-
+                <div className="form-row">
+                  <label>MOBILE :</label>
                   <input
                     type="text"
                     name="mobile"
@@ -285,9 +268,8 @@ function Users() {
                   />
                 </div>
 
-                <div className="form-group full-width">
-                  <label>EMAIL</label>
-
+                <div className="form-row">
+                  <label>EMAIL :</label>
                   <input
                     type="email"
                     name="email"
@@ -298,9 +280,8 @@ function Users() {
                   />
                 </div>
 
-                <div className="form-group">
-                  <label>PASSWORD</label>
-
+                <div className="form-row">
+                  <label>PASSWORD :</label>
                   <input
                     type="password"
                     name="password"
@@ -311,9 +292,8 @@ function Users() {
                   />
                 </div>
 
-                <div className="form-group">
-                  <label>STATUS</label>
-
+                <div className="form-row">
+                  <label>STATUS :</label>
                   <select
                     name="status"
                     value={formData.status}

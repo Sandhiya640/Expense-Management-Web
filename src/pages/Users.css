@@ -3,7 +3,6 @@
   padding: 0;
   box-sizing: border-box;
 }
-
 .users-page {
   width: 100%;
   min-height: calc(100vh - 60px);
@@ -11,11 +10,6 @@
   padding: 0 20px 20px 20px;
   margin-top: 60px;
   font-family: "Poppins", sans-serif;
-}
-
-.users-header {
-  margin: 0;
-  padding: 0;
 }
 
 .users-header h2 {
@@ -98,9 +92,9 @@ thead {
 thead th {
   padding: 20px;
   text-align: left;
-  color: #64748b;
-  font-size: 40px;
-  font-weight: bold;
+  color:  #000000 !important;
+  font-size: 14px;
+  font-weight: 700;
   border-bottom: 1px solid #e2e8f0;
 }
 
@@ -156,6 +150,7 @@ tbody tr:hover {
 .edit-btn:hover {
   background: #f8fafc;
 }
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -167,7 +162,7 @@ tbody tr:hover {
 }
 
 .modal {
-  width: 850px;
+  width: 750px;
   background: white;
   border-radius: 20px;
   overflow: hidden;
@@ -194,21 +189,43 @@ form {
   padding: 25px;
 }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  /* 2 columns */
-  gap: 25px 40px;
+.modal {
+  width: 750px;
 }
 
-.form-group {
-  display: grid;
-  grid-template-columns: 160px 1fr;
-  /* label | input */
+.form-body {
+  padding: 10px 0;
+}
+
+.form-row {
+  display: flex;
   align-items: center;
-  gap: 15px;
+  margin-bottom: 20px;
 }
 
+.form-row label {
+  width: 180px;
+  min-width: 180px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #000;
+}
+
+.form-row input,
+.form-row select {
+  width: 350px;
+  height: 45px;
+  padding: 0 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-row input:focus,
+.form-row select:focus {
+  border-color: #8b5cf6;
+}
 .form-group label {
   font-size: 14px;
   font-weight: 600;
@@ -234,7 +251,7 @@ form {
 .modal-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 12px;
   margin-top: 20px;
 }
 
@@ -255,7 +272,6 @@ form {
   cursor: pointer;
 }
 
-/* RESPONSIVE */
 @media (max-width: 900px) {
   .form-grid {
     grid-template-columns: 1fr;

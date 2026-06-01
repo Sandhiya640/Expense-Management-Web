@@ -180,32 +180,27 @@ function Role() {
                 }}
               />
             </div>
+<div className="form-row">
+  <label>ROLE NAME :</label>
+  <input
+    type="text"
+    value={roleName}
+    placeholder="Enter role name"
+    onChange={(e) => setRoleName(e.target.value)}
+  />
+</div>
 
-            <div className="modal-body">
-              <label>ROLE NAME</label>
-
-              <input
-                type="text"
-                value={roleName}
-                placeholder="Enter role name"
-                onChange={(e) => setRoleName(e.target.value)}
-              />
-
-              <label>STATUS</label>
-
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                <option>Active</option>
-                <option>Inactive</option>
-              </select>
-
+<div className="form-row">
+  <label>STATUS :</label>
+  <select
+    value={status}
+    onChange={(e) => setStatus(e.target.value)}
+  >
+    <option>Active</option>
+    <option>Inactive</option>
+  </select>
+</div>
               <div className="modal-buttons">
-                <button className="save-btn" onClick={saveRole}>
-                  <FaSave /> Save
-                </button>
-
                 <button
                   className="cancel-btn"
                   onClick={() => {
@@ -215,10 +210,14 @@ function Role() {
                 >
                   Cancel
                 </button>
+
+                <button className="save-btn" onClick={saveRole}>
+                  <FaSave /> Save
+                </button>
               </div>
             </div>
           </div>
-        </div>
+        
       )}
     </div>
   );

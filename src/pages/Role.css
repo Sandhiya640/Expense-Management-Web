@@ -70,16 +70,18 @@ table {
 thead {
   background: #f8fafc;
 }
-
+thead th {
+  color: #000 ;
+  font-weight: 700;
+}
 th {
   padding: 18px;
   text-align: left;
-  color: #64748b;
+  color: #000000 !important;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   border-bottom: 1px solid #e2e8f0;
 }
-
 td {
   padding: 18px;
   text-align: left;
@@ -129,7 +131,7 @@ tbody tr:hover {
 }
 
 .modal {
-  width: 450px;
+  width: 650px;
   background: white;
   border-radius: 18px;
   overflow: hidden;
@@ -144,15 +146,46 @@ tbody tr:hover {
 }
 
 .modal-body {
-  padding: 20px;
+  padding: 25px;
+  
+}
+.form-row {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  
+  margin-bottom: 22px;
 }
 
-.modal-body label {
+.form-row label {
+  width: 140px;
+
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  
+}
+
+.form-row input,
+.form-row select {
+  width: 350px;
+  height: 45px;
+  padding: 0 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
   font-size: 14px;
-  color: #64748b;
+}
+
+.form-row input:focus,
+.form-row select:focus {
+  border-color: #8b5cf6;
+}
+.modal-body label {
+  display: block;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 6px;
 }
 
 .modal-body input,
