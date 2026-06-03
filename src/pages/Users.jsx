@@ -166,8 +166,6 @@ function Users() {
           </button>
         </div>
 
-        
-
         <table>
           <thead>
             <tr>
@@ -197,16 +195,14 @@ function Users() {
 
                 <td>
                   <span
-  className={
-    Number(user.Active_Status) === 1
-      ? "status active"
-      : "status inactive"
-  }
->
-  {Number(user.Active_Status) === 1
-    ? "Active"
-    : "Inactive"}
-</span>
+                    className={
+                      Number(user.Active_Status) === 1
+                        ? "status active"
+                        : "status inactive"
+                    }
+                  >
+                    {Number(user.Active_Status) === 1 ? "Active" : "Inactive"}
+                  </span>
                 </td>
 
                 <td>
