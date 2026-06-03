@@ -1,47 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./Users.css";
 import { FaPlus, FaSearch, FaEdit, FaTimes, FaSave } from "react-icons/fa";
 
+const API_URL = "http://localhost:5001/api/users";
+
 function Users() {
-  const [users, setUsers] = useState([
-    {
-      id: 2,
-      empCode: "EMP001",
-      name: "Srinithi",
-      email: "srinithi@gmail.com",
-      mobile: "9876543210",
-      role: "Admin",
-      status: "Active",
-      password: "123456",
-    },
-    {
-      id: 3,
-      empCode: "EMP002",
-      name: "Priya Sharma",
-      email: "priya@corp.in",
-      mobile: "9876543211",
-      role: "User",
-      status: "Active",
-      password: "123456",
-    },
-    {
-      id: 4,
-      empCode: "EMP003",
-      name: "Rahul Verma",
-      email: "rahul@corp.in",
-      mobile: "9876543212",
-      role: "User",
-      status: "Inactive",
-      password: "123456",
-    },
-  ]);
+  const [users, setUsers] = useState([]);
 
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState("");
   const [editUser, setEditUser] = useState(null);
 
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(API_URL);
+
+      console.log("API Response:", response.data);
+
+      setUsers(response.data);
+    } catch (error) {
+      console.log("Error fetching users:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   const getNextEmpCode = () => {
-    return `EMP${String(users.length + 1).padStart(3, "0")}`;
+    const maxCode =
+      users.length > 0
+        ? Math.max(
+            ...users.map((u) => parseInt(u.Emp_Code?.replace("EMP", "") || 0)),
+          )
+        : 0;
+
+    return `EMP${String(maxCode + 1).padStart(3, "0")}`;
   };
 
   const [formData, setFormData] = useState({
@@ -80,56 +75,73 @@ function Users() {
     setShowModal(true);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (editUser) {
-      setUsers(
-        users.map((user) =>
-          user.id === editUser.id ? { ...user, ...formData } : user,
-        ),
-      );
-    } else {
-      const newUser = {
-        id: users.length + 1,
-        ...formData,
-      };
+    try {
+     const payload = {
+       RID: formData.role === "Admin" ? 1 : 2,
+       Emp_Code: formData.empCode,
+       Emp_Name: formData.name,
+       Mail_ID: formData.email,
+       Mobile_No: formData.mobile,
+       Password: formData.password,
+       Active_Status: formData.status === "Active" ? 1 : 0,
+     };
+      if (editUser) {
+        await axios.put(`${API_URL}/${editUser.UID}`, payload);
+      } else {
+        await axios.post(API_URL, payload);
+      }
 
-      setUsers([...users, newUser]);
+      await fetchUsers();
+
+      setShowModal(false);
+      resetForm();
+    } catch (error) {
+      console.log(error);
+      alert("Operation Failed");
     }
-
-    setShowModal(false);
-    resetForm();
   };
 
-  const handleEdit = (user) => {
-    setEditUser(user);
+ const handleEdit = (user) => {
+   setEditUser(user);
 
-    setFormData({
-      empCode: user.empCode,
-      name: user.name,
-      email: user.email,
-      mobile: user.mobile,
-      role: user.role,
-      status: user.status,
-      password: user.password,
-    });
+   setFormData({
+     empCode: user.Emp_Code,
+     name: user.Emp_Name,
+     email: user.Mail_ID,
+     mobile: user.Mobile_No,
+     role: user.RID === 1 ? "Admin" : "User",
+     status: Number(user.Active_Status) === 1 ? "Active" : "Inactive",
+     password: "",
+   });
 
-    setShowModal(true);
-  };
+   setShowModal(true);
+ };
+
+ const handleDelete = async (id) => {
+   if (!window.confirm("Delete this user?")) return;
+
+   try {
+     await axios.delete(`${API_URL}/${id}`);
+
+     fetchUsers();
+   } catch (error) {
+     console.log(error);
+   }
+ };
 
   const filteredUsers = users.filter((user) => {
-    const value = search.toLowerCase();
+  const value = search.toLowerCase();
 
-    return (
-      user.name.toLowerCase().includes(value) ||
-      user.empCode.toLowerCase().includes(value) ||
-      user.email.toLowerCase().includes(value) ||
-      user.mobile.toLowerCase().includes(value) ||
-      user.role.toLowerCase().includes(value) ||
-      user.status.toLowerCase().includes(value)
-    );
-  });
+  return (
+    user.Emp_Name?.toLowerCase().includes(value) ||
+    user.Emp_Code?.toLowerCase().includes(value) ||
+    user.Mail_ID?.toLowerCase().includes(value) ||
+    user.Mobile_No?.includes(value)
+  );
+});
 
   return (
     <div className="users-page">
@@ -169,37 +181,43 @@ function Users() {
 
           <tbody>
             {filteredUsers.map((user) => (
-              <tr key={user.id}>
-                <td>{user.empCode}</td>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.mobile}</td>
+              <tr key={user.UID}>
+                <td>{user.Emp_Code}</td>
+                <td>{user.Emp_Name}</td>
+                <td>{user.Mail_ID}</td>
+                <td>{user.Mobile_No}</td>
 
                 <td>
-                  <span
-                    className={
-                      user.role === "Admin" ? "role admin" : "role user"
-                    }
-                  >
-                    {user.role}
+                  <span className={user.RID === 1 ? "role admin" : "role user"}>
+                    {user.RID === 1 ? "Admin" : "User"}
                   </span>
                 </td>
 
                 <td>
                   <span
-                    className={
-                      user.status === "Active"
-                        ? "status active"
-                        : "status inactive"
-                    }
-                  >
-                    {user.status}
-                  </span>
+  className={
+    Number(user.Active_Status) === 1
+      ? "status active"
+      : "status inactive"
+  }
+>
+  {Number(user.Active_Status) === 1
+    ? "Active"
+    : "Inactive"}
+</span>
                 </td>
 
                 <td>
                   <button className="edit-btn" onClick={() => handleEdit(user)}>
                     <FaEdit />
+                  </button>
+
+                  <button
+                    className="edit-btn"
+                    onClick={() => handleDelete(user.UID)}
+                    style={{ marginLeft: "10px" }}
+                  >
+                    <FaTimes />
                   </button>
                 </td>
               </tr>
