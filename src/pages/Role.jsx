@@ -163,21 +163,17 @@ function Role() {
                 </td>
 
                 <td>
-                  <div className="action-buttons">
-                    <button
-                      className="edit-btn"
-                      onClick={() => handleEdit(role)}
-                    >
-                      <FaEdit />
-                    </button>
+                  <button className="edit-btn" onClick={() => handleEdit(role)}>
+                    <FaEdit />
+                  </button>
 
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDelete(role.RID)}
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
+                  <button
+                    className="edit-btn delete-icon-btn"
+                    onClick={() => handleDelete(role.RID)}
+                    style={{ marginLeft: "10px" }}
+                  >
+                    <FaTrash />
+                  </button>
                 </td>
               </tr>
             ))}
