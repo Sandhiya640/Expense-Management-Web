@@ -11,6 +11,7 @@ function Users() {
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState("");
   const [editUser, setEditUser] = useState(null);
+  const [roles, setRoles] = useState([]);
 
   const fetchUsers = async () => {
     try {
@@ -23,9 +24,19 @@ function Users() {
       console.log("Error fetching users:", error);
     }
   };
+  const fetchRoles = async () => {
+    try {
+      const response = await axios.get("http://localhost:5001/api/roles");
+
+      setRoles(response.data);
+    } catch (error) {
+      console.log("Error fetching roles:", error);
+    }
+  };
 
   useEffect(() => {
     fetchUsers();
+    fetchRoles();
   }, []);
 
   const getNextEmpCode = () => {
@@ -44,7 +55,7 @@ function Users() {
     name: "",
     email: "",
     mobile: "",
-    role: "User",
+    role: "",
     status: "Active",
     password: "",
   });
@@ -62,7 +73,7 @@ function Users() {
       name: "",
       email: "",
       mobile: "",
-      role: "User",
+      role: "",
       status: "Active",
       password: "",
     });
@@ -80,7 +91,7 @@ function Users() {
 
     try {
       const payload = {
-        RID: formData.role === "Admin" ? 1 : 2,
+        RID: Number(formData.role),
         Emp_Code: formData.empCode,
         Emp_Name: formData.name,
         Mail_ID: formData.email,
@@ -112,7 +123,7 @@ function Users() {
       name: user.Emp_Name,
       email: user.Mail_ID,
       mobile: user.Mobile_No,
-      role: user.RID === 1 ? "Admin" : "User",
+      role: user.RID.toString(),
       status: Number(user.Active_Status) === 1 ? "Active" : "Inactive",
       password: "",
     });
@@ -188,8 +199,9 @@ function Users() {
                 <td>{user.Mobile_No}</td>
 
                 <td>
-                  <span className={user.RID === 1 ? "role admin" : "role user"}>
-                    {user.RID === 1 ? "Admin" : "User"}
+                  <span className="role user">
+                    {roles.find((role) => role.RID === user.RID)?.Role_Name ||
+                      "No Role"}
                   </span>
                 </td>
 
@@ -254,9 +266,15 @@ function Users() {
                     name="role"
                     value={formData.role}
                     onChange={handleChange}
+                    required
                   >
-                    <option>Admin</option>
-                    <option>User</option>
+                    <option value="">Select Role</option>
+
+                    {roles.map((role) => (
+                      <option key={role.RID} value={role.RID}>
+                        {role.Role_Name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
