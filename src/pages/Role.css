@@ -136,9 +136,9 @@ tbody tr:hover {
 }
 
 .modal {
-  width: 650px;
+  width: 860px;
   background: white;
-  border-radius: 18px;
+  border-radius: 20px;
   overflow: hidden;
 }
 
@@ -146,66 +146,50 @@ tbody tr:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 25px 30px;
   border-bottom: 1px solid #e2e8f0;
 }
 
-.modal-body {
-  padding: 25px;
-  
+.form-body {
+  padding: 40px 60px;
 }
+
 .form-row {
   display: flex;
   align-items: center;
-  
-  margin-bottom: 22px;
+  margin-bottom: 35px;
 }
 
 .form-row label {
-  width: 140px;
-
+  width: 220px;
+  min-width: 220px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   color: #000;
-  
 }
 
 .form-row input,
 .form-row select {
-  width: 350px;
-  height: 45px;
-  padding: 0 12px;
+  width: 560px;
+  height: 48px;
+  padding: 0 16px;
   border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
 }
 
 .form-row input:focus,
 .form-row select:focus {
   border-color: #8b5cf6;
 }
-.modal-body label {
-  display: block;
-  text-align: left;
-  font-size: 14px;
-  font-weight: 600;
-  color: #000000;
-  margin-bottom: 6px;
-}
-
-.modal-body input,
-.modal-body select {
-  padding: 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  outline: none;
-}
 
 .modal-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 15px;
+  gap: 16px;
+  padding: 25px 30px;
+  border-top: 1px solid #e2e8f0;
 }
 
 .save-btn {
