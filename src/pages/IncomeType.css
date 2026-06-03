@@ -3,7 +3,66 @@
     padding: 0;
     box-sizing: border-box;
 }
+.form-layout {
+    padding: 25px;
+}
 
+.form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.form-row label {
+    width: 180px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+}
+
+.form-row input,
+.form-row select {
+    flex: 1;
+    height: 48px;
+    padding: 0 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+}
+
+.form-row input:focus,
+.form-row select:focus {
+    border-color: #8b5cf6;
+}
+
+.modal-buttons {
+    border-top: 1px solid #e2e8f0;
+    padding: 25px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.cancel-btn {
+    background: #dbe2ea;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.save-btn {
+    background: linear-gradient(135deg,#8b5cf6,#7c3aed);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
 .income-page {
     width: 100%;
     min-height: calc(100vh - 60px);

@@ -212,9 +212,9 @@ function IncomeType() {
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="form-grid">
-                <div className="form-group full-width">
-                  <label>INCOME TYPE</label>
+              <div className="form-layout">
+                <div className="form-row">
+                  <label>INCOME TYPE :</label>
 
                   <input
                     type="text"
@@ -226,8 +226,8 @@ function IncomeType() {
                   />
                 </div>
 
-                <div className="form-group">
-                  <label>STATUS</label>
+                <div className="form-row">
+                  <label>STATUS :</label>
 
                   <select
                     name="activeStatus"
@@ -235,24 +235,22 @@ function IncomeType() {
                     onChange={handleChange}
                   >
                     <option value={1}>Active</option>
-
                     <option value={0}>Inactive</option>
                   </select>
                 </div>
               </div>
-
               <div className="modal-buttons">
-                <button type="submit" className="save-btn">
-                  <FaSave />
-                  Save
-                </button>
-
                 <button
                   type="button"
                   className="cancel-btn"
                   onClick={() => setShowModal(false)}
                 >
                   Cancel
+                </button>
+
+                <button type="submit" className="save-btn">
+                  <FaSave />
+                  Save
                 </button>
               </div>
             </form>
