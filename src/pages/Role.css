@@ -218,23 +218,6 @@ td:nth-child(5) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-<<<<<<< HEAD
-  padding: 18px 20px;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.form-row {
-  display: flex;
-  align-items: center;
-  gap: 25px;
-  padding: 15px 25px;
-}
-
-.form-row label {
-  width: 150px;
-  font-size: 15px;
-  font-weight: 600;
-=======
   padding: 25px 30px;
   border-bottom: 1px solid #e2e8f0;
 }
@@ -254,27 +237,17 @@ td:nth-child(5) {
   min-width: 220px;
   font-size: 16px;
   font-weight: 700;
->>>>>>> 9ab75f092b01a7c0a9522de102540c2b7de56e4f
   color: #000;
 }
 
 .form-row input,
 .form-row select {
-<<<<<<< HEAD
-  flex: 1;
-  height: 42px;
-  padding: 0 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 14px;
-=======
   width: 560px;
   height: 48px;
   padding: 0 16px;
   border: 1px solid #cbd5e1;
   border-radius: 10px;
   font-size: 15px;
->>>>>>> 9ab75f092b01a7c0a9522de102540c2b7de56e4f
   outline: none;
 }
 
@@ -286,14 +259,9 @@ td:nth-child(5) {
 .modal-buttons {
   display: flex;
   justify-content: flex-end;
-<<<<<<< HEAD
-  gap: 10px;
-  padding: 20px;
-=======
   gap: 16px;
   padding: 25px 30px;
   border-top: 1px solid #e2e8f0;
->>>>>>> 9ab75f092b01a7c0a9522de102540c2b7de56e4f
 }
 
 .save-btn {
