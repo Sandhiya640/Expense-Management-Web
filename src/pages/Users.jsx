@@ -79,15 +79,15 @@ function Users() {
     e.preventDefault();
 
     try {
-     const payload = {
-       RID: formData.role === "Admin" ? 1 : 2,
-       Emp_Code: formData.empCode,
-       Emp_Name: formData.name,
-       Mail_ID: formData.email,
-       Mobile_No: formData.mobile,
-       Password: formData.password,
-       Active_Status: formData.status === "Active" ? 1 : 0,
-     };
+      const payload = {
+        RID: formData.role === "Admin" ? 1 : 2,
+        Emp_Code: formData.empCode,
+        Emp_Name: formData.name,
+        Mail_ID: formData.email,
+        Mobile_No: formData.mobile,
+        Password: formData.password,
+        Active_Status: formData.status === "Active" ? 1 : 0,
+      };
       if (editUser) {
         await axios.put(`${API_URL}/${editUser.UID}`, payload);
       } else {
@@ -104,44 +104,44 @@ function Users() {
     }
   };
 
- const handleEdit = (user) => {
-   setEditUser(user);
+  const handleEdit = (user) => {
+    setEditUser(user);
 
-   setFormData({
-     empCode: user.Emp_Code,
-     name: user.Emp_Name,
-     email: user.Mail_ID,
-     mobile: user.Mobile_No,
-     role: user.RID === 1 ? "Admin" : "User",
-     status: Number(user.Active_Status) === 1 ? "Active" : "Inactive",
-     password: "",
-   });
+    setFormData({
+      empCode: user.Emp_Code,
+      name: user.Emp_Name,
+      email: user.Mail_ID,
+      mobile: user.Mobile_No,
+      role: user.RID === 1 ? "Admin" : "User",
+      status: Number(user.Active_Status) === 1 ? "Active" : "Inactive",
+      password: "",
+    });
 
-   setShowModal(true);
- };
+    setShowModal(true);
+  };
 
- const handleDelete = async (id) => {
-   if (!window.confirm("Delete this user?")) return;
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this user?")) return;
 
-   try {
-     await axios.delete(`${API_URL}/${id}`);
+    try {
+      await axios.delete(`${API_URL}/${id}`);
 
-     fetchUsers();
-   } catch (error) {
-     console.log(error);
-   }
- };
+      fetchUsers();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const filteredUsers = users.filter((user) => {
-  const value = search.toLowerCase();
+    const value = search.toLowerCase();
 
-  return (
-    user.Emp_Name?.toLowerCase().includes(value) ||
-    user.Emp_Code?.toLowerCase().includes(value) ||
-    user.Mail_ID?.toLowerCase().includes(value) ||
-    user.Mobile_No?.includes(value)
-  );
-});
+    return (
+      user.Emp_Name?.toLowerCase().includes(value) ||
+      user.Emp_Code?.toLowerCase().includes(value) ||
+      user.Mail_ID?.toLowerCase().includes(value) ||
+      user.Mobile_No?.includes(value)
+    );
+  });
 
   return (
     <div className="users-page">
