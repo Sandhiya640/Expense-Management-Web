@@ -198,27 +198,40 @@ const filteredRoles = roles.filter(
                 }}
               />
             </div>
-            <div className="form-body">
-              <div className="form-row">
-                <label>ROLE NAME :</label>
-                <input
-                  type="text"
-                  value={roleName}
-                  placeholder="Enter role name"
-                  onChange={(e) => setRoleName(e.target.value)}
-                />
-              </div>
+            <div className="form-row">
+              <label>ROLE NAME :</label>
+              <input
+                type="text"
+                value={roleName}
+                placeholder="Enter role name"
+                onChange={(e) => setRoleName(e.target.value)}
+              />
+            </div>
 
-              <div className="form-row">
-                <label>STATUS :</label>
-                <select
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                >
-                  <option>Active</option>
-                  <option>Inactive</option>
-                </select>
-              </div>
+            <div className="form-row">
+              <label>STATUS :</label>
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+              >
+                <option>Active</option>
+                <option>Inactive</option>
+              </select>
+            </div>
+            <div className="modal-buttons">
+              <button
+                className="cancel-btn"
+                onClick={() => {
+                  setShowModal(false);
+                  setEditData(null);
+                }}
+              >
+                Cancel
+              </button>
+
+              <button className="save-btn" onClick={saveRole}>
+                <FaSave /> Save
+              </button>
             </div>
             <div className="modal-buttons">
               <button
