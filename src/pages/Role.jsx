@@ -198,7 +198,6 @@ const filteredRoles = roles.filter(
                 }}
               />
             </div>
-<<<<<<< HEAD
             <div className="form-row">
               <label>ROLE NAME :</label>
               <input
@@ -233,29 +232,6 @@ const filteredRoles = roles.filter(
               <button className="save-btn" onClick={saveRole}>
                 <FaSave /> Save
               </button>
-=======
-            <div className="form-body">
-              <div className="form-row">
-                <label>ROLE NAME :</label>
-                <input
-                  type="text"
-                  value={roleName}
-                  placeholder="Enter role name"
-                  onChange={(e) => setRoleName(e.target.value)}
-                />
-              </div>
-
-              <div className="form-row">
-                <label>STATUS :</label>
-                <select
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                >
-                  <option>Active</option>
-                  <option>Inactive</option>
-                </select>
-              </div>
->>>>>>> 9ab75f092b01a7c0a9522de102540c2b7de56e4f
             </div>
             <div className="modal-buttons">
               <button
