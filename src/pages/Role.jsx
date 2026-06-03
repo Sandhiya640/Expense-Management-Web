@@ -5,30 +5,31 @@ import {
   addRole,
   updateRole,
   deleteRole,
-} from "../service/roleService";import { FaPlus, FaEdit, FaTrash, FaTimes, FaSave } from "react-icons/fa";
+} from "../service/roleService";
+import { FaPlus, FaEdit, FaTrash, FaTimes, FaSave } from "react-icons/fa";
 function Role() {
   const [showModal, setShowModal] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
 
- const [roles, setRoles] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [editData, setEditData] = useState(null);
 
   const [roleName, setRoleName] = useState("");
 
   const [status, setStatus] = useState("Active");
- useEffect(() => {
-   fetchRoles();
- }, []);
+  useEffect(() => {
+    fetchRoles();
+  }, []);
 
-const fetchRoles = async () => {
-  try {
-    const response = await getRoles();
-    setRoles(response.data);
-  } catch (error) {
-    console.error("Error loading roles:", error);
-  }
-};
+  const fetchRoles = async () => {
+    try {
+      const response = await getRoles();
+      setRoles(response.data);
+    } catch (error) {
+      console.error("Error loading roles:", error);
+    }
+  };
   const openAddModal = () => {
     setEditData(null);
 
@@ -49,60 +50,60 @@ const fetchRoles = async () => {
     setShowModal(true);
   };
 
- const saveRole = async () => {
-   if (!roleName.trim()) {
-     alert("Role Name Required");
-     return;
-   }
+  const saveRole = async () => {
+    if (!roleName.trim()) {
+      alert("Role Name Required");
+      return;
+    }
 
-   try {
-     if (editData) {
-       await updateRole(editData.RID, {
-         Role_Name: roleName,
-         Active_Status: status === "Active",
-       });
-     } else {
-       await addRole({
-         Role_Name: roleName,
-         Active_Status: status === "Active",
-       });
-     }
+    try {
+      if (editData) {
+        await updateRole(editData.RID, {
+          Role_Name: roleName,
+          Active_Status: status === "Active",
+        });
+      } else {
+        await addRole({
+          Role_Name: roleName,
+          Active_Status: status === "Active",
+        });
+      }
 
-     await fetchRoles();
+      await fetchRoles();
 
-     setRoleName("");
-     setStatus("Active");
-     setEditData(null);
-     setShowModal(false);
-   } catch (error) {
-     console.error("Save Error:", error);
-   }
- };
-const handleDelete = async (rid) => {
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete this role?",
+      setRoleName("");
+      setStatus("Active");
+      setEditData(null);
+      setShowModal(false);
+    } catch (error) {
+      console.error("Save Error:", error);
+    }
+  };
+  const handleDelete = async (rid) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this role?",
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await deleteRole(rid);
+
+      await fetchRoles();
+
+      alert("Role deleted successfully");
+    } catch (error) {
+      console.error("Delete Error:", error);
+    }
+  };
+  const filteredRoles = roles.filter(
+    (role) =>
+      role.Role_Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(role.RID).includes(searchTerm) ||
+      (role.Active_Status ? "active" : "inactive").includes(
+        searchTerm.toLowerCase(),
+      ),
   );
-
-  if (!confirmDelete) return;
-
-  try {
-    await deleteRole(rid);
-
-    await fetchRoles();
-
-    alert("Role deleted successfully");
-  } catch (error) {
-    console.error("Delete Error:", error);
-  }
-};
-const filteredRoles = roles.filter(
-  (role) =>
-    role.Role_Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    String(role.RID).includes(searchTerm) ||
-    (role.Active_Status ? "active" : "inactive").includes(
-      searchTerm.toLowerCase(),
-    ),
-);
 
   return (
     <div className="role-page">
@@ -217,21 +218,6 @@ const filteredRoles = roles.filter(
                 <option>Active</option>
                 <option>Inactive</option>
               </select>
-            </div>
-            <div className="modal-buttons">
-              <button
-                className="cancel-btn"
-                onClick={() => {
-                  setShowModal(false);
-                  setEditData(null);
-                }}
-              >
-                Cancel
-              </button>
-
-              <button className="save-btn" onClick={saveRole}>
-                <FaSave /> Save
-              </button>
             </div>
             <div className="modal-buttons">
               <button
