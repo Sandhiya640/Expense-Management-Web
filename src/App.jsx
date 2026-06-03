@@ -10,7 +10,7 @@ import Users from "./pages/Users";
 import ExpenseCategory from "./pages/ExpenseCategory";
 import LoanTransaction from "./pages/LoanTransaction";
 import IncomeType from "./pages/IncomeType";
-import IncomeTransactions from "./pages/IncomeTransactions"
+import IncomeTransactions from "./pages/IncomeTransactions";
 
 function App() {
   return (
