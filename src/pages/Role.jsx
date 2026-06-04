@@ -157,8 +157,8 @@ function Role() {
                 </td>
 
                 <td>
-                  {role.Created_on
-                    ? new Date(role.Created_on).toLocaleDateString()
+                  {role.Created_On
+                    ? new Date(role.Created_On).toLocaleDateString()
                     : ""}
                 </td>
 
@@ -171,8 +171,8 @@ function Role() {
                     className="edit-btn delete-icon-btn"
                     onClick={() => handleDelete(role.RID)}
                     style={{ marginLeft: "10px" }}
-                  >
-                    <FaTrash />
+                  ><FaTrash style={{ color: "#ef4444" }} />
+                   
                   </button>
                 </td>
               </tr>
