@@ -1,138 +1,111 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./IncomeType.css";
-import { FaPlus, FaEdit, FaTimes, FaSave } from "react-icons/fa";
+import { FaPlus, FaEdit, FaTimes, FaSave, FaTrash } from "react-icons/fa";
 
+const API_URL = "http://localhost:5001/api/income-types";
 function IncomeType() {
-  const [incomeTypes, setIncomeTypes] = useState([
-    {
-      itId: 1,
-      incomeType: "Salary",
-      activeStatus: 1,
-      createdOn: "2026-05-25 17:18:52",
-      createdBy: "Admin",
-      modifiedBy: null,
-      modifiedOn: null,
-    },
-    {
-      itId: 2,
-      incomeType: "Freelancing",
-      activeStatus: 1,
-      createdOn: "2026-05-25 17:18:52",
-      createdBy: "Admin",
-      modifiedBy: null,
-      modifiedOn: null,
-    },
-    {
-      itId: 3,
-      incomeType: "Business",
-      activeStatus: 1,
-      createdOn: "2026-05-25 17:18:52",
-      createdBy: "Admin",
-      modifiedBy: null,
-      modifiedOn: null,
-    },
-    {
-      itId: 4,
-      incomeType: "Rental Income",
-      activeStatus: 1,
-      createdOn: "2026-05-25 17:18:52",
-      createdBy: "Admin",
-      modifiedBy: null,
-      modifiedOn: null,
-    },
-  ]);
+  const [incomeTypes, setIncomeTypes] = useState([]);
 
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState("");
   const [editIncomeType, setEditIncomeType] = useState(null);
 
-  const [formData, setFormData] = useState({
-    incomeType: "",
-    activeStatus: 1,
-  });
+const [formData, setFormData] = useState({
+  incomeType: "",
+  activeStatus: "Active",
+});
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]:
-        e.target.name === "activeStatus"
-          ? Number(e.target.value)
-          : e.target.value,
-    });
+  const fetchIncomeTypes = async () => {
+    try {
+      const response = await axios.get(API_URL);
+      setIncomeTypes(response.data);
+    } catch (error) {
+      console.log("Error fetching income types:", error);
+    }
   };
 
-  const resetForm = () => {
-    setFormData({
-      incomeType: "",
-      activeStatus: 1,
-    });
+  useEffect(() => {
+    fetchIncomeTypes();
+  }, []);
 
-    setEditIncomeType(null);
-  };
+ const handleChange = (e) => {
+   setFormData({
+     ...formData,
+     [e.target.name]: e.target.value,
+   });
+ };
+
+ const resetForm = () => {
+   setFormData({
+     incomeType: "",
+     activeStatus: "Active",
+   });
+
+   setEditIncomeType(null);
+ };
 
   const openAddModal = () => {
     resetForm();
     setShowModal(true);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (editIncomeType) {
-      setIncomeTypes(
-        incomeTypes.map((item) =>
-          item.itId === editIncomeType.itId
-            ? {
-                ...item,
-                incomeType: formData.incomeType,
-                activeStatus: formData.activeStatus,
-                modifiedBy: "Admin",
-                modifiedOn: new Date().toLocaleString(),
-              }
-            : item,
-        ),
-      );
-    } else {
-      const newIncomeType = {
-        itId:
-          incomeTypes.length > 0
-            ? Math.max(...incomeTypes.map((item) => item.itId)) + 1
-            : 1,
-
-        incomeType: formData.incomeType,
-        activeStatus: formData.activeStatus,
-        createdOn: new Date().toLocaleString(),
-        createdBy: "Admin",
-        modifiedBy: null,
-        modifiedOn: null,
+    try {
+      const payload = {
+        Income_Type: formData.incomeType,
+        Active_Status: formData.activeStatus === "Active" ? 1 : 0,
       };
 
-      setIncomeTypes([...incomeTypes, newIncomeType]);
+      if (editIncomeType) {
+        await axios.put(`${API_URL}/${editIncomeType.IT_ID}`, payload);
+      } else {
+        await axios.post(API_URL, payload);
+      }
+
+      await fetchIncomeTypes();
+
+      setShowModal(false);
+      resetForm();
+    } catch (error) {
+      console.log(error);
+      alert("Operation Failed");
     }
-
-    setShowModal(false);
-    resetForm();
   };
 
-  const handleEdit = (item) => {
-    setEditIncomeType(item);
+const handleEdit = (item) => {
+  setEditIncomeType(item);
 
-    setFormData({
-      incomeType: item.incomeType,
-      activeStatus: item.activeStatus,
-    });
-
-    setShowModal(true);
-  };
-
-  const filteredIncomeTypes = incomeTypes.filter((item) => {
-    const value = search.toLowerCase();
-
-    return (
-      item.incomeType.toLowerCase().includes(value) ||
-      item.createdBy.toLowerCase().includes(value)
-    );
+  setFormData({
+    incomeType: item.Income_Type,
+    activeStatus: Number(item.Active_Status) === 1 ? "Active" : "Inactive",
   });
+
+  setShowModal(true);
+};
+
+const handleDelete = async (id) => {
+  if (!window.confirm("Delete this income type?")) return;
+
+  try {
+    await axios.delete(`${API_URL}/${id}`);
+
+    fetchIncomeTypes();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const filteredIncomeTypes = incomeTypes.filter((item) => {
+  const value = search.toLowerCase();
+
+  return (
+    item.IT_ID?.toString().includes(value) ||
+    item.Income_Type?.toLowerCase().includes(value)
+  );
+});
 
   return (
     <div className="income-page">
@@ -170,28 +143,36 @@ function IncomeType() {
 
           <tbody>
             {filteredIncomeTypes.map((item) => (
-              <tr key={item.itId}>
-                <td>{item.itId}</td>
+              <tr key={item.IT_ID}>
+                <td>{item.IT_ID}</td>
 
-                <td>{item.incomeType}</td>
+                <td>{item.Income_Type}</td>
 
                 <td>
                   <span
                     className={
-                      item.activeStatus === 1
+                      Number(item.Active_Status) === 1
                         ? "status active"
                         : "status inactive"
                     }
                   >
-                    {item.activeStatus === 1 ? "Active" : "Inactive"}
+                    {Number(item.Active_Status) === 1 ? "Active" : "Inactive"}
                   </span>
                 </td>
 
-                <td>{item.createdBy}</td>
+                <td>{item.Created_By}</td>
 
                 <td>
                   <button className="edit-btn" onClick={() => handleEdit(item)}>
                     <FaEdit />
+                  </button>
+
+                  <button
+                    className="edit-btn"
+                    onClick={() => handleDelete(item.IT_ID)}
+                    style={{ marginLeft: "10px" }}
+                  >
+                    <FaTrash style={{ color: "#ef4444" }} />
                   </button>
                 </td>
               </tr>
@@ -206,7 +187,13 @@ function IncomeType() {
             <div className="modal-header">
               <h2>{editIncomeType ? "Edit Income Type" : "Add Income Type"}</h2>
 
-              <button className="close-btn" onClick={() => setShowModal(false)}>
+              <button
+                className="close-btn"
+                onClick={() => {
+                  setShowModal(false);
+                  resetForm();
+                }}
+              >
                 <FaTimes />
               </button>
             </div>
@@ -234,8 +221,8 @@ function IncomeType() {
                     value={formData.activeStatus}
                     onChange={handleChange}
                   >
-                    <option value={1}>Active</option>
-                    <option value={0}>Inactive</option>
+                    <option>Active</option>
+                    <option>Inactive</option>
                   </select>
                 </div>
               </div>
@@ -243,7 +230,10 @@ function IncomeType() {
                 <button
                   type="button"
                   className="cancel-btn"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => {
+                    setShowModal(false);
+                    resetForm();
+                  }}
                 >
                   Cancel
                 </button>

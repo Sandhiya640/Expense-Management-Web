@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./Sidebar.css";
+import "./Topbar.css";
 import {
   MdDashboard,
   MdKeyboardArrowDown,
@@ -87,7 +87,7 @@ const SETTINGS_SECTIONS = [
   },
 ];
 
-function Sidebar() {
+function Topbar() {
   const [activeMenu, setActiveMenu] = useState(null);
   const [showProfile, setShowProfile] = useState(false);
   const [showNotif, setShowNotif] = useState(false);
@@ -167,7 +167,6 @@ function Sidebar() {
 
   return (
     <div className="top-navbar">
-      {/* ── Logo ── */}
       <div className="nav-left">
         <div className="logo-box">
           <img
@@ -183,7 +182,6 @@ function Sidebar() {
 
       <div className="nav-divider" />
 
-      {/* ── Nav links ── */}
       <div className="nav-menu" ref={menuRef}>
         <Link to="/" className="nav-link">
           <div
@@ -282,9 +280,7 @@ function Sidebar() {
         </Link>
       </div>
 
-      {/* ── Right zone ── */}
       <div className="nav-right">
-        {/* Search bar — functional input */}
         <div
           className={`search-bar ${searchFocused ? "search-bar--focused" : ""}`}
         >
@@ -306,7 +302,6 @@ function Sidebar() {
           <kbd className="search-kbd">⌘K</kbd>
         </div>
 
-        {/* Notification bell */}
         <div className="icon-btn" ref={notifRef} onClick={openNotif}>
           <MdOutlineNotifications />
           {unreadCount > 0 && (
@@ -354,7 +349,6 @@ function Sidebar() {
           )}
         </div>
 
-        {/* Settings */}
         <div className="icon-btn" ref={settingsRef} onClick={openSettings}>
           <MdSettings />
           {showSettings && (
@@ -410,4 +404,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default Topbar;
