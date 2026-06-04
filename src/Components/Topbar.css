@@ -194,7 +194,6 @@ body {
   color: #38bdf8;
 }
 
-/* â”€â”€ Right zone â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .nav-right {
   margin-left: auto;
   display: flex;
@@ -288,7 +287,6 @@ body {
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* Notification badge */
 .notif-badge {
   position: absolute;
   top: -4px;
@@ -352,7 +350,6 @@ body {
   padding: 24px 14px;
 }
 
-/* â”€â”€ Notification panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .notif-panel {
   right: -60px;
   width: 320px;

@@ -167,11 +167,9 @@ tbody tr:hover {
   padding-bottom: 10px;
 }
 
-.modal-header h2 {
-  font-weight: 700;
-}
 
 .modal-header h2 {
+  font-weight: 700;
   font-size: 24px;
   color: #1f1f5c;
 }

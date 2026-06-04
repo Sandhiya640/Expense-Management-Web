@@ -179,6 +179,7 @@ tbody tr:hover {
   border-radius: 20px;
   overflow: hidden;
   padding-bottom:  10px !important;
+  padding: 20px;
 }
 
 .modal-header {
