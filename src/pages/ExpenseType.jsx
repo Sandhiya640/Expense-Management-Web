@@ -1,43 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
 import "./ExpenseType.css";
 
-import { FaPlus, FaEdit, FaTimes, FaSave } from "react-icons/fa";
+import {
+  getExpenseTypes,
+  addExpenseType,
+  updateExpenseType,
+  deleteExpenseType,
+} from "../service/expenseTypeService";
+
+import { FaPlus, FaEdit, FaTrash, FaTimes, FaSave } from "react-icons/fa";
 
 function ExpenseType() {
   const [showModal, setShowModal] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [expenseTypes, setExpenseTypes] = useState([
-    {
-      etId: 1,
-      ecId: 1,
-      expenseName: "Breakfast",
-      status: "Active",
-      createdBy: "Admin",
-    },
-    {
-      etId: 2,
-      ecId: 1,
-      expenseName: "Lunch",
-      status: "Active",
-      createdBy: "User",
-    },
-    {
-      etId: 3,
-      ecId: 2,
-      expenseName: "Bus Ticket",
-      status: "Active",
-      createdBy: "Admin",
-    },
-    {
-      etId: 4,
-      ecId: 2,
-      expenseName: "Train Ticket",
-      status: "Active",
-      createdBy: "Admin",
-    },
-  ]);
+  const [expenseTypes, setExpenseTypes] = useState([]);
 
   const [editData, setEditData] = useState(null);
 
@@ -46,6 +25,20 @@ function ExpenseType() {
   const [editCategoryId, setEditCategoryId] = useState("");
 
   const [editStatus, setEditStatus] = useState("Active");
+
+  useEffect(() => {
+    fetchExpenseTypes();
+  }, []);
+
+  const fetchExpenseTypes = async () => {
+    try {
+      const response = await getExpenseTypes();
+
+      setExpenseTypes(response.data);
+    } catch (error) {
+      console.error("Error loading expense types:", error);
+    }
+  };
 
   const openAddModal = () => {
     setEditData(null);
@@ -62,65 +55,79 @@ function ExpenseType() {
   const handleEdit = (item) => {
     setEditData(item);
 
-    setEditExpenseName(item.expenseName);
+    setEditCategoryId(item.EC_ID);
 
-    setEditCategoryId(item.ecId);
+    setEditExpenseName(item.Expense_Name);
 
-    setEditStatus(item.status);
+    setEditStatus(item.Active_Status ? "Active" : "Inactive");
 
     setShowModal(true);
   };
 
-  const saveExpenseType = () => {
-    if (editExpenseName.trim() === "" || editCategoryId === "") {
-      alert("All fields required");
+  const saveExpenseType = async () => {
+    if (!editExpenseName.trim() || !editCategoryId) {
+      alert("All fields are required");
       return;
     }
 
-    if (editData) {
-      const updatedList = expenseTypes.map((item) =>
-        item.etId === editData.etId
-          ? {
-              ...item,
-              ecId: editCategoryId,
-              expenseName: editExpenseName,
-              status: editStatus,
-            }
-          : item,
-      );
+    const payload = {
+      EC_ID: parseInt(editCategoryId),
+      Expense_Name: editExpenseName,
+      Active_Status: editStatus === "Active",
+    };
 
-      setExpenseTypes(updatedList);
-    } else {
-      const newExpense = {
-        etId: expenseTypes.length + 1,
-        ecId: editCategoryId,
-        expenseName: editExpenseName,
-        status: editStatus,
-        createdBy: "Admin",
-      };
+    try {
+      if (editData) {
+        await updateExpenseType(editData.ET_ID, payload);
+      } else {
+        await addExpenseType(payload);
+      }
 
-      setExpenseTypes([...expenseTypes, newExpense]);
+      await fetchExpenseTypes();
+
+      setShowModal(false);
+
+      setEditData(null);
+
+      setEditExpenseName("");
+
+      setEditCategoryId("");
+
+      setEditStatus("Active");
+    } catch (error) {
+      console.error("Save Error:", error);
     }
-
-    setShowModal(false);
-
-    setEditData(null);
-
-    setEditExpenseName("");
-
-    setEditCategoryId("");
-
-    setEditStatus("Active");
   };
 
-  const filteredExpenseTypes = expenseTypes.filter((item) =>
-    item.expenseName.toLowerCase().includes(searchTerm.toLowerCase()),
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this Expense Type?",
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await deleteExpenseType(id);
+
+      await fetchExpenseTypes();
+
+      alert("Expense Type deleted successfully");
+    } catch (error) {
+      console.error("Delete Error:", error);
+    }
+  };
+
+  const filteredExpenseTypes = expenseTypes.filter(
+    (item) =>
+      item.Expense_Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(item.ET_ID).includes(searchTerm) ||
+      String(item.EC_ID).includes(searchTerm),
   );
 
   return (
     <div className="expense-page">
       <div className="expense-header">
-        <h2>ExpenseType Management</h2>
+        <h2>Expense Type Management</h2>
       </div>
 
       <div className="expense-card">
@@ -148,36 +155,44 @@ function ExpenseType() {
               <th>EXPENSE NAME</th>
               <th>STATUS</th>
               <th>CREATED BY</th>
-              <th>ACTION</th>
+              <th>ACTIONS</th>
             </tr>
           </thead>
 
           <tbody>
             {filteredExpenseTypes.map((item) => (
-              <tr key={item.etId}>
-                <td>{item.etId}</td>
+              <tr key={item.ET_ID}>
+                <td>{item.ET_ID}</td>
 
-                <td>{item.ecId}</td>
+                <td>{item.EC_ID}</td>
 
-                <td>{item.expenseName}</td>
+                <td>{item.Expense_Name}</td>
 
                 <td>
                   <span
                     className={
-                      item.status === "Active"
-                        ? "status active"
-                        : "status inactive"
+                      item.Active_Status ? "status active" : "status inactive"
                     }
                   >
-                    {item.status}
+                    {item.Active_Status ? "Active" : "Inactive"}
                   </span>
                 </td>
 
-                <td>{item.createdBy}</td>
+                <td>{item.Created_by}</td>
 
                 <td>
                   <button className="edit-btn" onClick={() => handleEdit(item)}>
                     <FaEdit />
+                  </button>
+
+                  <button
+                    className="edit-btn delete-icon-btn"
+                    style={{
+                      marginLeft: "10px",
+                    }}
+                    onClick={() => handleDelete(item.ET_ID)}
+                  >
+                    <FaTrash />
                   </button>
                 </td>
               </tr>
@@ -193,62 +208,64 @@ function ExpenseType() {
               <h2>{editData ? "Edit Expense Type" : "Add Expense Type"}</h2>
 
               <FaTimes
-                className="close-icon"
+                style={{
+                  cursor: "pointer",
+                }}
                 onClick={() => {
                   setShowModal(false);
                   setEditData(null);
                 }}
               />
             </div>
+<div className="form-layout">
+            <div className="form-row">
+              <label>CATEGORY ID :</label>
 
-            <div className="modal-body">
-              <div className="form-row">
-                <label>CATEGORY ID :</label>
-                <input
-                  type="number"
-                  value={editCategoryId}
-                  placeholder="Enter category id"
-                  onChange={(e) => setEditCategoryId(e.target.value)}
-                />
-              </div>
+              <input
+                type="number"
+                value={editCategoryId}
+                onChange={(e) => setEditCategoryId(e.target.value)}
+              />
+            </div>
 
-              <div className="form-row">
-                <label>EXPENSE NAME :</label>
-                <input
-                  type="text"
-                  value={editExpenseName}
-                  placeholder="Enter expense name"
-                  onChange={(e) => setEditExpenseName(e.target.value)}
-                />
-              </div>
+            <div className="form-row">
+              <label>EXPENSE NAME :</label>
 
-              <div className="form-row">
-                <label>STATUS :</label>
-                <select
-                  value={editStatus}
-                  onChange={(e) => setEditStatus(e.target.value)}
-                >
-                  <option>Active</option>
-                  <option>Inactive</option>
-                </select>
-              </div>
+              <input
+                type="text"
+                value={editExpenseName}
+                onChange={(e) => setEditExpenseName(e.target.value)}
+              />
+            </div>
 
-              <div className="modal-buttons">
-                <button
-                  className="cancel-btn"
-                  onClick={() => {
-                    setShowModal(false);
-                    setEditData(null);
-                  }}
-                >
-                  Cancel
-                </button>
+            <div className="form-row">
+              <label>STATUS :</label>
 
-                <button className="save-btn" onClick={saveExpenseType}>
-                  <FaSave />
-                  Save
-                </button>
-              </div>
+              <select
+                value={editStatus}
+                onChange={(e) => setEditStatus(e.target.value)}
+              >
+                <option>Active</option>
+
+                <option>Inactive</option>
+              </select>
+            </div>
+</div>
+            <div className="modal-buttons">
+              <button
+                className="cancel-btn"
+                onClick={() => {
+                  setShowModal(false);
+                  setEditData(null);
+                }}
+              >
+                Cancel
+              </button>
+
+              <button className="save-btn" onClick={saveExpenseType}>
+                <FaSave />
+                Save
+              </button>
             </div>
           </div>
         </div>

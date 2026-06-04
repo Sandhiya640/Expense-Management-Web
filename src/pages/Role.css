@@ -132,7 +132,7 @@ tbody tr:hover {
   height: 40px;
   border-radius: 10px;
   border: 1px solid #dbe2ea;
-  background: red;
+  background: white;
   color: #475569;
   cursor: pointer;
 }
@@ -178,7 +178,7 @@ tbody tr:hover {
   background: white;
   border-radius: 20px;
   overflow: hidden;
-  padding-bottom: 10px;
+  padding-bottom:  10px !important;
 }
 
 .modal-header {
