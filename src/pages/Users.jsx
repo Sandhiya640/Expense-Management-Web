@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Users.css";
-import { FaPlus, FaSearch, FaEdit, FaTimes, FaSave } from "react-icons/fa";
+import { FaPlus, FaSearch, FaEdit, FaTimes, FaSave, FaTrash } from "react-icons/fa";
 
 const API_URL = "http://localhost:5001/api/users";
 
@@ -227,7 +227,7 @@ function Users() {
                     onClick={() => handleDelete(user.UID)}
                     style={{ marginLeft: "10px" }}
                   >
-                    <FaTimes />
+                    <FaTrash style={{ color: "#ef4444" }} />
                   </button>
                 </td>
               </tr>

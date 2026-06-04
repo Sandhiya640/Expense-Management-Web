@@ -1,53 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./ExpenseCategory.css";
-import { FaPlus, FaEdit, FaTimes, FaSave } from "react-icons/fa";
+import { FaPlus, FaEdit, FaTimes, FaSave, FaTrash } from "react-icons/fa";
+
+const API_URL = "http://localhost:5001/api/expense-categories";
 
 function ExpenseCategory() {
-  const [categories, setCategories] = useState([
-    {
-      id: 1,
-      ecId: 1,
-      name: "Food",
-      status: "Active",
-      createdBy: "Admin",
-    },
-    {
-      id: 2,
-      ecId: 2,
-      name: "Travel",
-      status: "Active",
-      createdBy: "Admin",
-    },
-    {
-      id: 3,
-      ecId: 3,
-      name: "Shopping",
-      status: "Active",
-      createdBy: "Admin",
-    },
-    {
-      id: 4,
-      ecId: 4,
-      name: "Medical",
-      status: "Active",
-      createdBy: "Admin",
-    },
-  ]);
+  const [categories, setCategories] = useState([]);
 
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editCategory, setEditCategory] = useState(null);
 
-  const getNextId = () => {
-    return categories.length + 1;
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(API_URL);
+
+      setCategories(response.data);
+    } catch (error) {
+      console.log("Error fetching categories:", error);
+    }
   };
 
-  const [formData, setFormData] = useState({
-    ecId: getNextId(),
-    name: "",
-    status: "Active",
-    createdBy: "Admin",
-  });
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const getNextId = () => {
+    return categories.length > 0
+      ? Math.max(...categories.map((c) => c.EC_ID)) + 1
+      : 1;
+  };
+
+ const [formData, setFormData] = useState({
+   ecId: "",
+   name: "",
+   status: "Active",
+ });
 
   const handleChange = (e) => {
     setFormData({
@@ -61,7 +50,6 @@ function ExpenseCategory() {
       ecId: getNextId(),
       name: "",
       status: "Active",
-      createdBy: "Admin",
     });
 
     setEditCategory(null);
@@ -72,44 +60,64 @@ function ExpenseCategory() {
     setShowModal(true);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+   e.preventDefault();
 
-    if (editCategory) {
-      setCategories(
-        categories.map((cat) =>
-          cat.id === editCategory.id ? { ...cat, ...formData } : cat,
-        ),
-      );
-    } else {
-      const newCategory = {
-        id: categories.length + 1,
-        ...formData,
-      };
+   try {
+     const payload = {
+       Expense_Type: formData.name,
+       Active_Status: formData.status === "Active" ? 1 : 0,
+     };
 
-      setCategories([...categories, newCategory]);
-    }
+     if (editCategory) {
+       await axios.put(`${API_URL}/${editCategory.EC_ID}`, payload);
+     } else {
+       await axios.post(API_URL, payload);
+     }
 
-    setShowModal(false);
-    resetForm();
-  };
+     await fetchCategories();
 
-  const handleEdit = (cat) => {
-    setEditCategory(cat);
-    setFormData(cat);
-    setShowModal(true);
-  };
+     setShowModal(false);
+     resetForm();
+   } catch (error) {
+     console.log(error);
+     alert("Operation Failed");
+   }
+ };
 
-  const filteredCategories = categories.filter((cat) => {
-    const val = search.toLowerCase();
+ const handleEdit = (cat) => {
+   setEditCategory(cat);
 
-    return (
-      cat.ecId.toString().includes(val) ||
-      cat.name.toLowerCase().includes(val) ||
-      cat.status.toLowerCase().includes(val) ||
-      cat.createdBy.toLowerCase().includes(val)
-    );
-  });
+   setFormData({
+     ecId: cat.EC_ID,
+     name: cat.Expense_Type,
+     status: Number(cat.Active_Status) === 1 ? "Active" : "Inactive",
+   });
+
+   setShowModal(true);
+ };
+
+ const handleDelete = async (id) => {
+   if (!window.confirm("Delete this category?")) return;
+
+   try {
+     await axios.delete(`${API_URL}/${id}`);
+
+     fetchCategories();
+   } catch (error) {
+     console.log(error);
+     alert("Delete Failed");
+   }
+ };
+
+ const filteredCategories = categories.filter((cat) => {
+   const val = search.toLowerCase();
+
+   return (
+     cat.EC_ID?.toString().includes(val) ||
+     cat.Expense_Type?.toLowerCase().includes(val)
+   );
+ });
 
   return (
     <div className="category-page">
@@ -148,31 +156,38 @@ function ExpenseCategory() {
 
             <tbody>
               {filteredCategories.map((cat) => (
-                <tr key={cat.id}>
-                  <td>{cat.ecId}</td>
+                <tr key={cat.EC_ID}>
+                  <td>{cat.EC_ID}</td>
 
-                  <td>{cat.name}</td>
+                  <td>{cat.Expense_Type}</td>
 
                   <td>
                     <span
                       className={
-                        cat.status === "Active"
+                        Number(cat.Active_Status) === 1
                           ? "status active"
                           : "status inactive"
                       }
                     >
-                      {cat.status}
+                      {Number(cat.Active_Status) === 1 ? "Active" : "Inactive"}
                     </span>
                   </td>
 
-                  <td>{cat.createdBy}</td>
-
+                  <td>{cat.Created_By}</td>
                   <td>
                     <button
                       className="edit-btn"
                       onClick={() => handleEdit(cat)}
                     >
                       <FaEdit />
+                    </button>
+
+                    <button
+                      className="edit-btn"
+                      onClick={() => handleDelete(cat.EC_ID)}
+                      style={{ marginLeft: "10px" }}
+                    >
+                      <FaTrash style={{ color: "#ef4444" }} />
                     </button>
                   </td>
                 </tr>
