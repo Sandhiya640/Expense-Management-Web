@@ -157,8 +157,8 @@ function Role() {
                 </td>
 
                 <td>
-                  {role.Created_On
-                    ? new Date(role.Created_On).toLocaleDateString()
+                  {role.Created_on
+                    ? new Date(role.Created_on).toLocaleDateString()
                     : ""}
                 </td>
 

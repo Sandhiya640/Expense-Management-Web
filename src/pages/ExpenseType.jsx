@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import axios from "axios";
 import "./ExpenseType.css";
 
 import {
@@ -23,12 +23,23 @@ function ExpenseType() {
   const [editExpenseName, setEditExpenseName] = useState("");
 
   const [editCategoryId, setEditCategoryId] = useState("");
-
+  const [categories, setCategories] = useState([]);
   const [editStatus, setEditStatus] = useState("Active");
+useEffect(() => {
+  fetchExpenseTypes();
+  fetchCategories();
+}, []);
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5001/api/expense-categories",
+      );
 
-  useEffect(() => {
-    fetchExpenseTypes();
-  }, []);
+      setCategories(response.data);
+    } catch (error) {
+      console.error("Error loading categories:", error);
+    }
+  };
 
   const fetchExpenseTypes = async () => {
     try {
@@ -178,7 +189,7 @@ function ExpenseType() {
                   </span>
                 </td>
 
-                <td>{item.Created_By}</td>
+                <td>{item.Created_by}</td>
 
                 <td>
                   <button className="edit-btn" onClick={() => handleEdit(item)}>
@@ -217,40 +228,47 @@ function ExpenseType() {
                 }}
               />
             </div>
-<div className="form-layout">
-            <div className="form-row">
-              <label>CATEGORY ID :</label>
+            <div className="form-layout">
+              <div className="form-row">
+                <label>EXPENSE CATEGORY :</label>
 
-              <input
-                type="number"
-                value={editCategoryId}
-                onChange={(e) => setEditCategoryId(e.target.value)}
-              />
+                <select
+                  value={editCategoryId}
+                  onChange={(e) => setEditCategoryId(e.target.value)}
+                >
+                  <option value="">Select Category</option>
+
+                  {categories.map((cat) => (
+                    <option key={cat.EC_ID} value={cat.EC_ID}>
+                      {cat.Expense_Type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-row">
+                <label>EXPENSE NAME :</label>
+
+                <input
+                  type="text"
+                  value={editExpenseName}
+                  onChange={(e) => setEditExpenseName(e.target.value)}
+                />
+              </div>
+
+              <div className="form-row">
+                <label>STATUS :</label>
+
+                <select
+                  value={editStatus}
+                  onChange={(e) => setEditStatus(e.target.value)}
+                >
+                  <option>Active</option>
+
+                  <option>Inactive</option>
+                </select>
+              </div>
             </div>
-
-            <div className="form-row">
-              <label>EXPENSE NAME :</label>
-
-              <input
-                type="text"
-                value={editExpenseName}
-                onChange={(e) => setEditExpenseName(e.target.value)}
-              />
-            </div>
-
-            <div className="form-row">
-              <label>STATUS :</label>
-
-              <select
-                value={editStatus}
-                onChange={(e) => setEditStatus(e.target.value)}
-              >
-                <option>Active</option>
-
-                <option>Inactive</option>
-              </select>
-            </div>
-</div>
             <div className="modal-buttons">
               <button
                 className="cancel-btn"
