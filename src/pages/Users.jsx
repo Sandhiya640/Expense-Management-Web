@@ -89,6 +89,30 @@ function Users() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Mobile validation
+    if (!/^\d{10}$/.test(formData.mobile)) {
+      alert("Mobile number must contain exactly 10 digits");
+      return;
+    }
+
+    // Email validation
+   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+     alert("Invalid email format");
+     return;
+   }
+
+    // Password uniqueness
+    const passwordExists = users.some(
+      (u) =>
+        u.Password === formData.password &&
+        (!editUser || u.UID !== editUser.UID),
+    );
+
+    if (passwordExists) {
+      alert("Password already used by another user");
+      return;
+    }
+
     try {
       const payload = {
         RID: Number(formData.role),
@@ -111,9 +135,10 @@ function Users() {
       resetForm();
     } catch (error) {
       console.log(error);
-      alert("Operation Failed");
+
+      alert(error.response?.data?.message || "Operation Failed");
     }
-  };
+  };;
 
   const handleEdit = (user) => {
     setEditUser(user);
@@ -255,8 +280,7 @@ function Users() {
                     type="text"
                     name="empCode"
                     value={formData.empCode}
-                    onChange={handleChange}
-                    required
+                    readOnly
                   />
                 </div>
 
@@ -297,7 +321,14 @@ function Users() {
                     name="mobile"
                     placeholder="Enter mobile number"
                     value={formData.mobile}
-                    onChange={handleChange}
+                    maxLength={10}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "");
+                      setFormData({
+                        ...formData,
+                        mobile: value,
+                      });
+                    }}
                     required
                   />
                 </div>

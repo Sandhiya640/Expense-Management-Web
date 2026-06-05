@@ -77,6 +77,8 @@ function Role() {
       setShowModal(false);
     } catch (error) {
       console.error("Save Error:", error);
+
+      alert(error.response?.data?.message || "Unable to save role");
     }
   };
   const handleDelete = async (rid) => {
@@ -157,8 +159,8 @@ function Role() {
                 </td>
 
                 <td>
-                  {role.Created_on
-                    ? new Date(role.Created_on).toLocaleDateString()
+                  {role.Created_On
+                    ? new Date(role.Created_On).toLocaleDateString()
                     : ""}
                 </td>
 

@@ -80,8 +80,7 @@ function ExpenseCategory() {
      setShowModal(false);
      resetForm();
    } catch (error) {
-     console.log(error);
-     alert("Operation Failed");
+     alert(error.response?.data?.message || "Operation Failed");
    }
  };
 
@@ -173,7 +172,7 @@ function ExpenseCategory() {
                     </span>
                   </td>
 
-                  <td>{cat.Created_by}</td>
+                  <td>{cat.Created_By}</td>
                   <td>
                     <button
                       className="edit-btn"

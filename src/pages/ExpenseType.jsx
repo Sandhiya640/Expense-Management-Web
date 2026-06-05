@@ -106,7 +106,9 @@ useEffect(() => {
 
       setEditStatus("Active");
     } catch (error) {
-      console.error("Save Error:", error);
+      console.error(error);
+
+      alert(error.response?.data?.message || "Operation Failed");
     }
   };
 
@@ -189,7 +191,7 @@ useEffect(() => {
                   </span>
                 </td>
 
-                <td>{item.Created_by}</td>
+                <td>{item.Created_By}</td>
 
                 <td>
                   <button className="edit-btn" onClick={() => handleEdit(item)}>

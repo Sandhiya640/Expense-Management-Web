@@ -70,8 +70,7 @@ const [formData, setFormData] = useState({
       setShowModal(false);
       resetForm();
     } catch (error) {
-      console.log(error);
-      alert("Operation Failed");
+      alert(error.response?.data?.message || "Operation Failed");
     }
   };
 
