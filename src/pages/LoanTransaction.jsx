@@ -119,13 +119,6 @@ function LoanTransaction() {
         </button>
 
         <button
-          className={activeTab === "bulk" ? "active" : ""}
-          onClick={() => setActiveTab("bulk")}
-        >
-          Bulk Upload
-        </button>
-
-        <button
           className={activeTab === "records" ? "active" : ""}
           onClick={() => setActiveTab("records")}
         >
@@ -223,15 +216,7 @@ function LoanTransaction() {
         </div>
       )}
 
-      {activeTab === "bulk" && (
-        <div className="expense-card">
-          <div className="upload-box">
-            <FaUpload size={40} />
-            <h3>Bulk Upload Loan Records</h3>
-            <input type="file" />
-          </div>
-        </div>
-      )}
+     
 
       {activeTab === "records" && (
         <div className="expense-card">

@@ -1,22 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./ExpenseTransaction.css";
-import { FaSave, FaEdit, FaSearch, FaUpload } from "react-icons/fa";
-
+import {
+  FaSave,
+  FaEdit,
+  FaSearch,
+  FaUpload,
+  FaPlus,
+  FaTimes,
+} from "react-icons/fa";
+import axios from "axios";
 function ExpenseTransactions() {
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+
+  const [categories, setCategories] = useState([]);
+
+  const [newExpense, setNewExpense] = useState({
+    expType: "",
+    expCategory: "",
+    expValue: "",
+    expDate: "",
+    remarks: "",
+  });
   const [activeTab, setActiveTab] = useState("single");
+
   const [editId, setEditId] = useState(null);
+
+  const [search, setSearch] = useState("");
+
+  const [selectedMonth, setSelectedMonth] = useState("");
+
+  const [hoveredItem, setHoveredItem] = useState(null);
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5001/api/expense-categories",
+      );
+
+      setCategories(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchCategories();
+  }, []);
   const [records, setRecords] = useState([
     {
       expId: 1,
-      etId: 1,
-      expValue: 120.5,
+      expType: "Food",
+      expCategory: "Breakfast",
+      expValue: 120,
       expDate: "2026-05-01",
       remarks: "Breakfast Expense",
       createdBy: "Admin",
     },
     {
       expId: 2,
-      etId: 2,
+      expType: "Food",
+      expCategory: "Lunch",
       expValue: 250,
       expDate: "2026-05-02",
       remarks: "Lunch Expense",
@@ -24,7 +66,8 @@ function ExpenseTransactions() {
     },
     {
       expId: 3,
-      etId: 3,
+      expType: "Travel",
+      expCategory: "Bus",
       expValue: 80,
       expDate: "2026-05-03",
       remarks: "Bus Travel",
@@ -32,93 +75,118 @@ function ExpenseTransactions() {
     },
     {
       expId: 4,
-      etId: 4,
+      expType: "Travel",
+      expCategory: "Train",
       expValue: 450,
       expDate: "2026-05-04",
-      remarks: "Train Ticket Booking",
+      remarks: "Train Ticket",
       createdBy: "Admin",
     },
   ]);
+  const handleAddExpense = () => {
+    if (
+      !newExpense.expCategory ||
+      !newExpense.expValue ||
+      !newExpense.expDate
+    ) {
+      alert("Please fill all fields");
+      return;
+    }
 
-  const [search, setSearch] = useState("");
+    const selectedCategory = categories.find(
+      (c) => c.EC_ID === Number(newExpense.expCategory),
+    );
+
+    const expenseRecord = {
+      expId: records.length + 1,
+      expType: selectedCategory?.Expense_Type || "",
+      expCategory: selectedCategory?.Expense_Type || "",
+      expValue: Number(newExpense.expValue),
+      expDate: newExpense.expDate,
+      remarks: newExpense.remarks,
+      createdBy: "Admin",
+    };
+
+    setRecords([...records, expenseRecord]);
+
+    setNewExpense({
+      expType: "",
+      expCategory: "",
+      expValue: "",
+      expDate: "",
+      remarks: "",
+    });
+
+    setShowAddModal(false);
+  };
 
   const [formData, setFormData] = useState({
-    etId: "",
+    expType: "",
+    expCategory: "",
     expValue: "",
     expDate: "",
     remarks: "",
   });
+
   const formatDate = (date) => {
     if (!date) return "";
 
     const [year, month, day] = date.split("-");
+
     return `${day}-${month}-${year}`;
   };
 
-  const reverseDate = (date) => {
-    if (!date) return "";
-
-    const [day, month, year] = date.split("-");
-    return `${year}-${month}-${day}`;
-  };
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "expType") {
+      setFormData({
+        ...formData,
+        expType: value,
+        expCategory: "",
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  };
+
+  const handleEdit = (item) => {
+    setEditId(item.expId);
+
     setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
+      expType: item.expType,
+      expCategory: item.expCategory,
+      expValue: item.expValue,
+      expDate: item.expDate,
+      remarks: item.remarks,
+    });
+
+    setShowEditModal(true);
+  };
+
+  const handleReset = () => {
+    setEditId(null);
+
+    setFormData({
+      expType: "",
+      expCategory: "",
+      expValue: "",
+      expDate: "",
+      remarks: "",
     });
   };
 
-const handleSubmit = (e) => {
-  e.preventDefault();
+  const monthlyRecords = records.filter((item) => {
+    if (!selectedMonth) return true;
 
-  if (editId) {
-    const updatedRecords = records.map((item) =>
-      item.expId === editId
-        ? {
-            ...item,
-            etId: formData.etId,
-            expValue: formData.expValue,
-            expDate: formData.expDate,
-            remarks: formData.remarks,
-          }
-        : item,
-    );
-
-    setRecords(updatedRecords);
-    setEditId(null);
-  } else {
-    const newExpense = {
-      expId: records.length + 1,
-      etId: formData.etId,
-      expValue: formData.expValue,
-      expDate: formData.expDate,
-      remarks: formData.remarks,
-      createdBy: "Admin",
-    };
-
-    setRecords([...records, newExpense]);
-  }
-
-  setFormData({
-    etId: "",
-    expValue: "",
-    expDate: "",
-    remarks: "",
+    return item.expDate.substring(0, 7) === selectedMonth;
   });
-};
-const handleEdit = (item) => {
-  setActiveTab("single");
-  setEditId(item.expId);
 
-  setFormData({
-    etId: item.etId,
-    expValue: item.expValue,
-    expDate: item.expDate,
-    remarks: item.remarks,
-  });
-};
   const filteredRecords = records.filter((item) =>
-    item.remarks.toLowerCase().includes(search.toLowerCase()),
+    item.expType.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -149,91 +217,71 @@ const handleEdit = (item) => {
           All Records
         </button>
       </div>
-
       {activeTab === "single" && (
         <div className="expense-card">
           <div className="card-header">
-            <h3>{editId ? "Edit Expense Entry" : "Add Expense Entry"}</h3>
+            <h3>Monthly Expense Records</h3>
+
+            <button className="add-btn" onClick={() => setShowAddModal(true)}>
+              <FaPlus />
+              Add Expense
+            </button>
           </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-grid">
-              <div className="form-group">
-                <label>EXPENSE TYPE ID</label>
+          <div className="month-filter">
+            <label>Select Month</label>
 
-                <select
-                  name="etId"
-                  value={formData.etId}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Type</option>
-                  <option value="1">Food</option>
-                  <option value="2">Travel</option>
-                  <option value="3">Medical</option>
-                  <option value="4">Shopping</option>
-                  <option value="5">Rent</option>
-                  <option value="6">Electricity</option>
-                </select>
-              </div>
+            <input
+              type="month"
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+            />
+          </div>
 
-              <div className="form-group">
-                <label>AMOUNT (₹)</label>
+          <div className="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>EXP ID</th>
+                  <th>EXPENSE TYPE</th>
+                  <th>EXPENSE CATEGORY</th>
+                  <th>AMOUNT</th>
+                  <th>REMARKS</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
 
-                <input
-                  type="number"
-                  name="expValue"
-                  placeholder="0.00"
-                  value={formData.expValue}
-                  onChange={handleChange}
-                />
-              </div>
+              <tbody>
+                {monthlyRecords.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="no-data">
+                      No Records Found
+                    </td>
+                  </tr>
+                ) : (
+                  monthlyRecords.map((item) => (
+                    <tr key={item.expId}>
+                      <td>{item.expId}</td>
+                      <td>{item.expType}</td>
+                      <td>{item.expCategory}</td>
+                      <td>₹ {item.expValue}</td>
+                      <td>{item.remarks}</td>
 
-              <div className="form-group">
-                <label>EXPENSE DATE</label>
-
-                <input
-                  type="date"
-                  name="expDate"
-                  value={formData.expDate}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div></div>
-
-              <div className="form-group full-width">
-                <label>REMARKS</label>
-
-                <textarea
-                  name="remarks"
-                  placeholder="Optional notes..."
-                  value={formData.remarks}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <div className="action-buttons">
-              <button
-                type="button"
-                className="reset-btn"
-                onClick={() => {
-                  setEditId(null);
-                  setFormData({
-                    etId: "",
-                    expValue: "",
-                    expDate: "",
-                    remarks: "",
-                  });
-                }}
-              >
-                Reset
-              </button>
-              <button type="submit" className="save-btn">
-                <FaSave />
-                {editId ? " Update" : " Save Entry"}
-              </button>
-            </div>
-          </form>
+                      <td>
+                        <button
+                          type="button"
+                          className="edit-btn"
+                          onClick={() => handleEdit(item)}
+                        >
+                          <FaEdit />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
@@ -248,7 +296,6 @@ const handleEdit = (item) => {
           </div>
         </div>
       )}
-
       {activeTab === "records" && (
         <div className="expense-card">
           <div className="table-top">
@@ -257,49 +304,251 @@ const handleEdit = (item) => {
 
               <input
                 type="text"
-                placeholder="Search Remarks..."
+                placeholder="Search Expense Type..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
           </div>
 
-          <table>
-            <thead>
-              <tr>
-                <th>EXP_ID</th>
-                <th>ET_ID</th>
-                <th>AMOUNT</th>
-                <th>DATE</th>
-                <th>REMARKS</th>
-                <th>CREATED BY</th>
-                <th>ACTION</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {filteredRecords.map((item) => (
-                <tr key={item.expId}>
-                  <td>{item.expId}</td>
-                  <td>{item.etId}</td>
-                  <td>₹ {item.expValue}</td>
-                  <td>{formatDate(item.expDate)}</td>
-                  <td>{item.remarks}</td>
-                  <td>{item.createdBy}</td>
-
-                  <td>
-                    <button
-                      type="button"
-                      className="edit-btn"
-                      onClick={() => handleEdit(item)}
-                    >
-                      <FaEdit />
-                    </button>
-                  </td>
+          <div className="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>DATE</th>
+                  <th>EXPENSE TYPE</th>
+                  <th>VALUE</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {filteredRecords.length === 0 ? (
+                  <tr>
+                    <td colSpan="3" className="no-data">
+                      No Records Found
+                    </td>
+                  </tr>
+                ) : (
+                  filteredRecords.map((item) => (
+                    <React.Fragment key={item.expId}>
+                      <tr className="summary-row">
+                        <td>{formatDate(item.expDate)}</td>
+
+                        <td>{item.expType}</td>
+
+                        <td className="value-column">
+                          <div
+                            className="value-wrapper"
+                            onMouseEnter={() => setHoveredItem(item.expId)}
+                            onMouseLeave={() => setHoveredItem(null)}
+                          >
+                            <span className="value-cell">
+                              ₹ {item.expValue}
+                            </span>
+
+                            {hoveredItem === item.expId && (
+                              <div className="expense-tooltip">
+                                <p>
+                                  <strong>Expense Type:</strong> {item.expType}
+                                </p>
+
+                                <p>
+                                  <strong>Expense Category:</strong>{" "}
+                                  {item.expCategory}
+                                </p>
+
+                                <p>
+                                  <strong>Amount:</strong> ₹ {item.expValue}
+                                </p>
+
+                                <p>
+                                  <strong>Remarks:</strong> {item.remarks}
+                                </p>
+
+                                <p>
+                                  <strong>Created By:</strong> {item.createdBy}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    </React.Fragment>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+      {showEditModal && (
+        <div className="modal-overlay">
+          <div className="edit-modal">
+            <div className="modal-header">
+              <h3>Edit Expense</h3>
+
+              <button
+                className="close-btn"
+                onClick={() => {
+                  setShowEditModal(false);
+                  setEditId(null);
+                }}
+              ></button>
+            </div>
+
+            <div className="modal-body">
+              <div className="form-group">
+                <label>Amount :</label>
+
+                <input
+                  type="number"
+                  name="expValue"
+                  value={formData.expValue}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Remarks :</label>
+
+                <textarea
+                  name="remarks"
+                  value={formData.remarks}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button
+                className="cancel-btn"
+                onClick={() => {
+                  setShowEditModal(false);
+                  setEditId(null);
+                }}
+              >
+                Cancel
+              </button>
+
+              <button
+                className="save-btn"
+                onClick={() => {
+                  const updatedRecords = records.map((item) =>
+                    item.expId === editId
+                      ? {
+                          ...item,
+                          expValue: formData.expValue,
+                          remarks: formData.remarks,
+                        }
+                      : item,
+                  );
+
+                  setRecords(updatedRecords);
+
+                  setShowEditModal(false);
+                  setEditId(null);
+                }}
+              >
+                <FaSave />
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showAddModal && (
+        <div className="modal-overlay">
+          <div className="edit-modal">
+            <div className="modal-header">
+              <h3>Add Expense</h3>
+
+              <FaTimes
+                style={{ cursor: "pointer" }}
+                onClick={() => setShowAddModal(false)}
+              />
+            </div>
+
+            <div className="modal-body">
+              <div className="form-group">
+                <label>Expense Category :</label>
+
+                <select
+                  value={newExpense.expCategory}
+                  onChange={(e) =>
+                    setNewExpense({
+                      ...newExpense,
+                      expCategory: e.target.value,
+                    })
+                  }
+                >
+                  <option value="">Select Category</option>
+
+                  {categories.map((cat) => (
+                    <option key={cat.EC_ID} value={cat.EC_ID}>
+                      {cat.Expense_Type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Amount :</label>
+
+                <input
+                  type="number"
+                  value={newExpense.expValue}
+                  onChange={(e) =>
+                    setNewExpense({
+                      ...newExpense,
+                      expValue: e.target.value,
+                    })
+                  }
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Date :</label>
+
+                <input
+                  type="date"
+                  value={newExpense.expDate}
+                  onChange={(e) =>
+                    setNewExpense({
+                      ...newExpense,
+                      expDate: e.target.value,
+                    })
+                  }
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Remarks :</label>
+
+                <textarea
+                  value={newExpense.remarks}
+                  onChange={(e) =>
+                    setNewExpense({
+                      ...newExpense,
+                      remarks: e.target.value,
+                    })
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button
+                className="cancel-btn"
+                onClick={() => setShowAddModal(false)}
+              >
+                Cancel
+              </button>
+
+              <button className="save-btn" onClick={handleAddExpense}>
+                <FaSave />
+                Save
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
