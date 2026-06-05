@@ -105,16 +105,16 @@ body {
 
 .icon {
   color: #c084fc;
-  font-size: 15px;
-  flex-shrink: 0;
+  font-size: 16px;
 }
 
 .nav-item span {
-  color: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  white-space: nowrap;
+  color: #e2e8f0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
 }
+
 
 .arrow {
   color: #94a3b8;
@@ -154,7 +154,7 @@ body {
   gap: 10px;
   padding: 9px 10px;
   border-radius: 8px;
-  color: #cbd5e1;
+  color: white;
   cursor: pointer;
   font-size: 13px;
   transition: background 0.12s;
@@ -162,7 +162,7 @@ body {
 
 .dropdown-item:hover {
   background: rgba(255, 255, 255, 0.06);
-  color: #fff;
+  color: #e2e8f0;
 }
 
 .sub-icon {
@@ -215,8 +215,9 @@ body {
 }
 
 .search-bar--focused {
-  border-color: #7c3aed;
+  border-color: #8b5cf6;
   background: #1e2d45;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25);
 }
 
 .search-icon {
@@ -237,7 +238,7 @@ body {
 }
 
 .search-input::placeholder {
-  color: #64748b;
+  color: #94a3b8;
 }
 
 .search-clear {
