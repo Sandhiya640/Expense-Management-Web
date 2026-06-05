@@ -244,8 +244,6 @@ const handleEdit = (item) => {
 
             <h3>Bulk Upload Expense Records</h3>
 
-            <p>Click or drag Excel file here</p>
-
             <input type="file" />
           </div>
         </div>

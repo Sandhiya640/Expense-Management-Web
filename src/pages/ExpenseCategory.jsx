@@ -173,7 +173,7 @@ function ExpenseCategory() {
                     </span>
                   </td>
 
-                  <td>{cat.Created_By}</td>
+                  <td>{cat.Created_by}</td>
                   <td>
                     <button
                       className="edit-btn"
@@ -238,15 +238,7 @@ function ExpenseCategory() {
                   </select>
                 </div>
 
-                <div className="form-row">
-                  <label>CREATED BY :</label>
-                  <input
-                    name="createdBy"
-                    value={formData.createdBy}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+              
               </div>
               <div className="modal-buttons">
                 <button
