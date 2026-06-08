@@ -294,6 +294,23 @@ function LoanTransaction() {
               placeholder="Search Loan Category..."
             />
           </div>
+          <div className="summary-cards">
+            <div className="summary-card">
+              <h4>Total Records</h4>
+              <p>{records.length}</p>
+            </div>
+
+            <div className="summary-card">
+              <h4>Total Loan Amount</h4>
+              <p>
+                ₹{" "}
+                {records.reduce(
+                  (sum, item) => sum + Number(item.loanAmount),
+                  0,
+                )}
+              </p>
+            </div>
+          </div>
 
           <table>
             <thead>

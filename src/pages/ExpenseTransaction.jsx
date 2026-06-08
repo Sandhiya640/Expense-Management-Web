@@ -311,6 +311,20 @@ function ExpenseTransactions() {
             </div>
           </div>
 
+          <div className="summary-cards">
+            <div className="summary-card">
+              <h4>Total Records</h4>
+              <p>{records.length}</p>
+            </div>
+
+            <div className="summary-card">
+              <h4>Total Expense</h4>
+              <p>
+                ₹{" "}
+                {records.reduce((sum, item) => sum + Number(item.expValue), 0)}
+              </p>
+            </div>
+          </div>
           <div className="table-wrapper">
             <table>
               <thead>
