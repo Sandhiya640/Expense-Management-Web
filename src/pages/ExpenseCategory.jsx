@@ -7,11 +7,9 @@ const API_URL = "http://localhost:5001/api/expense-categories";
 
 function ExpenseCategory() {
   const [categories, setCategories] = useState([]);
-
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editCategory, setEditCategory] = useState(null);
-
   const fetchCategories = async () => {
     try {
       const response = await axios.get(API_URL);
