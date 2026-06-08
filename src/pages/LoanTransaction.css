@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-expense-page {
+.expense-page {
   width: 100%;
   min-height: calc(100vh - 60px);
   background: #f8fafc;
@@ -51,8 +51,6 @@ expense-page {
   color: white;
 }
 
-/* CARD */
-
 .expense-card {
   background: white;
   margin-top: 25px;
@@ -71,7 +69,6 @@ expense-page {
   font-size: 22px;
 }
 
-/* FORM */
 
 form {
   padding: 25px;
@@ -132,8 +129,6 @@ form {
   grid-column: span 2;
 }
 
-/* BUTTONS */
-
 .action-buttons {
   display: flex;
   justify-content: space-between;
@@ -177,8 +172,6 @@ form {
   background: #e2e8f0;
 }
 
-/* BULK UPLOAD */
-
 .upload-box {
   text-align: center;
   padding: 80px;
@@ -194,7 +187,7 @@ form {
   margin-bottom: 15px;
 }
 
-/* TABLE */
+
 
 .table-top {
   padding: 20px;
@@ -257,7 +250,6 @@ tbody tr:hover {
   background: #f3f4f6;
 }
 
-/* RESPONSIVE */
 
 @media (max-width: 900px) {
   .form-grid {
@@ -282,4 +274,69 @@ tbody tr:hover {
     width: 100%;
     justify-content: center;
   }
+}
+.entry-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.entry-table td {
+  padding: 12px;
+  border: 1px solid #dfe6ee;
+}
+
+.entry-table label {
+  font-weight: 600;
+  color: #334155;
+}
+
+.entry-table input,
+.entry-table select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  outline: none;
+}
+.loan-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 50px;
+  padding: 20px 30px;
+  max-width: 1100px;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+}
+
+.form-row label {
+  width: 150px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.form-row input,
+.form-row select {
+  width: 600px !important;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fff;
+}
+
+.form-row input:focus,
+.form-row select:focus {
+  outline: none;
+  border-color: #8b5cf6;
+}
+
+.action-buttons {
+  margin-top: 25px;
+  padding: 0 30px 20px;
 }
