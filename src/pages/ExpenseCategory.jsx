@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./ExpenseCategory.css";
-import { FaPlus, FaEdit, FaTimes, FaSave, FaTrash } from "react-icons/fa";
+import { FaPlus, FaEdit, FaTimes, FaSave, FaTrash,FaSearch} from "react-icons/fa";
 
 const API_URL = "http://localhost:5001/api/expense-categories";
 
@@ -125,6 +125,7 @@ function ExpenseCategory() {
       <div className="category-card">
         <div className="table-top">
           <div className="search-box">
+            <FaSearch/>
             <input
               type="text"
               placeholder="Search categories..."

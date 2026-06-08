@@ -6,7 +6,7 @@ import {
   updateRole,
   deleteRole,
 } from "../service/roleService";
-import { FaPlus, FaEdit, FaTrash, FaTimes, FaSave } from "react-icons/fa";
+import { FaSearch,FaPlus, FaEdit, FaTrash, FaTimes, FaSave } from "react-icons/fa";
 function Role() {
   const [showModal, setShowModal] = useState(false);
 
@@ -116,6 +116,7 @@ function Role() {
       <div className="role-card">
         <div className="card-header">
           <div className="search-box">
+            <FaSearch/>
             <input
               type="text"
               placeholder="Search roles..."

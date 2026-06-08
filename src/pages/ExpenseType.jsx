@@ -9,7 +9,7 @@ import {
   deleteExpenseType,
 } from "../service/expenseTypeService";
 
-import { FaPlus, FaEdit, FaTrash, FaTimes, FaSave } from "react-icons/fa";
+import { FaSearch,FaPlus, FaEdit, FaTrash, FaTimes, FaSave } from "react-icons/fa";
 
 function ExpenseType() {
   const [showModal, setShowModal] = useState(false);
@@ -146,6 +146,7 @@ useEffect(() => {
       <div className="expense-card">
         <div className="card-header">
           <div className="search-box">
+            <FaSearch/>
             <input
               type="text"
               placeholder="Search Expense Type..."

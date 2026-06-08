@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./IncomeType.css";
-import { FaPlus, FaEdit, FaTimes, FaSave, FaTrash } from "react-icons/fa";
+import { FaSearch,FaPlus, FaEdit, FaTimes, FaSave, FaTrash } from "react-icons/fa";
 
 const API_URL = "http://localhost:5001/api/income-types";
 function IncomeType() {
@@ -115,6 +115,7 @@ const filteredIncomeTypes = incomeTypes.filter((item) => {
       <div className="income-card">
         <div className="table-top">
           <div className="search-box">
+            <FaSearch/>
             <input
               type="text"
               placeholder="Search income types..."

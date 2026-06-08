@@ -185,6 +185,7 @@ function Users() {
       <div className="users-card">
         <div className="table-top">
           <div className="search-box">
+            <FaSearch/>
             <input
               type="text"
               placeholder="Search users..."
