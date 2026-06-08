@@ -356,13 +356,13 @@ tbody tr:hover {
 }
 
 .summary-card h4 {
-  color: #64748b;
+  color:white;
   font-size: 14px;
   margin-bottom: 10px;
 }
 
 .summary-card p {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: bolder;
   color: #1f1f5c;
 }

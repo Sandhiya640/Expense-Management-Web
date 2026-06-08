@@ -218,7 +218,6 @@ function IncomeTransactions() {
         {activeTab === "records" && (
           <div className="income-card">
             <div className="records-header">
-              <h3>All Income Records</h3>
 
               <div className="search-box">
                 <FaSearch />
