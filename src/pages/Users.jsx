@@ -89,19 +89,16 @@ function Users() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Mobile validation
     if (!/^\d{10}$/.test(formData.mobile)) {
       alert("Mobile number must contain exactly 10 digits");
       return;
     }
 
-    // Email validation
    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
      alert("Invalid email format");
      return;
    }
 
-    // Password uniqueness
     const passwordExists = users.some(
       (u) =>
         u.Password === formData.password &&

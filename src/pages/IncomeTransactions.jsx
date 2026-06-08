@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import "./IncomeTransactions.css";
-import { FaSave, FaEdit, FaSearch, FaUpload } from "react-icons/fa";
+import {
+  FaSave,
+  FaEdit,
+  FaSearch,
+  FaUpload,
+  FaPlus,
+  FaTimes,
+} from "react-icons/fa";
 
 function IncomeTransactions() {
   const [activeTab, setActiveTab] = useState("single");
@@ -30,8 +37,9 @@ function IncomeTransactions() {
   ]);
 
   const [search, setSearch] = useState("");
-
   const [editId, setEditId] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState("");
 
   const [formData, setFormData] = useState({
     incomeType: "Salary",
@@ -40,14 +48,12 @@ function IncomeTransactions() {
     remarks: "",
   });
 
-  // Convert yyyy-mm-dd -> dd-mm-yyyy
   const formatDate = (date) => {
     if (!date) return "";
     const [year, month, day] = date.split("-");
     return `${day}-${month}-${year}`;
   };
 
-  // Convert dd-mm-yyyy -> yyyy-mm-dd (for input field)
   const reverseDate = (date) => {
     if (!date) return "";
     const [day, month, year] = date.split("-");
@@ -60,6 +66,12 @@ function IncomeTransactions() {
       [e.target.name]: e.target.value,
     });
   };
+
+  const monthlyRecords = records.filter((item) => {
+    if (!selectedMonth) return true;
+    const [day, month, year] = item.incomeDate.split("-");
+    return `${year}-${month}` === selectedMonth;
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -94,13 +106,13 @@ function IncomeTransactions() {
   const handleEdit = (record) => {
     setActiveTab("single");
     setEditId(record.id);
-
     setFormData({
       incomeType: record.incomeType,
       amount: record.amount,
       incomeDate: reverseDate(record.incomeDate),
       remarks: record.remarks,
     });
+    setShowAddModal(true);
   };
 
   const filteredRecords = records.filter((record) =>
@@ -108,46 +120,184 @@ function IncomeTransactions() {
   );
 
   return (
-    <div className="income-page">
-      <div className="income-header">
-        <h2>Income Transactions</h2>
-      </div>
+    <>
+      <div className="income-page">
+        <div className="income-header">
+          <h2>Income Transactions</h2>
+        </div>
 
-      {/* Tabs */}
-      <div className="tabs">
-        <button
-          className={activeTab === "single" ? "active" : ""}
-          onClick={() => setActiveTab("single")}
-        >
-          Single Entry
-        </button>
+        <div className="tabs">
+          <button
+            className={activeTab === "single" ? "active" : ""}
+            onClick={() => setActiveTab("single")}
+          >
+            Single Entry
+          </button>
 
-        <button
-          className={activeTab === "bulk" ? "active" : ""}
-          onClick={() => setActiveTab("bulk")}
-        >
-          Bulk Upload
-        </button>
+          <button
+            className={activeTab === "bulk" ? "active" : ""}
+            onClick={() => setActiveTab("bulk")}
+          >
+            Bulk Upload
+          </button>
 
-        <button
-          className={activeTab === "records" ? "active" : ""}
-          onClick={() => setActiveTab("records")}
-        >
-          All Records
-        </button>
-      </div>
+          <button
+            className={activeTab === "records" ? "active" : ""}
+            onClick={() => setActiveTab("records")}
+          >
+            All Records
+          </button>
+        </div>
 
-      {/* SINGLE ENTRY */}
-      {activeTab === "single" && (
-        <div className="income-card">
-          <div className="card-header">
-            <h3>{editId ? "Edit Income Entry" : "Add Income Entry"}</h3>
+        {activeTab === "single" && (
+          <div className="income-card">
+            <div className="card-header">
+              <h3>Monthly Income Records</h3>
+              <button className="add-btn" onClick={() => setShowAddModal(true)}>
+                <FaPlus />
+                Add Income
+              </button>
+            </div>
+
+            <div className="month-filter">
+              <label>Select Month</label>
+              <input
+                type="month"
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+              />
+            </div>
+
+            <div className="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>INCOME TYPE</th>
+                    <th>AMOUNT</th>
+                    <th>DATE</th>
+                    <th>REMARKS</th>
+                    <th>ACTION</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {monthlyRecords.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.id}</td>
+                      <td>{item.incomeType}</td>
+                      <td>₹ {item.amount}</td>
+                      <td>{item.incomeDate}</td>
+                      <td>{item.remarks}</td>
+                      <td>
+                        <button
+                          className="edit-btn"
+                          onClick={() => handleEdit(item)}
+                        >
+                          <FaEdit />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
+        )}
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-grid">
+        {activeTab === "bulk" && (
+          <div className="income-card">
+            <div className="upload-box">
+              <FaUpload size={40} />
+              <h3>Bulk Upload Income Records</h3>
+              <input type="file" />
+            </div>
+          </div>
+        )}
+
+        {activeTab === "records" && (
+          <div className="income-card">
+            <div className="records-header">
+              <h3>All Income Records</h3>
+
+              <div className="search-box">
+                <FaSearch />
+                <input
+                  type="text"
+                  placeholder="Search Income Type..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="summary-cards">
+              <div className="summary-card">
+                <h4>Total Records</h4>
+                <p>{records.length}</p>
+              </div>
+
+              <div className="summary-card">
+                <h4>Total Income</h4>
+                <p>
+                  ₹{" "}
+                  {records.reduce((sum, item) => sum + Number(item.amount), 0)}
+                </p>
+              </div>
+            </div>
+
+            <div className="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Income Type</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Remarks</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {filteredRecords.map((record) => (
+                    <tr key={record.id}>
+                      <td>{record.id}</td>
+                      <td>{record.incomeType}</td>
+                      <td>₹ {record.amount}</td>
+                      <td>{record.incomeDate}</td>
+                      <td>{record.remarks}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {showAddModal && (
+        <div className="modal-overlay">
+          <div className="edit-modal">
+            <div className="modal-header">
+              <h3>{editId ? "Edit Income" : "Add Income"}</h3>
+              <FaTimes
+                onClick={() => {
+                  setShowAddModal(false);
+                  setEditId(null);
+                  setFormData({
+                    incomeType: "Salary",
+                    amount: "",
+                    incomeDate: "",
+                    remarks: "",
+                  });
+                }}
+                style={{ cursor: "pointer" }}
+              />
+            </div>
+
+            <div className="modal-body">
               <div className="form-group">
-                <label>INCOME TYPE</label>
+                <label>Income Type :</label>
                 <select
                   name="incomeType"
                   value={formData.incomeType}
@@ -156,13 +306,11 @@ function IncomeTransactions() {
                   <option>Salary</option>
                   <option>Freelancing</option>
                   <option>Business Profit</option>
-                  <option>Rental Income</option>
-                  <option>Bonus</option>
                 </select>
               </div>
 
               <div className="form-group">
-                <label>AMOUNT (₹)</label>
+                <label>Amount :</label>
                 <input
                   type="number"
                   name="amount"
@@ -172,7 +320,7 @@ function IncomeTransactions() {
               </div>
 
               <div className="form-group">
-                <label>INCOME DATE</label>
+                <label>Date :</label>
                 <input
                   type="date"
                   name="incomeDate"
@@ -181,10 +329,8 @@ function IncomeTransactions() {
                 />
               </div>
 
-              <div></div>
-
-              <div className="form-group full-width">
-                <label>REMARKS</label>
+              <div className="form-group">
+                <label>Remarks :</label>
                 <textarea
                   name="remarks"
                   value={formData.remarks}
@@ -193,80 +339,38 @@ function IncomeTransactions() {
               </div>
             </div>
 
-            <div className="action-buttons">
-              <button type="reset" className="reset-btn">
-                Reset
+            <div className="modal-footer">
+              <button
+                className="cancel-btn"
+                onClick={() => {
+                  setShowAddModal(false);
+                  setEditId(null);
+                  setFormData({
+                    incomeType: "Salary",
+                    amount: "",
+                    incomeDate: "",
+                    remarks: "",
+                  });
+                }}
+              >
+                Cancel
               </button>
 
-              <button type="submit" className="save-btn">
-                <FaSave /> {editId ? "Update" : "Save Entry"}
+              <button
+                className="save-btn"
+                onClick={(e) => {
+                  handleSubmit(e);
+                  setShowAddModal(false);
+                }}
+              >
+                <FaSave />
+                Save
               </button>
             </div>
-          </form>
-        </div>
-      )}
-
-      {/* BULK */}
-      {activeTab === "bulk" && (
-        <div className="income-card">
-          <div className="upload-box">
-            <FaUpload size={40} />
-            <h3>Bulk Upload Income Records</h3>
-            <input type="file" />
           </div>
         </div>
       )}
-
-      {/* RECORDS */}
-      {activeTab === "records" && (
-        <div className="income-card">
-          <div className="table-top">
-            <div className="search-box">
-              <FaSearch />
-              <input
-                type="text"
-                placeholder="Search Income Type..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>INCOME TYPE</th>
-                <th>AMOUNT</th>
-                <th>DATE</th>
-                <th>REMARKS</th>
-                <th>ACTION</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {filteredRecords.map((record) => (
-                <tr key={record.id}>
-                  <td>{record.id}</td>
-                  <td>{record.incomeType}</td>
-                  <td>₹ {record.amount}</td>
-                  <td>{record.incomeDate}</td>
-                  <td>{record.remarks}</td>
-                  <td>
-                    <button
-                      className="edit-btn"
-                      onClick={() => handleEdit(record)}
-                    >
-                      <FaEdit />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+    </>
   );
 }
 
