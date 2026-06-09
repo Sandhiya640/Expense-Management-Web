@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./IncomeTransactions.css";
 import {
   FaSave,
@@ -8,45 +9,75 @@ import {
   FaPlus,
   FaTimes,
 } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa6";
+
+const API_URL = "http://localhost:5001/api/income-trn";
 
 function IncomeTransactions() {
   const [activeTab, setActiveTab] = useState("single");
 
-  const [records, setRecords] = useState([
-    {
-      id: 1,
-      incomeType: "Salary",
-      amount: 50000,
-      incomeDate: "01-05-2026",
-      remarks: "Monthly Salary",
-    },
-    {
-      id: 2,
-      incomeType: "Freelancing",
-      amount: 12000,
-      incomeDate: "03-05-2026",
-      remarks: "Freelancing Project",
-    },
-    {
-      id: 3,
-      incomeType: "Business Profit",
-      amount: 30000,
-      incomeDate: "05-05-2026",
-      remarks: "Business Profit",
-    },
-  ]);
+  const [records, setRecords] = useState([]);
 
   const [search, setSearch] = useState("");
   const [editId, setEditId] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState("");
 
+  const [incomeTypes, setIncomeTypes] = useState([]);
+
   const [formData, setFormData] = useState({
-    incomeType: "Salary",
+    userId: "",
+    username: "",
+    incomeType: "",
     amount: "",
     incomeDate: "",
     remarks: "",
   });
+
+  const fetchIncomeRecords = async () => {
+    try {
+      const res = await axios.get(API_URL);
+
+      console.log("Response Data:", res.data);
+
+      const data = res.data.map((item) => ({
+        id: item.INC_ID,
+        userId: item.Emp_Code,
+        username: item.Emp_Name,
+        uid: item.UID,
+        incomeType: item.IT_ID,
+        incomeTypeName: item.Income_Type,
+        amount: item.Inc_Value,
+        incomeDate: new Date(item.Inc_Date)
+          .toLocaleDateString("en-GB")
+          .replace(/\//g, "-"),
+        remarks: item.Remarks,
+      }));
+
+      console.log("Mapped Data:", data);
+
+      setRecords(data);
+    } catch (error) {
+      console.error("API Error:", error);
+    }
+  };
+
+  const fetchIncomeTypes = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5001/api/income-trn/income-types",
+      );
+
+      setIncomeTypes(res.data);
+    } catch (error) {
+      console.error("Income Type Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchIncomeRecords();
+    fetchIncomeTypes();
+  }, []);
 
   const formatDate = (date) => {
     if (!date) return "";
@@ -67,56 +98,150 @@ function IncomeTransactions() {
     });
   };
 
+  const fetchUserDetails = async (empCode) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:5001/api/income-trn/user/${empCode}`,
+      );
+
+      if (res.data) {
+        setFormData((prev) => ({
+          ...prev,
+          userId: res.data.Emp_Code,
+          username: res.data.Emp_Name,
+          uid: res.data.UID,
+        }));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${API_URL}/${id}`);
+
+      alert("Income deleted successfully");
+
+      fetchIncomeRecords();
+    } catch (error) {
+      console.error(error);
+      alert("Error deleting income");
+    }
+  };
+
   const monthlyRecords = records.filter((item) => {
     if (!selectedMonth) return true;
+
     const [day, month, year] = item.incomeDate.split("-");
+
     return `${year}-${month}` === selectedMonth;
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formattedDate = formatDate(formData.incomeDate);
-
-    if (editId) {
-      const updated = records.map((rec) =>
-        rec.id === editId
-          ? { ...formData, incomeDate: formattedDate, id: editId }
-          : rec,
-      );
-      setRecords(updated);
-      setEditId(null);
-    } else {
-      const newRecord = {
-        id: records.length + 1,
-        ...formData,
-        incomeDate: formattedDate,
-      };
-      setRecords([...records, newRecord]);
+    if (!formData.userId || !formData.amount || !formData.incomeDate) {
+      alert("Please fill all required fields");
+      return;
     }
 
-    setFormData({
-      incomeType: "Salary",
-      amount: "",
-      incomeDate: "",
-      remarks: "",
-    });
+    if (Number(formData.amount) <= 0) {
+      alert("Amount must be greater than 0");
+      return;
+    }
+
+    const duplicate = records.find(
+      (item) =>
+        item.userId === formData.userId &&
+        String(item.incomeType) === String(formData.incomeType) &&
+        item.id !== editId,
+    );
+
+    if (duplicate) {
+      alert("This Income Type is already assigned to this user");
+      return;
+    }
+
+    try {
+      if (editId) {
+        await axios.put(`${API_URL}/${editId}`, {
+          IT_ID: formData.incomeType,
+          Inc_Value: formData.amount,
+          Inc_Date: formData.incomeDate,
+          Remarks: formData.remarks,
+        });
+
+        alert("Income Updated Successfully");
+      } else {
+        await axios.post(API_URL, {
+          UID: formData.uid,
+          IT_ID: formData.incomeType,
+          Inc_Value: formData.amount,
+          Inc_Date: formData.incomeDate,
+          Remarks: formData.remarks,
+        });
+
+        alert("Income Added Successfully");
+      }
+
+      fetchIncomeRecords();
+
+      setFormData({
+        userId: "",
+        username: "",
+        uid: "",
+        incomeType: "",
+        amount: "",
+        incomeDate: "",
+        remarks: "",
+      });
+
+      setShowAddModal(false);
+      setEditId(null);
+    } catch (error) {
+      console.error(error);
+      alert("Error saving income");
+    }
   };
 
   const handleEdit = (record) => {
-    setActiveTab("single");
     setEditId(record.id);
+
     setFormData({
+      uid: record.uid,
+      userId: record.userId,
+      username: record.username,
       incomeType: record.incomeType,
       amount: record.amount,
       incomeDate: reverseDate(record.incomeDate),
       remarks: record.remarks,
     });
+
     setShowAddModal(true);
   };
 
-  const filteredRecords = records.filter((record) =>
-    record.incomeType.toLowerCase().includes(search.toLowerCase()),
+  const filteredRecords = records.filter(
+    (record) =>
+      record.username.toLowerCase().includes(search.toLowerCase()) ||
+      record.userId.toLowerCase().includes(search.toLowerCase()),
+  );
+
+
+  const incomeSummary = Object.values(
+    records.reduce((acc, item) => {
+      if (!acc[item.userId]) {
+        acc[item.userId] = {
+          userId: item.userId,
+          username: item.username,
+          totalIncome: 0,
+        };
+      }
+
+    acc[item.userId].totalIncome += Number(item.amount);
+
+      return acc;
+    }, {}),
   );
 
   return (
@@ -173,9 +298,11 @@ function IncomeTransactions() {
                 <thead>
                   <tr>
                     <th>ID</th>
+                    <th>USER ID</th>
+                    <th>USERNAME</th>
+                    <th>DATE</th>
                     <th>INCOME TYPE</th>
                     <th>AMOUNT</th>
-                    <th>DATE</th>
                     <th>REMARKS</th>
                     <th>ACTION</th>
                   </tr>
@@ -185,9 +312,11 @@ function IncomeTransactions() {
                   {monthlyRecords.map((item) => (
                     <tr key={item.id}>
                       <td>{item.id}</td>
-                      <td>{item.incomeType}</td>
-                      <td>₹ {item.amount}</td>
+                      <td>{item.userId}</td>
+                      <td>{item.username}</td>
                       <td>{item.incomeDate}</td>
+                      <td>{item.incomeTypeName}</td>
+                      <td>₹ {item.amount}</td>
                       <td>{item.remarks}</td>
                       <td>
                         <button
@@ -195,6 +324,14 @@ function IncomeTransactions() {
                           onClick={() => handleEdit(item)}
                         >
                           <FaEdit />
+                        </button>
+
+                        <button
+                          className="edit-btn delete-icon-btn"
+                          onClick={() => handleDelete(item.id)}
+                          style={{ marginLeft: "10px" }}
+                        >
+                          <FaTrash style={{ color: "#ef4444" }} />
                         </button>
                       </td>
                     </tr>
@@ -218,30 +355,14 @@ function IncomeTransactions() {
         {activeTab === "records" && (
           <div className="income-card">
             <div className="records-header">
-
               <div className="search-box">
                 <FaSearch />
                 <input
                   type="text"
-                  placeholder="Search Income Type..."
+                  placeholder="Search Username or UID..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-              </div>
-            </div>
-
-            <div className="summary-cards">
-              <div className="summary-card">
-                <h4>Total Records</h4>
-                <p>{records.length}</p>
-              </div>
-
-              <div className="summary-card">
-                <h4>Total Income</h4>
-                <p>
-                  ₹{" "}
-                  {records.reduce((sum, item) => sum + Number(item.amount), 0)}
-                </p>
               </div>
             </div>
 
@@ -250,10 +371,12 @@ function IncomeTransactions() {
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Income Type</th>
-                    <th>Amount</th>
-                    <th>Date</th>
-                    <th>Remarks</th>
+                    <th>USER ID</th>
+                    <th>USERNAME</th>
+                    <th>DATE</th>
+                    <th>INCOME TYPE</th>
+                    <th>AMOUNT</th>
+                    <th>REMARKS</th>
                   </tr>
                 </thead>
 
@@ -261,9 +384,11 @@ function IncomeTransactions() {
                   {filteredRecords.map((record) => (
                     <tr key={record.id}>
                       <td>{record.id}</td>
-                      <td>{record.incomeType}</td>
-                      <td>₹ {record.amount}</td>
+                      <td>{record.userId}</td>
+                      <td>{record.username}</td>
                       <td>{record.incomeDate}</td>
+                      <td>{record.incomeTypeName}</td>
+                      <td>₹ {record.amount}</td>
                       <td>{record.remarks}</td>
                     </tr>
                   ))}
@@ -273,7 +398,6 @@ function IncomeTransactions() {
           </div>
         )}
       </div>
-
       {showAddModal && (
         <div className="modal-overlay">
           <div className="edit-modal">
@@ -284,7 +408,9 @@ function IncomeTransactions() {
                   setShowAddModal(false);
                   setEditId(null);
                   setFormData({
-                    incomeType: "Salary",
+                    userId: "",
+                    username: "",
+                    incomeType: "",
                     amount: "",
                     incomeDate: "",
                     remarks: "",
@@ -296,15 +422,54 @@ function IncomeTransactions() {
 
             <div className="modal-body">
               <div className="form-group">
+                <label>User ID :</label>
+                <input
+                  type="text"
+                  name="userId"
+                  value={formData.userId}
+                  onChange={(e) => {
+                    handleChange(e);
+
+                    fetchUserDetails(e.target.value);
+                  }}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Username :</label>
+                <input
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  readOnly
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Date :</label>
+                <input
+                  type="date"
+                  max={new Date().toISOString().split("T")[0]}
+                  name="incomeDate"
+                  value={formData.incomeDate}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group">
                 <label>Income Type :</label>
                 <select
                   name="incomeType"
                   value={formData.incomeType}
                   onChange={handleChange}
                 >
-                  <option>Salary</option>
-                  <option>Freelancing</option>
-                  <option>Business Profit</option>
+                  <option value="">Select Income Type</option>
+
+                  {incomeTypes.map((type) => (
+                    <option key={type.IT_ID} value={type.IT_ID}>
+                      {type.Income_Type}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -314,16 +479,6 @@ function IncomeTransactions() {
                   type="number"
                   name="amount"
                   value={formData.amount}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Date :</label>
-                <input
-                  type="date"
-                  name="incomeDate"
-                  value={formData.incomeDate}
                   onChange={handleChange}
                 />
               </div>
@@ -345,7 +500,9 @@ function IncomeTransactions() {
                   setShowAddModal(false);
                   setEditId(null);
                   setFormData({
-                    incomeType: "Salary",
+                    userId: "",
+                    username: "",
+                    incomeType: "",
                     amount: "",
                     incomeDate: "",
                     remarks: "",
@@ -355,13 +512,7 @@ function IncomeTransactions() {
                 Cancel
               </button>
 
-              <button
-                className="save-btn"
-                onClick={(e) => {
-                  handleSubmit(e);
-                  setShowAddModal(false);
-                }}
-              >
+              <button className="save-btn" onClick={handleSubmit}>
                 <FaSave />
                 Save
               </button>
