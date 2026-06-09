@@ -200,6 +200,7 @@ form {
   gap: 10px;
   margin-top: 20px;
   margin-left: 20px;
+  margin-bottom: 20px;
   border: 1px solid #dbe2ea;
   border-radius: 12px;
   padding: 10px 15px;
@@ -342,30 +343,4 @@ tbody tr:hover {
 .action-buttons {
   margin-top: 25px;
   padding: 0 30px 20px;
-}
-.summary-cards {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-}
-
-.summary-card {
-  min-width: 220px;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.summary-card h4 {
-  color:white;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-.summary-card p {
-  font-size: 24px;
-  font-weight: bolder;
-  color: #1f1f5c;
 }
