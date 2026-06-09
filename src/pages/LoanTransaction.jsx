@@ -1,51 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./LoanTransaction.css";
 import { FaSave, FaEdit, FaSearch } from "react-icons/fa";
 
 function LoanTransaction() {
   const [activeTab, setActiveTab] = useState("single");
   const [editId, setEditId] = useState(null);
+  const [users, setUsers] = useState([]);
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get("http://localhost:5001/api/users");
+
+      setUsers(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   const [records, setRecords] = useState([
     {
       loanId: 1,
+      userId: "EMP001",
+      userName: "John",
       loanCategory: "Personal",
-      bankType: "SBI",
+      bankName: "SBI",
       loanAmount: 50000,
       interestRate: 5,
-      loanDate: "2026-06-01",
+      EMIstartDate: "2026-06-01",
       tenureMonths: 12,
-      dueDate: "2026-07-01",
-      balance: 5000,
+      dueDate: "2027-06-01",
+      monthlyEMI: 4280,
       status: "Active",
-      createdBy: "Admin",
-    },
-    {
-      loanId: 2,
-      loanCategory: "vechicle",
-      bankType: "ICICI",
-      loanAmount: 100000,
-      interestRate: 5,
-      loanDate: "2026-06-01",
-      tenureMonths: 24,
-      dueDate: "2026-07-01",
-      balance: 5000,
-      status: "Active",
-      createdBy: "Admin",
     },
   ]);
 
   const [search, setSearch] = useState("");
 
   const [formData, setFormData] = useState({
+    userId: "",
+    userName: "",
     loanCategory: "",
-    bankType: "",
+    bankName: "",
     loanAmount: "",
     interestRate: "",
-    loanDate: "",
+    EMIstartDate: "",
     tenureMonths: "",
     dueDate: "",
-    balance: "",
+    monthlyEMI: "",
     status: "",
   });
 
@@ -54,10 +58,22 @@ function LoanTransaction() {
     const d = new Date(dateString);
     return `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 1).padStart(2, "0")}-${d.getFullYear()}`;
   };
+  const calculateMonthlyEMI = (amount, rate, months) => {
+    const P = Number(amount);
 
-  const calculateDueDate = (loanDate, months) => {
-    if (!loanDate || !months) return "";
-    const d = new Date(loanDate);
+    const R = Number(rate) / (12 * 100);
+
+    const N = Number(months);
+
+    if (!P || !R || !N) return "";
+
+    const emi = (P * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+
+    return emi.toFixed(2);
+  };
+  const calculateDueDate = (EMIstartDate, months) => {
+    if (!EMIstartDate || !months) return "";
+    const d = new Date(EMIstartDate);
     d.setMonth(d.getMonth() + Number(months));
     return d.toISOString().split("T")[0];
   };
@@ -65,48 +81,62 @@ function LoanTransaction() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    let updated = { ...formData, [name]: value };
+    let updated = {
+      ...formData,
+      [name]: value,
+    };
 
-    if (name === "loanAmount") {
-      updated.balance = value;
+    if (
+      name === "loanAmount" ||
+      name === "interestRate" ||
+      name === "tenureMonths"
+    ) {
+      updated.monthlyEMI = calculateMonthlyEMI(
+        name === "loanAmount" ? value : updated.loanAmount,
+        name === "interestRate" ? value : updated.interestRate,
+        name === "tenureMonths" ? value : updated.tenureMonths,
+      );
     }
-
-    if (name === "loanDate" || name === "tenureMonths") {
+    if (name === "EMIstartDate" || name === "tenureMonths") {
       updated.dueDate = calculateDueDate(
-        name === "loanDate" ? value : updated.loanDate,
+        name === "EMIstartDate" ? value : updated.EMIstartDate,
         name === "tenureMonths" ? value : updated.tenureMonths,
       );
     }
 
     setFormData(updated);
   };
-
   const resetForm = () => {
     setEditId(null);
+
     setFormData({
+      userId: "",
+      userName: "",
       loanCategory: "",
+      bankName: "",
       loanAmount: "",
       interestRate: "",
-      loanDate: "",
+      EMIstartDate: "",
       tenureMonths: "",
       dueDate: "",
-      balance: "",
+      monthlyEMI: "",
       status: "",
     });
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const loanData = {
+      userId: formData.userId,
+      userName: formData.userName,
       loanCategory: formData.loanCategory,
-      bankType: formData.bankType,
+      bankName: formData.bankName,
       loanAmount: formData.loanAmount,
       interestRate: formData.interestRate,
-      loanDate: formData.loanDate,
+      EMIstartDate: formData.EMIstartDate,
       tenureMonths: formData.tenureMonths,
       dueDate: formData.dueDate,
-      balance: formData.loanAmount,
+      monthlyEMI: formData.monthlyEMI,
       status: formData.status,
     };
 
@@ -120,7 +150,6 @@ function LoanTransaction() {
         {
           loanId: records.length + 1,
           ...loanData,
-          createdBy: "Admin",
         },
       ]);
     }
@@ -131,17 +160,19 @@ function LoanTransaction() {
   const handleEdit = (item) => {
     setActiveTab("single");
     setEditId(item.loanId);
-    setFormData({
-      loanCategory: item.loanCategory,
-      bankType: item.bankType,
-      loanAmount: item.loanAmount,
-      interestRate: item.interestRate,
-      loanDate: item.loanDate,
-      tenureMonths: item.tenureMonths,
-      dueDate: item.dueDate,
-      balance: item.balance,
-      status: item.status,
-    });
+  setFormData({
+    userId: item.userId,
+    userName: item.userName,
+    loanCategory: item.loanCategory,
+    bankName: item.bankName,
+    loanAmount: item.loanAmount,
+    interestRate: item.interestRate,
+    EMIstartDate: item.EMIstartDate,
+    tenureMonths: item.tenureMonths,
+    dueDate: item.dueDate,
+    monthlyEMI: item.monthlyEMI,
+    status: item.status,
+  });
   };
 
   const filteredRecords = records.filter((r) =>
@@ -174,6 +205,38 @@ function LoanTransaction() {
           <form onSubmit={handleSubmit}>
             <div className="loan-form">
               <div className="form-row">
+                <label>USER ID :</label>
+
+                <select
+                  name="userId"
+                  value={formData.userId}
+                  onChange={(e) => {
+                    const selectedUser = users.find(
+                      (u) => u.Emp_Code === e.target.value,
+                    );
+
+                    setFormData({
+                      ...formData,
+                      userId: selectedUser?.Emp_Code || "",
+                      userName: selectedUser?.Emp_Name || "",
+                    });
+                  }}
+                >
+                  <option value="">Select User ID</option>
+
+                  {users.map((user) => (
+                    <option key={user.UID} value={user.Emp_Code}>
+                      {user.Emp_Code}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-row">
+                <label>USER NAME :</label>
+
+                <input type="text" value={formData.userName} readOnly />
+              </div>
+              <div className="form-row">
                 <label>LOAN CATEGORY :</label>
 
                 <select
@@ -192,11 +255,11 @@ function LoanTransaction() {
               </div>
 
               <div className="form-row">
-                <label>BANK TYPE :</label>
+                <label>BANK NAME :</label>
 
                 <select
-                  name="bankType"
-                  value={formData.bankType}
+                  name="bankName"
+                  value={formData.bankName}
                   onChange={handleChange}
                 >
                   <option value="">Select Bank</option>
@@ -232,12 +295,12 @@ function LoanTransaction() {
               </div>
 
               <div className="form-row">
-                <label>LOAN DATE :</label>
+                <label>EMI START DATE :</label>
 
                 <input
                   type="date"
-                  name="loanDate"
-                  value={formData.loanDate}
+                  name="EMIstartDate"
+                  value={formData.EMIstartDate}
                   onChange={handleChange}
                 />
               </div>
@@ -264,11 +327,10 @@ function LoanTransaction() {
               </div>
 
               <div className="form-row">
-                <label>BALANCE :</label>
+                <label>MONTHLY EMI :</label>
 
-                <input type="number" value={formData.balance} readOnly />
+                <input type="number" value={formData.monthlyEMI} readOnly />
               </div>
-
               <div className="form-row">
                 <label>STATUS :</label>
 
@@ -307,62 +369,44 @@ function LoanTransaction() {
               placeholder="Search Loan Category..."
             />
           </div>
-          <div className="summary-cards">
-            <div className="summary-card">
-              <h4>Total Records</h4>
-              <p>{records.length}</p>
-            </div>
-
-            <div className="summary-card">
-              <h4>Total Loan Amount</h4>
-              <p>
-                ₹{" "}
-                {records.reduce(
-                  (sum, item) => sum + Number(item.loanAmount),
-                  0,
-                )}
-              </p>
-            </div>
-          </div>
 
           <table>
             <thead>
               <tr>
                 <th>LOAN ID</th>
-                <th>CATEGORY</th>
-                <th>BANK TYPE</th>
-                <th>AMOUNT</th>
-                <th>INTEREST</th>
-                <th>LOAN DATE</th>
+                <th>USER ID</th>
+                <th>USER NAME</th>
+                <th>LOAN TYPE</th>
+                <th>BANK NAME</th>
+                <th>EMI START DATE</th>
                 <th>TENURE</th>
                 <th>DUE DATE</th>
-                <th>BALANCE</th>
+                <th>MONTHLY EMI</th>
                 <th>STATUS</th>
-                <th>ACTION</th>
               </tr>
             </thead>
             <tbody>
               {filteredRecords.map((item) => (
                 <tr key={item.loanId}>
                   <td>{item.loanId}</td>
+
+                  <td>{item.userId}</td>
+
+                  <td>{item.userName}</td>
+
                   <td>{item.loanCategory}</td>
-                  <td>{item.bankType}</td>
-                  <td>₹ {item.loanAmount}</td>
-                  <td>{item.interestRate}%</td>
-                  <td>{formatDate(item.loanDate)}</td>
+
+                  <td>{item.bankName}</td>
+
+                  <td>{formatDate(item.EMIstartDate)}</td>
+
                   <td>{item.tenureMonths}</td>
+
                   <td>{formatDate(item.dueDate)}</td>
-                  <td>₹ {item.balance}</td>
+
+                  <td>₹ {item.monthlyEMI}</td>
+
                   <td>{item.status}</td>
-                  <td>
-                    <button
-                      type="button"
-                      className="edit-btn"
-                      onClick={() => handleEdit(item)}
-                    >
-                      <FaEdit />
-                    </button>
-                  </td>
                 </tr>
               ))}
             </tbody>

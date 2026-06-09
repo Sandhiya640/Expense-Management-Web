@@ -11,11 +11,27 @@ import {
 import axios from "axios";
 function ExpenseTransactions() {
   const [showEditModal, setShowEditModal] = useState(false);
+  const [users, setUsers] = useState([]);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get("http://localhost:5001/api/users");
+      setUsers(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+    fetchUsers();
+  }, []);
   const [showAddModal, setShowAddModal] = useState(false);
 
   const [categories, setCategories] = useState([]);
-
   const [newExpense, setNewExpense] = useState({
+    userId: "",
+    userName: "",
     expType: "",
     expCategory: "",
     expValue: "",
@@ -48,6 +64,8 @@ function ExpenseTransactions() {
   const [records, setRecords] = useState([
     {
       expId: 1,
+      userId: "EMP001",
+      userName: "Admin User",
       expType: "Food",
       expCategory: "Breakfast",
       expValue: 120,
@@ -57,6 +75,8 @@ function ExpenseTransactions() {
     },
     {
       expId: 2,
+      userId: "EMP002",
+      userName: "John",
       expType: "Food",
       expCategory: "Lunch",
       expValue: 250,
@@ -64,27 +84,10 @@ function ExpenseTransactions() {
       remarks: "Lunch Expense",
       createdBy: "Admin",
     },
-    {
-      expId: 3,
-      expType: "Travel",
-      expCategory: "Bus",
-      expValue: 80,
-      expDate: "2026-05-03",
-      remarks: "Bus Travel",
-      createdBy: "Admin",
-    },
-    {
-      expId: 4,
-      expType: "Travel",
-      expCategory: "Train",
-      expValue: 450,
-      expDate: "2026-05-04",
-      remarks: "Train Ticket",
-      createdBy: "Admin",
-    },
   ]);
   const handleAddExpense = () => {
     if (
+      !newExpense.userId ||
       !newExpense.expCategory ||
       !newExpense.expValue ||
       !newExpense.expDate
@@ -93,14 +96,18 @@ function ExpenseTransactions() {
       return;
     }
 
+    const selectedUser = users.find((u) => u.UID === Number(newExpense.userId));
+
     const selectedCategory = categories.find(
       (c) => c.EC_ID === Number(newExpense.expCategory),
     );
 
     const expenseRecord = {
       expId: records.length + 1,
+      userId: selectedUser?.Emp_Code || "",
+      userName: selectedUser?.Emp_Name || "",
       expType: selectedCategory?.Expense_Type || "",
-      expCategory: selectedCategory?.Expense_Type || "",
+      expCategory: selectedCategory?.Expense_Category || "",
       expValue: Number(newExpense.expValue),
       expDate: newExpense.expDate,
       remarks: newExpense.remarks,
@@ -110,6 +117,8 @@ function ExpenseTransactions() {
     setRecords([...records, expenseRecord]);
 
     setNewExpense({
+      userId: "",
+      userName: "",
       expType: "",
       expCategory: "",
       expValue: "",
@@ -186,7 +195,7 @@ function ExpenseTransactions() {
   });
 
   const filteredRecords = records.filter((item) =>
-    item.expType.toLowerCase().includes(search.toLowerCase()),
+    item.userId?.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -243,6 +252,9 @@ function ExpenseTransactions() {
               <thead>
                 <tr>
                   <th>EXP ID</th>
+                  <th>USER ID</th>
+                  <th>USER NAME</th>
+                  <th>DATE</th>
                   <th>EXPENSE TYPE</th>
                   <th>EXPENSE CATEGORY</th>
                   <th>AMOUNT</th>
@@ -262,11 +274,13 @@ function ExpenseTransactions() {
                   monthlyRecords.map((item) => (
                     <tr key={item.expId}>
                       <td>{item.expId}</td>
+                      <td>{item.userId}</td>
+                      <td>{item.userName}</td>
+                      <td>{formatDate(item.expDate)}</td>
                       <td>{item.expType}</td>
                       <td>{item.expCategory}</td>
                       <td>₹ {item.expValue}</td>
                       <td>{item.remarks}</td>
-
                       <td>
                         <button
                           type="button"
@@ -304,41 +318,27 @@ function ExpenseTransactions() {
 
               <input
                 type="text"
-                placeholder="Search Expense Type..."
+                placeholder="Search User ID..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
-            </div>
-          </div>
-
-          <div className="summary-cards">
-            <div className="summary-card">
-              <h4>Total Records</h4>
-              <p>{records.length}</p>
-            </div>
-
-            <div className="summary-card">
-              <h4>Total Expense</h4>
-              <p>
-                ₹{" "}
-                {records.reduce((sum, item) => sum + Number(item.expValue), 0)}
-              </p>
             </div>
           </div>
           <div className="table-wrapper">
             <table>
               <thead>
                 <tr>
+                  <th>EXPENSE ID</th>
+                  <th>USER ID</th>
+                  <th>USER NAME</th>
                   <th>DATE</th>
-                  <th>EXPENSE TYPE</th>
-                  <th>VALUE</th>
+                  <th>AMOUNT</th>
                 </tr>
               </thead>
-
               <tbody>
                 {filteredRecords.length === 0 ? (
                   <tr>
-                    <td colSpan="3" className="no-data">
+                    <td colSpan="5" className="no-data">
                       No Records Found
                     </td>
                   </tr>
@@ -346,9 +346,13 @@ function ExpenseTransactions() {
                   filteredRecords.map((item) => (
                     <React.Fragment key={item.expId}>
                       <tr className="summary-row">
-                        <td>{formatDate(item.expDate)}</td>
+                        <td>{item.expId}</td>
 
-                        <td>{item.expType}</td>
+                        <td>{item.userId}</td>
+
+                        <td>{item.userName}</td>
+
+                        <td>{formatDate(item.expDate)}</td>
 
                         <td className="value-column">
                           <div
@@ -482,6 +486,27 @@ function ExpenseTransactions() {
             </div>
 
             <div className="modal-body">
+              <div className="form-group">
+                <label>User :</label>
+
+                <select
+                  value={newExpense.userId}
+                  onChange={(e) =>
+                    setNewExpense({
+                      ...newExpense,
+                      userId: e.target.value,
+                    })
+                  }
+                >
+                  <option value="">Select User</option>
+
+                  {users.map((user) => (
+                    <option key={user.UID} value={user.UID}>
+                      {user.Emp_Code} - {user.Emp_Name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <div className="form-group">
                 <label>Expense Category :</label>
 
