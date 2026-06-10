@@ -16,26 +16,38 @@ function LoanTransaction() {
       console.error(error);
     }
   };
+
+  const fetchLoans = async () => {
+    try {
+      const response = await axios.get("http://localhost:5001/api/loans");
+
+      const formattedData = response.data.map((item) => ({
+        loanId: item.LO_ID,
+        userId: item.Emp_Code,
+        userName: item.Emp_Name,
+        loanCategory: item.Loan_Type,
+        bankName: item.Bank_Name,
+        loanAmount: item.Loan_Amount,
+        interestRate: item.Interest_Rate,
+        EMIstartDate: item.EMI_Start_Date,
+        tenureMonths: item.Tenure,
+        dueDate: item.Due_Date,
+        monthlyEMI: item.Monthly_EMI,
+        status: item.Status,
+      }));
+
+      setRecords(formattedData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
+    fetchLoans();
   }, []);
 
-  const [records, setRecords] = useState([
-    {
-      loanId: 1,
-      userId: "EMP001",
-      userName: "John",
-      loanCategory: "Personal",
-      bankName: "SBI",
-      loanAmount: 50000,
-      interestRate: 5,
-      EMIstartDate: "2026-06-01",
-      tenureMonths: 12,
-      dueDate: "2027-06-01",
-      monthlyEMI: 4280,
-      status: "Active",
-    },
-  ]);
+  const [records, setRecords] = useState([]);
 
   const [search, setSearch] = useState("");
 
@@ -123,61 +135,80 @@ function LoanTransaction() {
       status: "",
     });
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const loanData = {
-      userId: formData.userId,
-      userName: formData.userName,
-      loanCategory: formData.loanCategory,
-      bankName: formData.bankName,
-      loanAmount: formData.loanAmount,
-      interestRate: formData.interestRate,
-      EMIstartDate: formData.EMIstartDate,
-      tenureMonths: formData.tenureMonths,
-      dueDate: formData.dueDate,
-      monthlyEMI: formData.monthlyEMI,
-      status: formData.status,
-    };
+    if (!formData.userId) return alert("Please select a User");
 
-    if (editId) {
-      setRecords(
-        records.map((r) => (r.loanId === editId ? { ...r, ...loanData } : r)),
-      );
-    } else {
-      setRecords([
-        ...records,
-        {
-          loanId: records.length + 1,
-          ...loanData,
-        },
-      ]);
+    if (!formData.loanCategory) return alert("Please select a Loan Category");
+
+    if (!formData.bankName) return alert("Please select a Bank Name");
+
+    if (!formData.loanAmount) return alert("Please enter Loan Amount");
+
+    if (!formData.interestRate) return alert("Please enter Interest Rate");
+
+    if (!formData.EMIstartDate) return alert("Please select EMI Start Date");
+
+    if (!formData.tenureMonths) return alert("Please enter Tenure Months");
+
+    if (!formData.status) return alert("Please select Status");
+
+    try {
+      const payload = {
+        UID: formData.userId,
+        Loan_Type: formData.loanCategory,
+        Bank_Name: formData.bankName,
+        Loan_Amount: formData.loanAmount,
+        Interest_Rate: formData.interestRate,
+        EMI_Start_Date: formData.EMIstartDate,
+        Tenure: formData.tenureMonths,
+        Due_Date: formData.dueDate,
+        Monthly_EMI: formData.monthlyEMI,
+        Status: formData.status,
+      };
+
+      await axios.post("http://localhost:5001/api/loans", payload);
+
+      fetchLoans();
+      resetForm();
+
+      alert("Loan Saved Successfully");
+    } catch (error) {
+      console.log(error.response?.data);
+      console.log(error.response?.status);
+      console.log(error);
+
+      alert(error.response?.data?.error || "Failed to save loan");
     }
-
-    resetForm();
   };
 
   const handleEdit = (item) => {
     setActiveTab("single");
     setEditId(item.loanId);
-  setFormData({
-    userId: item.userId,
-    userName: item.userName,
-    loanCategory: item.loanCategory,
-    bankName: item.bankName,
-    loanAmount: item.loanAmount,
-    interestRate: item.interestRate,
-    EMIstartDate: item.EMIstartDate,
-    tenureMonths: item.tenureMonths,
-    dueDate: item.dueDate,
-    monthlyEMI: item.monthlyEMI,
-    status: item.status,
-  });
+    setFormData({
+      userId: item.userId,
+      userName: item.userName,
+      loanCategory: item.loanCategory,
+      bankName: item.bankName,
+      loanAmount: item.loanAmount,
+      interestRate: item.interestRate,
+      EMIstartDate: item.EMIstartDate,
+      tenureMonths: item.tenureMonths,
+      dueDate: item.dueDate,
+      monthlyEMI: item.monthlyEMI,
+      status: item.status,
+    });
   };
 
-  const filteredRecords = records.filter((r) =>
-    r.loanCategory.toLowerCase().includes(search.toLowerCase()),
-  );
+ const filteredRecords = records.filter(
+   (r) =>
+     r.userId?.toString().toLowerCase().includes(search.toLowerCase()) ||
+     r.userName?.toLowerCase().includes(search.toLowerCase()) ||
+     r.loanCategory?.toLowerCase().includes(search.toLowerCase()) ||
+     r.bankName?.toLowerCase().includes(search.toLowerCase()) ||
+     r.status?.toLowerCase().includes(search.toLowerCase()),
+ );
 
   return (
     <div className="expense-page">
@@ -212,12 +243,12 @@ function LoanTransaction() {
                   value={formData.userId}
                   onChange={(e) => {
                     const selectedUser = users.find(
-                      (u) => u.Emp_Code === e.target.value,
+                      (u) => u.UID === Number(e.target.value),
                     );
 
                     setFormData({
                       ...formData,
-                      userId: selectedUser?.Emp_Code || "",
+                      userId: selectedUser?.UID || "",
                       userName: selectedUser?.Emp_Name || "",
                     });
                   }}
@@ -225,7 +256,7 @@ function LoanTransaction() {
                   <option value="">Select User ID</option>
 
                   {users.map((user) => (
-                    <option key={user.UID} value={user.Emp_Code}>
+                    <option key={user.UID} value={user.UID}>
                       {user.Emp_Code}
                     </option>
                   ))}
