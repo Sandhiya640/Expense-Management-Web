@@ -7,6 +7,7 @@ import {
   FaUpload,
   FaPlus,
   FaTimes,
+  FaTrash,
 } from "react-icons/fa";
 import axios from "axios";
 function ExpenseTransactions() {
@@ -101,7 +102,45 @@ function ExpenseTransactions() {
     }
   };
   console.log(newExpense);
-  const handleAddExpense = async () => {
+  
+   const handleAddExpense = async () => {
+
+  if (
+    !newExpense.userId ||
+    !newExpense.expDate ||
+    !newExpense.expType ||
+    !newExpense.expCategory ||
+    !newExpense.expValue
+  ) {
+    alert("Please fill all required fields");
+    return;
+  }
+
+  if (Number(newExpense.expValue) <= 0) {
+    alert("Amount must be greater than 0");
+    return;
+  }
+
+  const duplicate = records.find(
+    (item) =>
+      String(item.userId) === String(newExpense.userId) &&
+      String(item.expDate).substring(0, 10) === newExpense.expDate &&
+      item.expType ===
+        categories.find(
+          (c) => String(c.EC_ID) === String(newExpense.expType)
+        )?.Expense_Type &&
+      item.expCategory ===
+        expenseTypes.find(
+          (e) => String(e.ET_ID) === String(newExpense.expCategory)
+        )?.Expense_Name
+  );
+
+  if (duplicate) {
+    alert("Duplicate Expense Entry Already Exists");
+    return;
+  }
+
+  
     try {
       await axios.post("http://localhost:5001/api/expense-transactions", {
         userId: newExpense.userId,
@@ -192,6 +231,22 @@ function ExpenseTransactions() {
     });
 
     setShowEditModal(true);
+  };
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this expense?")) return;
+
+    try {
+      await axios.delete(
+        `http://localhost:5001/api/expense-transactions/${id}`,
+      );
+
+      alert("Expense Deleted Successfully");
+
+      fetchExpenses();
+    } catch (error) {
+      console.error(error);
+      alert("Delete Failed");
+    }
   };
 
   const handleReset = () => {
@@ -313,6 +368,15 @@ function ExpenseTransactions() {
                           onClick={() => handleEdit(item)}
                         >
                           <FaEdit />
+                        </button>
+
+                        <button
+                          type="button"
+                          className="edit-btn"
+                          style={{ marginLeft: "10px" }}
+                          onClick={() => handleDelete(item.expId)}
+                        >
+                          <FaTrash style={{ color: "#ef4444" }} />
                         </button>
                       </td>
                     </tr>
@@ -511,6 +575,7 @@ function ExpenseTransactions() {
                 <label>User :</label>
 
                 <select
+                required
                   value={newExpense.userId}
                   onChange={(e) =>
                     setNewExpense({
@@ -533,6 +598,7 @@ function ExpenseTransactions() {
                 <label>Date :</label>
 
                 <input
+                required
                   type="date"
                   value={newExpense.expDate}
                   onChange={(e) =>
@@ -547,6 +613,7 @@ function ExpenseTransactions() {
                 <label>Expense Type :</label>
 
                 <select
+                required
                   value={newExpense.expType}
                   onChange={(e) =>
                     setNewExpense({
@@ -569,6 +636,8 @@ function ExpenseTransactions() {
                 <label>Expense Name :</label>
 
                 <select
+                required
+                  disabled={!newExpense.expType}
                   value={newExpense.expCategory}
                   onChange={(e) =>
                     setNewExpense({
@@ -595,7 +664,9 @@ function ExpenseTransactions() {
                 <label>Amount :</label>
 
                 <input
+                required
                   type="number"
+                  min="1"
                   value={newExpense.expValue}
                   onChange={(e) =>
                     setNewExpense({
@@ -610,6 +681,7 @@ function ExpenseTransactions() {
                 <label>Remarks :</label>
 
                 <textarea
+                  maxLength={250}
                   value={newExpense.remarks}
                   onChange={(e) =>
                     setNewExpense({
@@ -629,7 +701,18 @@ function ExpenseTransactions() {
                 Cancel
               </button>
 
-              <button className="save-btn" onClick={handleAddExpense}>
+              <button
+                className="save-btn"
+                onClick={handleAddExpense}
+                disabled={
+                  !newExpense.userId ||
+                  !newExpense.expDate ||
+                  !newExpense.expType ||
+                  !newExpense.expCategory ||
+                  !newExpense.expValue ||
+                  !newExpense.remarks
+                }
+              >
                 <FaSave />
                 Save
               </button>
