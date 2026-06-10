@@ -192,7 +192,7 @@ useEffect(() => {
                   </span>
                 </td>
 
-                <td>{item.Created_by}</td>
+                <td>{item.Created_By}</td>
 
                 <td>
                   <button className="edit-btn" onClick={() => handleEdit(item)}>
