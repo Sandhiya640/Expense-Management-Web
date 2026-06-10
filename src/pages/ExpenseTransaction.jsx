@@ -12,7 +12,7 @@ import axios from "axios";
 function ExpenseTransactions() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [users, setUsers] = useState([]);
-
+  const [categories, setCategories] = useState([]);
   const fetchUsers = async () => {
     try {
       const response = await axios.get("http://localhost:5001/api/users");
@@ -21,14 +21,23 @@ function ExpenseTransactions() {
       console.error(error);
     }
   };
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5001/api/expense-categories",
+      );
 
-  useEffect(() => {
-    fetchCategories();
-    fetchUsers();
-  }, []);
+      console.log("Expense Categories:", response.data);
+
+      setCategories(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const [showAddModal, setShowAddModal] = useState(false);
 
-  const [categories, setCategories] = useState([]);
+  const [expenseTypes, setExpenseTypes] = useState([]);
   const [newExpense, setNewExpense] = useState({
     userId: "",
     userName: "",
@@ -47,75 +56,81 @@ function ExpenseTransactions() {
   const [selectedMonth, setSelectedMonth] = useState("");
 
   const [hoveredItem, setHoveredItem] = useState(null);
-  const fetchCategories = async () => {
+  const fetchExpenseTypes = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5001/api/expense-categories",
+        "http://localhost:5001/api/expense-types",
       );
 
-      setCategories(response.data);
+      console.log("Expense Types API:", response.data);
+
+      setExpenseTypes(response.data);
     } catch (error) {
       console.error(error);
     }
   };
   useEffect(() => {
+    fetchUsers();
     fetchCategories();
+    fetchExpenseTypes();
+    fetchExpenses();
   }, []);
-  const [records, setRecords] = useState([
-    {
-      expId: 1,
-      userId: "EMP001",
-      userName: "Admin User",
-      expType: "Food",
-      expCategory: "Breakfast",
-      expValue: 120,
-      expDate: "2026-05-01",
-      remarks: "Breakfast Expense",
-      createdBy: "Admin",
-    },
-    {
-      expId: 2,
-      userId: "EMP002",
-      userName: "John",
-      expType: "Food",
-      expCategory: "Lunch",
-      expValue: 250,
-      expDate: "2026-05-02",
-      remarks: "Lunch Expense",
-      createdBy: "Admin",
-    },
-  ]);
-  const handleAddExpense = () => {
-    if (
-      !newExpense.userId ||
-      !newExpense.expCategory ||
-      !newExpense.expValue ||
-      !newExpense.expDate
-    ) {
-      alert("Please fill all fields");
-      return;
+  const [records, setRecords] = useState([]);
+  const fetchExpenses = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5001/api/expense-transactions",
+      );
+
+      console.log("Expense Data:", response.data);
+
+      const formatted = response.data.map((item) => ({
+        expId: item.EXP_ID,
+        userId: item.UID,
+        userName: item.Emp_Name,
+        expType: item.Expense_Type,
+        expCategory: item.Expense_Name,
+        expValue: item.Amount,
+        expDate: item.Expense_Date,
+        remarks: item.Remarks,
+      }));
+
+      setRecords(formatted);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  console.log(newExpense);
+  const handleAddExpense = async () => {
+    try {
+      await axios.post("http://localhost:5001/api/expense-transactions", {
+        userId: newExpense.userId,
+        expType: newExpense.expType,
+        expCategory: newExpense.expCategory,
+        expValue: newExpense.expValue,
+        expDate: newExpense.expDate,
+        remarks: newExpense.remarks,
+      });
+
+      alert("Expense Saved Successfully");
+
+      fetchExpenses();
+
+      setNewExpense({
+        userId: "",
+        expType: "",
+        expCategory: "",
+        expValue: "",
+        expDate: "",
+        remarks: "",
+      });
+
+      setShowAddModal(false);
+    } catch (error) {
+      console.error(error);
     }
 
-    const selectedUser = users.find((u) => u.UID === Number(newExpense.userId));
-
-    const selectedCategory = categories.find(
-      (c) => c.EC_ID === Number(newExpense.expCategory),
-    );
-
-    const expenseRecord = {
-      expId: records.length + 1,
-      userId: selectedUser?.Emp_Code || "",
-      userName: selectedUser?.Emp_Name || "",
-      expType: selectedCategory?.Expense_Type || "",
-      expCategory: selectedCategory?.Expense_Category || "",
-      expValue: Number(newExpense.expValue),
-      expDate: newExpense.expDate,
-      remarks: newExpense.remarks,
-      createdBy: "Admin",
-    };
-
-    setRecords([...records, expenseRecord]);
-
+    console.log(newExpense);
     setNewExpense({
       userId: "",
       userName: "",
@@ -140,11 +155,14 @@ function ExpenseTransactions() {
   const formatDate = (date) => {
     if (!date) return "";
 
-    const [year, month, day] = date.split("-");
+    const d = new Date(date);
+
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const year = d.getFullYear();
 
     return `${day}-${month}-${year}`;
   };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -191,13 +209,20 @@ function ExpenseTransactions() {
   const monthlyRecords = records.filter((item) => {
     if (!selectedMonth) return true;
 
-    return item.expDate.substring(0, 7) === selectedMonth;
+    return item.expDate?.substring(0, 7) === selectedMonth;
   });
 
   const filteredRecords = records.filter((item) =>
-    item.userId?.toLowerCase().includes(search.toLowerCase()),
+    String(item.userId).toLowerCase().includes(search.toLowerCase()),
   );
+  console.log("Selected Type:", newExpense.expType);
 
+  console.log(
+    "Matching Expense Names:",
+    expenseTypes.filter(
+      (item) => Number(item.EC_ID) === Number(newExpense.expType),
+    ),
+  );
   return (
     <div className="expense-page">
       <div className="expense-header">
@@ -256,7 +281,7 @@ function ExpenseTransactions() {
                   <th>USER NAME</th>
                   <th>DATE</th>
                   <th>EXPENSE TYPE</th>
-                  <th>EXPENSE CATEGORY</th>
+                  <th>EXPENSE NAME</th>
                   <th>AMOUNT</th>
                   <th>REMARKS</th>
                   <th>ACTION</th>
@@ -266,7 +291,7 @@ function ExpenseTransactions() {
               <tbody>
                 {monthlyRecords.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="no-data">
+                    <td colSpan="9" className="no-data">
                       No Records Found
                     </td>
                   </tr>
@@ -381,10 +406,6 @@ function ExpenseTransactions() {
 
                                 <p>
                                   <strong>Remarks:</strong> {item.remarks}
-                                </p>
-
-                                <p>
-                                  <strong>Created By:</strong> {item.createdBy}
                                 </p>
                               </div>
                             )}
@@ -507,42 +528,6 @@ function ExpenseTransactions() {
                   ))}
                 </select>
               </div>
-              <div className="form-group">
-                <label>Expense Category :</label>
-
-                <select
-                  value={newExpense.expCategory}
-                  onChange={(e) =>
-                    setNewExpense({
-                      ...newExpense,
-                      expCategory: e.target.value,
-                    })
-                  }
-                >
-                  <option value="">Select Category</option>
-
-                  {categories.map((cat) => (
-                    <option key={cat.EC_ID} value={cat.EC_ID}>
-                      {cat.Expense_Type}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label>Amount :</label>
-
-                <input
-                  type="number"
-                  value={newExpense.expValue}
-                  onChange={(e) =>
-                    setNewExpense({
-                      ...newExpense,
-                      expValue: e.target.value,
-                    })
-                  }
-                />
-              </div>
 
               <div className="form-group">
                 <label>Date :</label>
@@ -554,6 +539,68 @@ function ExpenseTransactions() {
                     setNewExpense({
                       ...newExpense,
                       expDate: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className="form-group">
+                <label>Expense Type :</label>
+
+                <select
+                  value={newExpense.expType}
+                  onChange={(e) =>
+                    setNewExpense({
+                      ...newExpense,
+                      expType: e.target.value,
+                      expCategory: "",
+                    })
+                  }
+                >
+                  <option value="">Select Type</option>
+
+                  {categories.map((cat) => (
+                    <option key={cat.EC_ID} value={cat.EC_ID}>
+                      {cat.Expense_Type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Expense Name :</label>
+
+                <select
+                  value={newExpense.expCategory}
+                  onChange={(e) =>
+                    setNewExpense({
+                      ...newExpense,
+                      expCategory: e.target.value,
+                    })
+                  }
+                >
+                  <option value="">Select Expense Name</option>
+
+                  {expenseTypes
+                    .filter(
+                      (item) =>
+                        Number(item.EC_ID) === Number(newExpense.expType),
+                    )
+                    .map((item) => (
+                      <option key={item.ET_ID} value={item.ET_ID}>
+                        {item.Expense_Name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Amount :</label>
+
+                <input
+                  type="number"
+                  value={newExpense.expValue}
+                  onChange={(e) =>
+                    setNewExpense({
+                      ...newExpense,
+                      expValue: e.target.value,
                     })
                   }
                 />
