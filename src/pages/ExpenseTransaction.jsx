@@ -102,45 +102,42 @@ function ExpenseTransactions() {
     }
   };
   console.log(newExpense);
-  
-   const handleAddExpense = async () => {
 
-  if (
-    !newExpense.userId ||
-    !newExpense.expDate ||
-    !newExpense.expType ||
-    !newExpense.expCategory ||
-    !newExpense.expValue
-  ) {
-    alert("Please fill all required fields");
-    return;
-  }
+  const handleAddExpense = async () => {
+    if (
+      !newExpense.userId ||
+      !newExpense.expDate ||
+      !newExpense.expType ||
+      !newExpense.expCategory ||
+      !newExpense.expValue
+    ) {
+      alert("Please fill all required fields");
+      return;
+    }
 
-  if (Number(newExpense.expValue) <= 0) {
-    alert("Amount must be greater than 0");
-    return;
-  }
+    if (Number(newExpense.expValue) <= 0) {
+      alert("Amount must be greater than 0");
+      return;
+    }
 
-  const duplicate = records.find(
-    (item) =>
-      String(item.userId) === String(newExpense.userId) &&
-      String(item.expDate).substring(0, 10) === newExpense.expDate &&
-      item.expType ===
-        categories.find(
-          (c) => String(c.EC_ID) === String(newExpense.expType)
-        )?.Expense_Type &&
-      item.expCategory ===
-        expenseTypes.find(
-          (e) => String(e.ET_ID) === String(newExpense.expCategory)
-        )?.Expense_Name
-  );
+    const duplicate = records.find(
+      (item) =>
+        String(item.userId) === String(newExpense.userId) &&
+        String(item.expDate).substring(0, 10) === newExpense.expDate &&
+        item.expType ===
+          categories.find((c) => String(c.EC_ID) === String(newExpense.expType))
+            ?.Expense_Type &&
+        item.expCategory ===
+          expenseTypes.find(
+            (e) => String(e.ET_ID) === String(newExpense.expCategory),
+          )?.Expense_Name,
+    );
 
-  if (duplicate) {
-    alert("Duplicate Expense Entry Already Exists");
-    return;
-  }
+    if (duplicate) {
+      alert("Duplicate Expense Entry Already Exists");
+      return;
+    }
 
-  
     try {
       await axios.post("http://localhost:5001/api/expense-transactions", {
         userId: newExpense.userId,
@@ -182,7 +179,7 @@ function ExpenseTransactions() {
 
     setShowAddModal(false);
   };
-
+ 
   const [formData, setFormData] = useState({
     expType: "",
     expCategory: "",
@@ -278,6 +275,17 @@ function ExpenseTransactions() {
       (item) => Number(item.EC_ID) === Number(newExpense.expType),
     ),
   );
+  const resetNewExpense = () => {
+    setNewExpense({
+      userId: "",
+      userName: "",
+      expType: "",
+      expCategory: "",
+      expValue: "",
+      expDate: "",
+      remarks: "",
+    });
+  };
   return (
     <div className="expense-page">
       <div className="expense-header">
@@ -311,7 +319,13 @@ function ExpenseTransactions() {
           <div className="card-header">
             <h3>Monthly Expense Records</h3>
 
-            <button className="add-btn" onClick={() => setShowAddModal(true)}>
+            <button
+              className="add-btn"
+              onClick={() => {
+                resetNewExpense();
+                setShowAddModal(true);
+              }}
+            >
               <FaPlus />
               Add Expense
             </button>
@@ -527,6 +541,7 @@ function ExpenseTransactions() {
                 onClick={() => {
                   setShowEditModal(false);
                   setEditId(null);
+                  handleReset();
                 }}
               >
                 Cancel
@@ -566,7 +581,10 @@ function ExpenseTransactions() {
 
               <FaTimes
                 style={{ cursor: "pointer" }}
-                onClick={() => setShowAddModal(false)}
+                onClick={() => {
+                  resetNewExpense();
+                  setShowAddModal(false);
+                }}
               />
             </div>
 
@@ -575,7 +593,7 @@ function ExpenseTransactions() {
                 <label>User :</label>
 
                 <select
-                required
+                  required
                   value={newExpense.userId}
                   onChange={(e) =>
                     setNewExpense({
@@ -598,7 +616,7 @@ function ExpenseTransactions() {
                 <label>Date :</label>
 
                 <input
-                required
+                  required
                   type="date"
                   value={newExpense.expDate}
                   onChange={(e) =>
@@ -613,7 +631,7 @@ function ExpenseTransactions() {
                 <label>Expense Type :</label>
 
                 <select
-                required
+                  required
                   value={newExpense.expType}
                   onChange={(e) =>
                     setNewExpense({
@@ -636,7 +654,7 @@ function ExpenseTransactions() {
                 <label>Expense Name :</label>
 
                 <select
-                required
+                  required
                   disabled={!newExpense.expType}
                   value={newExpense.expCategory}
                   onChange={(e) =>
@@ -664,7 +682,7 @@ function ExpenseTransactions() {
                 <label>Amount :</label>
 
                 <input
-                required
+                  required
                   type="number"
                   min="1"
                   value={newExpense.expValue}
@@ -696,7 +714,10 @@ function ExpenseTransactions() {
             <div className="modal-footer">
               <button
                 className="cancel-btn"
-                onClick={() => setShowAddModal(false)}
+                onClick={() => {
+                  resetNewExpense();
+                  setShowAddModal(false);
+                }}
               >
                 Cancel
               </button>
