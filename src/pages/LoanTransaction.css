@@ -344,3 +344,16 @@ tbody tr:hover {
   margin-top: 25px;
   padding: 0 30px 20px;
 }
+.edit-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid #dbe2ea;
+  background: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.edit-btn:hover {
+  background: #f3f4f6;
+}

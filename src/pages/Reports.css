@@ -1,0 +1,233 @@
+* {
+  box-sizing: border-box;
+}
+
+.report-page {
+  padding: 20px;
+  min-height: 100vh;
+  background: #f4f7fc;
+}
+
+.report-header {
+  text-align: left;
+  margin-bottom: 25px;
+}
+
+.report-header h2 {
+  font-size: 30px;
+  color: #1f1f5c;
+  font-weight: bold;
+  text-align: left;
+  font-family: "Times New Roman", Times, serif;
+  margin: 0;
+  padding-top: 8px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 12px;
+
+  margin-bottom: 30px;
+}
+
+.summary-card {
+  color: white;
+margin-top: 30px;
+  padding: 16px;
+
+  border-radius: 12px;
+
+  text-align: center;
+
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.summary-card h4 {
+  font-size: 13px;
+
+  margin-bottom: 8px;
+}
+
+.summary-card h2 {
+  font-size: 30px;
+}
+
+.income {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.expense {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.saving {
+  background: linear-gradient(135deg, #8b5cf6, #d946ef);
+}
+
+.loan {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.report-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 16px;
+
+  margin-bottom: 28px;
+}
+
+.report-card {
+  background: white;
+
+  border-radius: 16px;
+
+  text-align: center;
+
+  padding: 25px;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+
+  transition: 0.3s;
+}
+
+.report-card:hover {
+  transform: translateY(-6px);
+}
+
+.report-icon {
+  font-size: 40px;
+
+  color: #7c3aed;
+
+  margin-bottom: 15px;
+}
+
+.report-card h3 {
+  color: #111827;
+
+  margin-bottom: 10px;
+}
+
+.report-card p {
+  color: #64748b;
+
+  margin-bottom: 20px;
+}
+
+.report-card button {
+  width: 100%;
+  border: none;
+ background: linear-gradient(135deg, #8b5cf6, #d946ef);
+
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+.report-card button:hover {
+  opacity: 0.9;
+}
+
+.recent-download {
+  background: white;
+
+  border-radius: 16px;
+
+  padding: 20px;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.recent-download h3 {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 20px;
+
+  color: #111827;
+}
+
+table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f8fafc;
+}
+
+th {
+  text-align: left;
+
+  padding: 14px;
+}
+
+td {
+  padding: 16px;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.status {
+  background: #dcfce7;
+
+  color: #16a34a;
+
+  padding: 5px 12px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .summary-grid,
+  .report-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .summary-grid,
+  .report-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .report-header h2 {
+    font-size: 30px;
+  }
+}
+.empty {
+  text-align: center;
+  color: #64748b;
+  padding: 25px;
+}
+.saving {
+  background: linear-gradient(
+    90deg,
+    #7c3aed,
+    #4f46e5
+  );
+}
+.excel-icon {
+  color: #217346;
+  font-size: 22px;
+}

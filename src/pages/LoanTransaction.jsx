@@ -23,6 +23,7 @@ function LoanTransaction() {
 
       const formattedData = response.data.map((item) => ({
         loanId: item.LO_ID,
+        uid: item.UID,
         userId: item.Emp_Code,
         userName: item.Emp_Name,
         loanCategory: item.Loan_Type,
@@ -168,15 +169,19 @@ function LoanTransaction() {
         Status: formData.status,
       };
 
-      await axios.post("http://localhost:5001/api/loans", payload);
+      if (editId) {
+        await axios.put(`http://localhost:5001/api/loans/${editId}`, payload);
+
+        alert("Loan Updated Successfully");
+      } else {
+        await axios.post("http://localhost:5001/api/loans", payload);
+
+        alert("Loan Saved Successfully");
+      }
 
       fetchLoans();
       resetForm();
-
-      alert("Loan Saved Successfully");
     } catch (error) {
-      console.log(error.response?.data);
-      console.log(error.response?.status);
       console.log(error);
 
       alert(error.response?.data?.error || "Failed to save loan");
@@ -185,15 +190,17 @@ function LoanTransaction() {
 
   const handleEdit = (item) => {
     setActiveTab("single");
+
     setEditId(item.loanId);
+
     setFormData({
-      userId: item.userId,
+      userId: item.uid,
       userName: item.userName,
       loanCategory: item.loanCategory,
       bankName: item.bankName,
       loanAmount: item.loanAmount,
       interestRate: item.interestRate,
-      EMIstartDate: item.EMIstartDate,
+      EMIstartDate: item.EMIstartDate ? item.EMIstartDate.split("T")[0] : "",
       tenureMonths: item.tenureMonths,
       dueDate: item.dueDate,
       monthlyEMI: item.monthlyEMI,
@@ -201,14 +208,14 @@ function LoanTransaction() {
     });
   };
 
- const filteredRecords = records.filter(
-   (r) =>
-     r.userId?.toString().toLowerCase().includes(search.toLowerCase()) ||
-     r.userName?.toLowerCase().includes(search.toLowerCase()) ||
-     r.loanCategory?.toLowerCase().includes(search.toLowerCase()) ||
-     r.bankName?.toLowerCase().includes(search.toLowerCase()) ||
-     r.status?.toLowerCase().includes(search.toLowerCase()),
- );
+  const filteredRecords = records.filter(
+    (r) =>
+      r.userId?.toString().toLowerCase().includes(search.toLowerCase()) ||
+      r.userName?.toLowerCase().includes(search.toLowerCase()) ||
+      r.loanCategory?.toLowerCase().includes(search.toLowerCase()) ||
+      r.bankName?.toLowerCase().includes(search.toLowerCase()) ||
+      r.status?.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
     <div className="expense-page">
@@ -241,6 +248,7 @@ function LoanTransaction() {
                 <select
                   name="userId"
                   value={formData.userId}
+                  disabled={editId}
                   onChange={(e) => {
                     const selectedUser = users.find(
                       (u) => u.UID === Number(e.target.value),
@@ -414,6 +422,7 @@ function LoanTransaction() {
                 <th>DUE DATE</th>
                 <th>MONTHLY EMI</th>
                 <th>STATUS</th>
+                <th>ACTION</th>
               </tr>
             </thead>
             <tbody>
@@ -438,6 +447,15 @@ function LoanTransaction() {
                   <td>₹ {item.monthlyEMI}</td>
 
                   <td>{item.status}</td>
+
+                  <td>
+                    <button
+                      className="edit-btn"
+                      onClick={() => handleEdit(item)}
+                    >
+                      <FaEdit />
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

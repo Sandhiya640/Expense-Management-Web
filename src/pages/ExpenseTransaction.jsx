@@ -237,7 +237,7 @@ function ExpenseTransactions() {
 
     setShowAddModal(false);
   };
-
+ 
   const [formData, setFormData] = useState({
     expType: "",
     expCategory: "",
@@ -335,6 +335,17 @@ const filteredRecords = records.filter(
       (item) => Number(item.EC_ID) === Number(newExpense.expType),
     ),
   );
+  const resetNewExpense = () => {
+    setNewExpense({
+      userId: "",
+      userName: "",
+      expType: "",
+      expCategory: "",
+      expValue: "",
+      expDate: "",
+      remarks: "",
+    });
+  };
   return (
     <div className="expense-page">
       <div className="expense-header">
@@ -584,6 +595,7 @@ const filteredRecords = records.filter(
                 onClick={() => {
                   setShowEditModal(false);
                   setEditId(null);
+                  handleReset();
                 }}
               >
                 Cancel
@@ -623,7 +635,10 @@ const filteredRecords = records.filter(
 
               <FaTimes
                 style={{ cursor: "pointer" }}
-                onClick={() => setShowAddModal(false)}
+                onClick={() => {
+                  resetNewExpense();
+                  setShowAddModal(false);
+                }}
               />
             </div>
 
@@ -753,7 +768,10 @@ const filteredRecords = records.filter(
             <div className="modal-footer">
               <button
                 className="cancel-btn"
-                onClick={() => setShowAddModal(false)}
+                onClick={() => {
+                  resetNewExpense();
+                  setShowAddModal(false);
+                }}
               >
                 Cancel
               </button>
