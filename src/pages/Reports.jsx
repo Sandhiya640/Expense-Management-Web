@@ -79,7 +79,6 @@ function Reports() {
 
   return (
     <div className="report-page">
-      
       <div className="summary-grid">
         <div className="summary-card income">
           <h4>Total Income</h4>
@@ -121,7 +120,7 @@ function Reports() {
 
       <div className="recent-download">
         <h3>
-          <FaFileExcel className="excel-icon"/>
+          <FaFileExcel className="excel-icon" />
           Recent Downloads
         </h3>
 
