@@ -322,9 +322,11 @@ function ExpenseTransactions() {
     return item.expDate?.substring(0, 7) === selectedMonth;
   });
 
-  const filteredRecords = records.filter((item) =>
-    String(item.userId).toLowerCase().includes(search.toLowerCase()),
-  );
+const filteredRecords = records.filter(
+  (item) =>
+    String(item.userId).toLowerCase().includes(search.toLowerCase()) ||
+    String(item.userName).toLowerCase().includes(search.toLowerCase()),
+);
   console.log("Selected Type:", newExpense.expType);
 
   console.log(
