@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import * as XLSX from "xlsx";
 import "./IncomeTransactions.css";
 import {
   FaSave,
@@ -20,6 +21,9 @@ function IncomeTransactions() {
 
   const [search, setSearch] = useState("");
   const [editId, setEditId] = useState(null);
+
+  const fileInputRef = useRef(null);
+
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState("");
 
@@ -79,6 +83,8 @@ function IncomeTransactions() {
     fetchIncomeTypes();
   }, []);
 
+  
+
   const formatDate = (date) => {
     if (!date) return "";
     const [year, month, day] = date.split("-");
@@ -130,6 +136,57 @@ function IncomeTransactions() {
     }
   };
 
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = async (event) => {
+      try {
+        const data = new Uint8Array(event.target.result);
+
+        const workbook = XLSX.read(data, {
+          type: "array",
+        });
+
+        const sheetName = workbook.SheetNames[0];
+
+        const worksheet = workbook.Sheets[sheetName];
+
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        console.log(jsonData);
+
+       const res = await axios.post(
+         "http://localhost:5001/api/income-trn/bulk",
+         jsonData,
+       );
+
+      if (res.data.inserted === 0 && res.data.skipped > 0) {
+        alert(
+          "Bulk Upload Failed: All records already exist (duplicate data).",
+        );
+      } else if (res.data.inserted > 0 && res.data.skipped > 0) {
+        alert(
+          `Bulk Upload Partially Completed.\n\nInserted: ${res.data.inserted}\nDuplicate Records Skipped: ${res.data.skipped}`,
+        );
+      } else {
+        alert("Bulk Upload Successful.");
+      }
+
+        setActiveTab("records");
+        await fetchIncomeRecords();
+      } catch (error) {
+        console.error(error);
+        alert("Bulk Upload Failed");
+      }
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+
   const monthlyRecords = records.filter((item) => {
     if (!selectedMonth) return true;
 
@@ -151,17 +208,20 @@ function IncomeTransactions() {
       return;
     }
 
-    const duplicate = records.find(
-      (item) =>
-        item.userId === formData.userId &&
-        String(item.incomeType) === String(formData.incomeType) &&
-        item.id !== editId,
-    );
+   const duplicate = records.find(
+     (item) =>
+       item.userId === formData.userId &&
+       String(item.incomeType) === String(formData.incomeType) &&
+       item.incomeDate === formatDate(formData.incomeDate) &&
+       item.id !== editId,
+   );
 
-    if (duplicate) {
-      alert("This Income Type is already assigned to this user");
-      return;
-    }
+   if (duplicate) {
+     alert(
+       "This Income Type already exists for this user on the selected date",
+     );
+     return;
+   }
 
     try {
       if (editId) {
@@ -227,7 +287,6 @@ function IncomeTransactions() {
       record.userId.toLowerCase().includes(search.toLowerCase()),
   );
 
-
   const incomeSummary = Object.values(
     records.reduce((acc, item) => {
       if (!acc[item.userId]) {
@@ -238,7 +297,7 @@ function IncomeTransactions() {
         };
       }
 
-    acc[item.userId].totalIncome += Number(item.amount);
+      acc[item.userId].totalIncome += Number(item.amount);
 
       return acc;
     }, {}),
@@ -260,13 +319,6 @@ function IncomeTransactions() {
           </button>
 
           <button
-            className={activeTab === "bulk" ? "active" : ""}
-            onClick={() => setActiveTab("bulk")}
-          >
-            Bulk Upload
-          </button>
-
-          <button
             className={activeTab === "records" ? "active" : ""}
             onClick={() => setActiveTab("records")}
           >
@@ -278,10 +330,32 @@ function IncomeTransactions() {
           <div className="income-card">
             <div className="card-header">
               <h3>Monthly Income Records</h3>
-              <button className="add-btn" onClick={() => setShowAddModal(true)}>
-                <FaPlus />
-                Add Income
-              </button>
+
+              <div className="header-actions">
+                <button
+                  className="upload-btn"
+                  onClick={() => fileInputRef.current.click()}
+                >
+                  <FaUpload />
+                  Bulk Upload
+                </button>
+
+                <button
+                  className="add-btn"
+                  onClick={() => setShowAddModal(true)}
+                >
+                  <FaPlus />
+                  Add Income
+                </button>
+
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  accept=".xlsx,.xls"
+                  style={{ display: "none" }}
+                  onChange={handleFileUpload}
+                />
+              </div>
             </div>
 
             <div className="month-filter">
@@ -338,16 +412,6 @@ function IncomeTransactions() {
                   ))}
                 </tbody>
               </table>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "bulk" && (
-          <div className="income-card">
-            <div className="upload-box">
-              <FaUpload size={40} />
-              <h3>Bulk Upload Income Records</h3>
-              <input type="file" />
             </div>
           </div>
         )}

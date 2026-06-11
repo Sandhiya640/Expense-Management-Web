@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import * as XLSX from "xlsx";
 import "./ExpenseTransaction.css";
 import {
   FaSave,
@@ -10,10 +11,14 @@ import {
   FaTrash,
 } from "react-icons/fa";
 import axios from "axios";
+
 function ExpenseTransactions() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [users, setUsers] = useState([]);
   const [categories, setCategories] = useState([]);
+
+  const fileInputRef = useRef(null);
+
   const fetchUsers = async () => {
     try {
       const response = await axios.get("http://localhost:5001/api/users");
@@ -34,6 +39,57 @@ function ExpenseTransactions() {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleBulkUpload = async (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = async (event) => {
+      try {
+        const data = new Uint8Array(event.target.result);
+
+        const workbook = XLSX.read(data, {
+          type: "array",
+        });
+
+        const sheetName = workbook.SheetNames[0];
+
+        const worksheet = workbook.Sheets[sheetName];
+
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        console.log(jsonData);
+
+        const res = await axios.post(
+          "http://localhost:5001/api/expense-transactions/bulk",
+          jsonData,
+        );
+
+        if (res.data.inserted === 0 && res.data.skipped > 0) {
+          alert(
+            "Bulk Upload Failed: All records already exist (duplicate data).",
+          );
+        } else if (res.data.inserted > 0 && res.data.skipped > 0) {
+          alert(
+            `Bulk Upload Partially Completed.\n\nInserted: ${res.data.inserted}\nDuplicate Records Skipped: ${res.data.skipped}`,
+          );
+        } else {
+          alert("Bulk Upload Successful.");
+        }
+
+        setActiveTab("records");
+        await fetchExpenses();
+      } catch (error) {
+        console.error(error);
+        alert("Bulk Upload Failed");
+      }
+    };
+
+    reader.readAsArrayBuffer(file);
   };
 
   const [showAddModal, setShowAddModal] = useState(false);
@@ -77,6 +133,7 @@ function ExpenseTransactions() {
     fetchExpenses();
   }, []);
   const [records, setRecords] = useState([]);
+
   const fetchExpenses = async () => {
     try {
       const response = await axios.get(
@@ -85,16 +142,17 @@ function ExpenseTransactions() {
 
       console.log("Expense Data:", response.data);
 
-      const formatted = response.data.map((item) => ({
-        expId: item.EXP_ID,
-        userId: item.UID,
-        userName: item.Emp_Name,
-        expType: item.Expense_Type,
-        expCategory: item.Expense_Name,
-        expValue: item.Amount,
-        expDate: item.Expense_Date,
-        remarks: item.Remarks,
-      }));
+     const formatted = response.data.map((item) => ({
+       expId: item.EXP_ID,
+       userId: item.Emp_Code,
+       uid: item.UID,
+       userName: item.Emp_Name,
+       expType: item.Expense_Type,
+       expCategory: item.Expense_Name,
+       expValue: item.Amount,
+       expDate: item.Expense_Date,
+       remarks: item.Remarks,
+     }));
 
       setRecords(formatted);
     } catch (error) {
@@ -102,45 +160,42 @@ function ExpenseTransactions() {
     }
   };
   console.log(newExpense);
-  
-   const handleAddExpense = async () => {
 
-  if (
-    !newExpense.userId ||
-    !newExpense.expDate ||
-    !newExpense.expType ||
-    !newExpense.expCategory ||
-    !newExpense.expValue
-  ) {
-    alert("Please fill all required fields");
-    return;
-  }
+  const handleAddExpense = async () => {
+    if (
+      !newExpense.userId ||
+      !newExpense.expDate ||
+      !newExpense.expType ||
+      !newExpense.expCategory ||
+      !newExpense.expValue
+    ) {
+      alert("Please fill all required fields");
+      return;
+    }
 
-  if (Number(newExpense.expValue) <= 0) {
-    alert("Amount must be greater than 0");
-    return;
-  }
+    if (Number(newExpense.expValue) <= 0) {
+      alert("Amount must be greater than 0");
+      return;
+    }
 
-  const duplicate = records.find(
-    (item) =>
-      String(item.userId) === String(newExpense.userId) &&
-      String(item.expDate).substring(0, 10) === newExpense.expDate &&
-      item.expType ===
-        categories.find(
-          (c) => String(c.EC_ID) === String(newExpense.expType)
-        )?.Expense_Type &&
-      item.expCategory ===
-        expenseTypes.find(
-          (e) => String(e.ET_ID) === String(newExpense.expCategory)
-        )?.Expense_Name
-  );
+    const duplicate = records.find(
+      (item) =>
+        String(item.userId) === String(newExpense.userId) &&
+        String(item.expDate).substring(0, 10) === newExpense.expDate &&
+        item.expType ===
+          categories.find((c) => String(c.EC_ID) === String(newExpense.expType))
+            ?.Expense_Type &&
+        item.expCategory ===
+          expenseTypes.find(
+            (e) => String(e.ET_ID) === String(newExpense.expCategory),
+          )?.Expense_Name,
+    );
 
-  if (duplicate) {
-    alert("Duplicate Expense Entry Already Exists");
-    return;
-  }
+    if (duplicate) {
+      alert("Duplicate Expense Entry Already Exists");
+      return;
+    }
 
-  
     try {
       await axios.post("http://localhost:5001/api/expense-transactions", {
         userId: newExpense.userId,
@@ -293,13 +348,6 @@ function ExpenseTransactions() {
         </button>
 
         <button
-          className={activeTab === "bulk" ? "active" : ""}
-          onClick={() => setActiveTab("bulk")}
-        >
-          Bulk Upload
-        </button>
-
-        <button
           className={activeTab === "records" ? "active" : ""}
           onClick={() => setActiveTab("records")}
         >
@@ -311,10 +359,28 @@ function ExpenseTransactions() {
           <div className="card-header">
             <h3>Monthly Expense Records</h3>
 
-            <button className="add-btn" onClick={() => setShowAddModal(true)}>
-              <FaPlus />
-              Add Expense
-            </button>
+            <div className="header-actions">
+              <button
+                className="upload-btn"
+                onClick={() => fileInputRef.current.click()}
+              >
+                <FaUpload />
+                Bulk Upload
+              </button>
+
+              <button className="add-btn" onClick={() => setShowAddModal(true)}>
+                <FaPlus />
+                Add Expense
+              </button>
+
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept=".xlsx,.xls"
+                style={{ display: "none" }}
+                onChange={handleBulkUpload}
+              />
+            </div>
           </div>
 
           <div className="month-filter">
@@ -388,17 +454,6 @@ function ExpenseTransactions() {
         </div>
       )}
 
-      {activeTab === "bulk" && (
-        <div className="expense-card">
-          <div className="upload-box">
-            <FaUpload size={40} />
-
-            <h3>Bulk Upload Expense Records</h3>
-
-            <input type="file" />
-          </div>
-        </div>
-      )}
       {activeTab === "records" && (
         <div className="expense-card">
           <div className="table-top">
@@ -575,7 +630,7 @@ function ExpenseTransactions() {
                 <label>User :</label>
 
                 <select
-                required
+                  required
                   value={newExpense.userId}
                   onChange={(e) =>
                     setNewExpense({
@@ -598,7 +653,7 @@ function ExpenseTransactions() {
                 <label>Date :</label>
 
                 <input
-                required
+                  required
                   type="date"
                   value={newExpense.expDate}
                   onChange={(e) =>
@@ -613,7 +668,7 @@ function ExpenseTransactions() {
                 <label>Expense Type :</label>
 
                 <select
-                required
+                  required
                   value={newExpense.expType}
                   onChange={(e) =>
                     setNewExpense({
@@ -636,7 +691,7 @@ function ExpenseTransactions() {
                 <label>Expense Name :</label>
 
                 <select
-                required
+                  required
                   disabled={!newExpense.expType}
                   value={newExpense.expCategory}
                   onChange={(e) =>
@@ -664,7 +719,7 @@ function ExpenseTransactions() {
                 <label>Amount :</label>
 
                 <input
-                required
+                  required
                   type="number"
                   min="1"
                   value={newExpense.expValue}
