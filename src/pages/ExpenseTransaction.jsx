@@ -462,7 +462,7 @@ function ExpenseTransactions() {
 
               <input
                 type="text"
-                placeholder="Search User ID..."
+                placeholder="Search Username or UID..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
