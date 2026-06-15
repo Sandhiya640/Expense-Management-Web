@@ -308,6 +308,8 @@ function LoanTransaction() {
                   <option value="Axis">Axis</option>
                   <option value="Canara">Canara</option>
                   <option value="Indian Bank">Indian Bank</option>
+                  <option value="Kvb">Kvb</option>
+              
                 </select>
               </div>
 
