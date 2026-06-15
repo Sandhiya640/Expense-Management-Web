@@ -18,21 +18,16 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
-
           <Route path="roles" element={<Role />} />
-
           <Route path="users" element={<Users />} />
-
           <Route path="expense-category" element={<ExpenseCategory />} />
-
           <Route path="expense-type" element={<ExpenseType />} />
-
           <Route path="income-type" element={<IncomeType />} />
-
           <Route path="income-transactions" element={<IncomeTransactions />} />
           <Route path="expense" element={<ExpenseTransactions />} />
           <Route path="/loan-transaction" element={<LoanTransaction />} />
           <Route path="/reports" element={<Reports />} />
+          
         </Route>
       </Routes>
     </BrowserRouter>
