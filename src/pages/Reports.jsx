@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   FaUsers,
@@ -13,7 +13,7 @@ import "./Reports.css";
 
 function Reports() {
   const [recentDownloads, setRecentDownloads] = useState([]);
-
+  
   const downloadReport = async (type, title) => {
     try {
       const response = await axios.get(
@@ -26,7 +26,6 @@ function Reports() {
       const url = window.URL.createObjectURL(new Blob([response.data]));
 
       const link = document.createElement("a");
-
       link.href = url;
       link.download = `${type}.xlsx`;
 
@@ -41,6 +40,7 @@ function Reports() {
       };
 
       setRecentDownloads((prev) => [newDownload, ...prev]);
+
     } catch (error) {
       console.error(error);
       alert("Download Failed");
@@ -54,21 +54,18 @@ function Reports() {
       icon: <FaUsers />,
       description: "Download all user details",
     },
-
     {
       title: "Income Transaction",
       type: "income",
       icon: <FaMoneyBillWave />,
       description: "Download income records",
     },
-
     {
       title: "Expense Transaction",
       type: "expense",
       icon: <FaWallet />,
       description: "Download expense records",
     },
-
     {
       title: "Loan Transaction",
       type: "loan",
@@ -79,28 +76,6 @@ function Reports() {
 
   return (
     <div className="report-page">
-      <div className="summary-grid">
-        <div className="summary-card income">
-          <h4>Total Income</h4>
-          <h2>₹5,20,000</h2>
-        </div>
-
-        <div className="summary-card expense">
-          <h4>Total Expense</h4>
-          <h2>₹2,10,000</h2>
-        </div>
-
-        <div className="summary-card saving">
-          <h4>Net Savings</h4>
-          <h2>₹3,10,000</h2>
-        </div>
-
-        <div className="summary-card loan">
-          <h4>Total Loans</h4>
-          <h2>₹8,50,000</h2>
-        </div>
-      </div>
-
       <div className="report-grid">
         {reports.map((report) => (
           <div className="report-card" key={report.type}>
@@ -144,9 +119,7 @@ function Reports() {
               recentDownloads.map((item, index) => (
                 <tr key={index}>
                   <td>{item.name}</td>
-
                   <td>{item.date}</td>
-
                   <td>
                     <span className="status">{item.status}</span>
                   </td>

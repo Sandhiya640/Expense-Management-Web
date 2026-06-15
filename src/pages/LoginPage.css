@@ -1,0 +1,184 @@
+ .login-page {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0effe;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.lp-grid-dots {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    pointer-events: none;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+.lp-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #7F77DD;
+    opacity: 0.15;
+    place-self: center;
+}
+
+.lp-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 2.2rem 2.2rem 2rem;
+    width: 100%;
+    max-width: 540px;
+    min-height: 580px;
+    box-sizing: border-box; 
+    position: relative;
+    z-index: 2;
+    border: 1px solid #e4e1fc;
+    box-shadow: 0 8px 40px rgba(83, 74, 183, 0.1);
+}
+
+.lp-brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.lp-brand-icon {
+    width: 34px;
+    height: 34px;
+    background: #534AB7;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.lp-brand-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #3C3489;
+    letter-spacing: -0.3px;
+}
+
+.lp-brand-name span {
+    color: #993556;
+}
+
+.lp-tagline {
+    text-align: center;
+    font-size: 12.5px;
+    color: #9896a4;
+    margin: 0 0 1.1rem;
+}
+
+.lp-accent-bar {
+    height: 2.5px;
+    border-radius: 2px;
+    background: linear-gradient(to right, #534AB7, #D4537E);
+    margin: 0 0 1.6rem;
+}
+
+.lp-field-group {
+    margin-bottom: 1.6rem;
+}
+
+.lp-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #534AB7;
+    margin-bottom: 8px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.lp-field-wrap {
+    position: relative;
+}
+
+.lp-icon-left {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.lp-eye-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    line-height: 0;
+}
+
+.lp-field-wrap input {
+    width: 100%;
+    box-sizing: border-box;
+    height: 48px;
+    border-radius: 9px;
+    border: 1.5px solid #CECBF6;
+    background: #fbf7ff;
+    padding: 0 38px 0 36px;
+    font-size: 15px;
+    color: #26215C;
+    outline: none;
+    transition: border-color 0.15s, background 0.15s;
+    font-family: inherit;
+}
+
+.lp-field-wrap input::placeholder {
+    color: #c0bed4;
+    font-size: 14px;
+}
+
+.lp-field-wrap input:focus {
+    border-color: #7F77DD;
+    background: #ffffff;
+}
+
+/* ── Login button ── */
+.lp-login-btn {
+    width: 100%;
+    height: 44px;
+    border-radius: 9px;
+    border: none;
+    background: #534AB7;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    transition: background 0.15s, transform 0.1s;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+    margin-top: 2rem;
+     height: 50px;
+}
+
+.lp-login-btn:hover {
+    background: #3C3489;
+}
+
+.lp-login-btn:active {
+    transform: scale(0.98);
+}

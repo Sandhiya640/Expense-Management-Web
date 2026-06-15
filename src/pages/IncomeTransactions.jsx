@@ -83,8 +83,6 @@ function IncomeTransactions() {
     fetchIncomeTypes();
   }, []);
 
-  
-
   const formatDate = (date) => {
     if (!date) return "";
     const [year, month, day] = date.split("-");
@@ -159,22 +157,22 @@ function IncomeTransactions() {
 
         console.log(jsonData);
 
-       const res = await axios.post(
-         "http://localhost:5001/api/income-trn/bulk",
-         jsonData,
-       );
+        const res = await axios.post(
+          "http://localhost:5001/api/income-trn/bulk",
+          jsonData,
+        );
 
-      if (res.data.inserted === 0 && res.data.skipped > 0) {
-        alert(
-          "Bulk Upload Failed: All records already exist (duplicate data).",
-        );
-      } else if (res.data.inserted > 0 && res.data.skipped > 0) {
-        alert(
-          `Bulk Upload Partially Completed.\n\nInserted: ${res.data.inserted}\nDuplicate Records Skipped: ${res.data.skipped}`,
-        );
-      } else {
-        alert("Bulk Upload Successful.");
-      }
+        if (res.data.inserted === 0 && res.data.skipped > 0) {
+          alert(
+            "Bulk Upload Failed: All records already exist (duplicate data).",
+          );
+        } else if (res.data.inserted > 0 && res.data.skipped > 0) {
+          alert(
+            `Bulk Upload Partially Completed.\n\nInserted: ${res.data.inserted}\nDuplicate Records Skipped: ${res.data.skipped}`,
+          );
+        } else {
+          alert("Bulk Upload Successful.");
+        }
 
         setActiveTab("records");
         await fetchIncomeRecords();
@@ -208,20 +206,25 @@ function IncomeTransactions() {
       return;
     }
 
-   const duplicate = records.find(
-     (item) =>
-       item.userId === formData.userId &&
-       String(item.incomeType) === String(formData.incomeType) &&
-       item.incomeDate === formatDate(formData.incomeDate) &&
-       item.id !== editId,
-   );
+    const duplicate = records.find((item) => {
+      const existingMonth = item.incomeDate.split("-"); 
+      const newMonth = formData.incomeDate.split("-"); 
 
-   if (duplicate) {
+      return (
+        item.userId === formData.userId &&
+        String(item.incomeType) === String(formData.incomeType) &&
+        `${existingMonth[2]}-${existingMonth[1]}` ===
+          `${newMonth[0]}-${newMonth[1]}` &&
+        item.id !== editId
+      );
+    });
+
+    if (duplicate) {
      alert(
-       "This Income Type already exists for this user on the selected date",
+       "This Income Type already exists for this user for the selected month",
      );
-     return;
-   }
+      return;
+    }
 
     try {
       if (editId) {

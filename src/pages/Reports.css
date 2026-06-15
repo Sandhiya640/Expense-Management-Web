@@ -23,37 +23,6 @@
   padding-top: 8px;
 }
 
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-
-  gap: 12px;
-
-  margin-bottom: 30px;
-}
-
-.summary-card {
-  color: white;
-margin-top: 30px;
-  padding: 16px;
-
-  border-radius: 12px;
-
-  text-align: center;
-
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-}
-
-.summary-card h4 {
-  font-size: 13px;
-
-  margin-bottom: 8px;
-}
-
-.summary-card h2 {
-  font-size: 30px;
-}
-
 .income {
   background: linear-gradient(135deg, #10b981, #059669);
 }
@@ -76,7 +45,7 @@ margin-top: 30px;
   grid-template-columns: repeat(4, 1fr);
 
   gap: 16px;
-
+  margin-top: 20px;
   margin-bottom: 28px;
 }
 

@@ -142,17 +142,22 @@ function ExpenseTransactions() {
 
       console.log("Expense Data:", response.data);
 
-     const formatted = response.data.map((item) => ({
-       expId: item.EXP_ID,
-       userId: item.Emp_Code,
-       uid: item.UID,
-       userName: item.Emp_Name,
-       expType: item.Expense_Type,
-       expCategory: item.Expense_Name,
-       expValue: item.Amount,
-       expDate: item.Expense_Date,
-       remarks: item.Remarks,
-     }));
+  const formatted = response.data.map((item) => ({
+    expId: item.EXP_ID,
+    userId: item.Emp_Code,
+    uid: item.UID,
+    userName: item.Emp_Name,
+
+    expType: item.Expense_Type,
+    expTypeId: item.EC_ID, // ✅ REQUIRED
+
+    expCategory: item.Expense_Name,
+    expCategoryId: item.ET_ID, // ✅ REQUIRED
+
+    expValue: item.Amount,
+    expDate: item.Expense_Date,
+    remarks: item.Remarks,
+  }));
 
       setRecords(formatted);
     } catch (error) {
@@ -178,32 +183,43 @@ function ExpenseTransactions() {
       return;
     }
 
-    const duplicate = records.find(
-      (item) =>
-        String(item.userId) === String(newExpense.userId) &&
-        String(item.expDate).substring(0, 10) === newExpense.expDate &&
-        item.expType ===
-          categories.find((c) => String(c.EC_ID) === String(newExpense.expType))
-            ?.Expense_Type &&
-        item.expCategory ===
-          expenseTypes.find(
-            (e) => String(e.ET_ID) === String(newExpense.expCategory),
-          )?.Expense_Name,
-    );
+    // ✅ FIXED DUPLICATE LOGIC (like income)
+    const duplicate = records.find((item) => {
+      const existingMonth = item.expDate?.substring(0, 7); // YYYY-MM
+      const newMonth = newExpense.expDate?.substring(0, 7);
+
+      return (
+        String(item.uid) === String(newExpense.userId) &&
+        String(item.expTypeId) === String(newExpense.expType) &&
+        String(item.expCategoryId) === String(newExpense.expCategory) && // ✅ ADDED
+        existingMonth === newMonth
+      );
+    });
 
     if (duplicate) {
-      alert("Duplicate Expense Entry Already Exists");
+      alert(
+        "This Expense Type + Category already exists for this user for the selected month",
+      );
       return;
     }
 
+    console.log("DATA GOING TO BACKEND:", {
+      UID: newExpense.userId,
+      EC_ID: newExpense.expType,
+      ET_ID: newExpense.expCategory,
+      Amount: newExpense.expValue,
+      Expense_Date: newExpense.expDate,
+      Remarks: newExpense.remarks,
+    });
+
     try {
       await axios.post("http://localhost:5001/api/expense-transactions", {
-        userId: newExpense.userId,
-        expType: newExpense.expType,
-        expCategory: newExpense.expCategory,
-        expValue: newExpense.expValue,
-        expDate: newExpense.expDate,
-        remarks: newExpense.remarks,
+        UID: newExpense.userId,
+        EC_ID: newExpense.expType,
+        ET_ID: newExpense.expCategory,
+        Amount: newExpense.expValue,
+        Expense_Date: newExpense.expDate,
+        Remarks: newExpense.remarks,
       });
 
       alert("Expense Saved Successfully");
@@ -212,6 +228,7 @@ function ExpenseTransactions() {
 
       setNewExpense({
         userId: "",
+        userName: "",
         expType: "",
         expCategory: "",
         expValue: "",
@@ -222,20 +239,8 @@ function ExpenseTransactions() {
       setShowAddModal(false);
     } catch (error) {
       console.error(error);
+      alert("Error saving expense");
     }
-
-    console.log(newExpense);
-    setNewExpense({
-      userId: "",
-      userName: "",
-      expType: "",
-      expCategory: "",
-      expValue: "",
-      expDate: "",
-      remarks: "",
-    });
-
-    setShowAddModal(false);
   };
  
   const [formData, setFormData] = useState({
@@ -276,7 +281,6 @@ function ExpenseTransactions() {
 
   const handleEdit = (item) => {
     setEditId(item.expId);
-
     setFormData({
       expType: item.expType,
       expCategory: item.expCategory,
