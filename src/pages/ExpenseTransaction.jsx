@@ -142,22 +142,22 @@ function ExpenseTransactions() {
 
       console.log("Expense Data:", response.data);
 
-  const formatted = response.data.map((item) => ({
-    expId: item.EXP_ID,
-    userId: item.Emp_Code,
-    uid: item.UID,
-    userName: item.Emp_Name,
+      const formatted = response.data.map((item) => ({
+        expId: item.EXP_ID,
+        userId: item.Emp_Code,
+        uid: item.UID,
+        userName: item.Emp_Name,
 
-    expType: item.Expense_Type,
-    expTypeId: item.EC_ID, // ✅ REQUIRED
+        expType: item.Expense_Type,
+        expTypeId: item.EC_ID, // ✅ REQUIRED
 
-    expCategory: item.Expense_Name,
-    expCategoryId: item.ET_ID, // ✅ REQUIRED
+        expCategory: item.Expense_Name,
+        expCategoryId: item.ET_ID, // ✅ REQUIRED
 
-    expValue: item.Amount,
-    expDate: item.Expense_Date,
-    remarks: item.Remarks,
-  }));
+        expValue: item.Amount,
+        expDate: item.Expense_Date,
+        remarks: item.Remarks,
+      }));
 
       setRecords(formatted);
     } catch (error) {
@@ -242,7 +242,7 @@ function ExpenseTransactions() {
       alert("Error saving expense");
     }
   };
- 
+
   const [formData, setFormData] = useState({
     expType: "",
     expCategory: "",
@@ -326,11 +326,11 @@ function ExpenseTransactions() {
     return item.expDate?.substring(0, 7) === selectedMonth;
   });
 
-const filteredRecords = records.filter(
-  (item) =>
-    String(item.userId).toLowerCase().includes(search.toLowerCase()) ||
-    String(item.userName).toLowerCase().includes(search.toLowerCase()),
-);
+  const filteredRecords = records.filter(
+    (item) =>
+      String(item.userId).toLowerCase().includes(search.toLowerCase()) ||
+      String(item.userName).toLowerCase().includes(search.toLowerCase()),
+  );
   console.log("Selected Type:", newExpense.expType);
 
   console.log(
@@ -800,7 +800,6 @@ const filteredRecords = records.filter(
         </div>
       )}
     </div>
-    
   );
 }
 
