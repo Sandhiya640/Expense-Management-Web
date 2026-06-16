@@ -1,13 +1,24 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./ExpenseCategory.css";
-import { FaPlus, FaEdit, FaTimes, FaSave, FaTrash,FaSearch} from "react-icons/fa";
+import {
+  FaPlus,
+  FaEdit,
+  FaTimes,
+  FaSave,
+  FaTrash,
+  FaSearch,
+  FaSort,
+  FaSortUp,
+  FaSortDown,
+} from "react-icons/fa";
 
 const API_URL = "http://localhost:5001/api/expense-categories";
 
 function ExpenseCategory() {
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");
+  const [sortOrder, setSortOrder] = useState("ecid");
   const [showModal, setShowModal] = useState(false);
   const [editCategory, setEditCategory] = useState(null);
   const fetchCategories = async () => {
@@ -29,7 +40,15 @@ function ExpenseCategory() {
       ? Math.max(...categories.map((c) => c.EC_ID)) + 1
       : 1;
   };
-
+const toggleSort = () => {
+  if (sortOrder === "ecid") {
+    setSortOrder("asc");
+  } else if (sortOrder === "asc") {
+    setSortOrder("desc");
+  } else {
+    setSortOrder("ecid");
+  }
+};
  const [formData, setFormData] = useState({
    ecId: "",
    name: "",
@@ -107,14 +126,26 @@ function ExpenseCategory() {
    }
  };
 
- const filteredCategories = categories.filter((cat) => {
-   const val = search.toLowerCase();
+ const filteredCategories = categories
+   .filter((cat) => {
+     const val = search.toLowerCase();
 
-   return (
-     cat.EC_ID?.toString().includes(val) ||
-     cat.Expense_Type?.toLowerCase().includes(val)
-   );
- });
+     return (
+       cat.EC_ID?.toString().includes(val) ||
+       cat.Expense_Type?.toLowerCase().includes(val)
+     );
+   })
+   .sort((a, b) => {
+     if (sortOrder === "asc") {
+       return a.Expense_Type.localeCompare(b.Expense_Type);
+     }
+
+     if (sortOrder === "desc") {
+       return b.Expense_Type.localeCompare(a.Expense_Type);
+     }
+
+     return 0;
+   });
 
   return (
     <div className="category-page">
@@ -125,7 +156,7 @@ function ExpenseCategory() {
       <div className="category-card">
         <div className="table-top">
           <div className="search-box">
-            <FaSearch/>
+            <FaSearch />
             <input
               type="text"
               placeholder="Search categories..."
@@ -145,7 +176,23 @@ function ExpenseCategory() {
             <thead>
               <tr>
                 <th>EC ID</th>
-                <th>EXPENSE TYPE</th>
+                <th>
+                  <div className="sortable-header">
+                    <span>EXPENSE CATEGORY</span>
+
+                    <div className="sort-icons">
+                      <span
+                        className={`arrow-up ${sortOrder === "asc" ? "active" : ""}`}
+                        onClick={() => setSortOrder("asc")}
+                      ></span>
+
+                      <span
+                        className={`arrow-down ${sortOrder === "desc" ? "active" : ""}`}
+                        onClick={() => setSortOrder("desc")}
+                      ></span>
+                    </div>
+                  </div>
+                </th>
                 <th>STATUS</th>
                 <th>CREATED BY</th>
                 <th>ACTIONS</th>
@@ -171,7 +218,7 @@ function ExpenseCategory() {
                     </span>
                   </td>
 
-                  <td>{cat.Created_By}</td>
+                  <td>{cat.Created_by}</td>
                   <td>
                     <button
                       className="edit-btn"
@@ -235,8 +282,6 @@ function ExpenseCategory() {
                     <option>Inactive</option>
                   </select>
                 </div>
-
-              
               </div>
               <div className="modal-buttons">
                 <button

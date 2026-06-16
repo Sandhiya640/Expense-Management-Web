@@ -258,3 +258,85 @@ form {
     padding: 10px 18px;
     border-radius: 10px;
 }
+.sortable-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.sort-icon {
+  font-size: 16px;
+  color: #64748b;
+  transition: 0.3s;
+}
+
+/* Remove blue color on click */
+.sortable-header:focus,
+.sortable-header:active,
+.sortable-header *:focus,
+.sortable-header *:active {
+  outline: none;
+  color: inherit;
+}
+.sortable-header:hover .sort-icon {
+  color: #7c3aed;
+}
+.sortable-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sortable-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sortable-header span:first-child {
+  color: #000;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.sort-icons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  margin-top: 1px;
+}
+
+.arrow-up,
+.arrow-down {
+  width: 0;
+  height: 0;
+  cursor: pointer;
+}
+
+.arrow-up {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 6px solid #64748b;
+}
+
+.arrow-down {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #64748b;
+}
+
+.arrow-up.active {
+  border-bottom-color: #7c3aed;
+}
+
+.arrow-down.active {
+  border-top-color: #7c3aed;
+}
+
+.sort-icon:focus,
+.sort-icon:active {
+  outline: none;
+}

@@ -9,11 +9,18 @@ import {
   deleteExpenseType,
 } from "../service/expenseTypeService";
 
-import { FaSearch,FaPlus, FaEdit, FaTrash, FaTimes, FaSave } from "react-icons/fa";
+import {
+  FaSearch,
+  FaPlus,
+  FaEdit,
+  FaTrash,
+  FaTimes,
+  FaSave,
+} from "react-icons/fa";
 
 function ExpenseType() {
   const [showModal, setShowModal] = useState(false);
-
+const [sortOrder, setSortOrder] = useState("etid");
   const [searchTerm, setSearchTerm] = useState("");
 
   const [expenseTypes, setExpenseTypes] = useState([]);
@@ -21,7 +28,15 @@ function ExpenseType() {
   const [editData, setEditData] = useState(null);
 
   const [editExpenseName, setEditExpenseName] = useState("");
-
+const toggleSort = () => {
+  if (sortOrder === "etid") {
+    setSortOrder("asc");
+  } else if (sortOrder === "asc") {
+    setSortOrder("desc");
+  } else {
+    setSortOrder("etid");
+  }
+};
   const [editCategoryId, setEditCategoryId] = useState("");
   const [categories, setCategories] = useState([]);
   const [editStatus, setEditStatus] = useState("Active");
@@ -130,13 +145,24 @@ useEffect(() => {
     }
   };
 
-  const filteredExpenseTypes = expenseTypes.filter(
-    (item) =>
-      item.Expense_Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      String(item.ET_ID).includes(searchTerm) ||
-      String(item.EC_ID).includes(searchTerm),
-  );
+ const filteredExpenseTypes = expenseTypes
+   .filter(
+     (item) =>
+       item.Expense_Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+       String(item.ET_ID).includes(searchTerm) ||
+       String(item.EC_ID).includes(searchTerm),
+   )
+   .sort((a, b) => {
+     if (sortOrder === "asc") {
+       return a.Expense_Name.localeCompare(b.Expense_Name);
+     }
 
+     if (sortOrder === "desc") {
+       return b.Expense_Name.localeCompare(a.Expense_Name);
+     }
+
+     return 0;
+   });
   return (
     <div className="expense-page">
       <div className="expense-header">
@@ -146,7 +172,7 @@ useEffect(() => {
       <div className="expense-card">
         <div className="card-header">
           <div className="search-box">
-            <FaSearch/>
+            <FaSearch />
             <input
               type="text"
               placeholder="Search Expense Type..."
@@ -166,7 +192,23 @@ useEffect(() => {
             <tr>
               <th>ET ID</th>
               <th>EC ID</th>
-              <th>EXPENSE NAME</th>
+              <th>
+                <div className="sortable-header">
+                  <span>EXPENSE TYPE</span>
+
+                  <div className="sort-icons">
+                    <span
+                      className={`arrow-up ${sortOrder === "asc" ? "active" : ""}`}
+                      onClick={() => setSortOrder("asc")}
+                    ></span>
+
+                    <span
+                      className={`arrow-down ${sortOrder === "desc" ? "active" : ""}`}
+                      onClick={() => setSortOrder("desc")}
+                    ></span>
+                  </div>
+                </div>
+              </th>
               <th>STATUS</th>
               <th>CREATED BY</th>
               <th>ACTIONS</th>
@@ -192,7 +234,7 @@ useEffect(() => {
                   </span>
                 </td>
 
-                <td>{item.Created_By}</td>
+                <td>{item.Created_by}</td>
 
                 <td>
                   <button className="edit-btn" onClick={() => handleEdit(item)}>

@@ -8,9 +8,6 @@ import {
   FaTimes,
   FaSave,
   FaTrash,
-  FaSort,
-  FaSortUp,
-  FaSortDown,
 } from "react-icons/fa";
 
 const API_URL = "http://localhost:5001/api/users";
@@ -208,11 +205,7 @@ const filteredUsers = users
       return b.Emp_Name.localeCompare(a.Emp_Name);
     }
 
-    // Default EMP CODE sorting
-    const empA = parseInt(a.Emp_Code?.replace("EMP", "") || 0);
-    const empB = parseInt(b.Emp_Code?.replace("EMP", "") || 0);
-
-    return empA - empB;
+    return 0;
   });
   return (
     <div className="users-page">
@@ -243,9 +236,20 @@ const filteredUsers = users
             <tr>
               <th>EMP CODE</th>
               <th>
-                <div className="sortable-header" onClick={toggleSort}>
-                  NAME
-                  <FaSort className="sort-icon" />
+                <div className="sortable-header">
+                  <span>NAME</span>
+
+                  <div className="sort-icons">
+                    <span
+                      className={`arrow-up ${sortOrder === "asc" ? "active" : ""}`}
+                      onClick={() => setSortOrder("asc")}
+                    ></span>
+
+                    <span
+                      className={`arrow-down ${sortOrder === "desc" ? "active" : ""}`}
+                      onClick={() => setSortOrder("desc")}
+                    ></span>
+                  </div>
                 </div>
               </th>
               <th>EMAIL</th>

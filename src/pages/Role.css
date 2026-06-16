@@ -290,3 +290,35 @@ form {
     overflow-x: auto;
   }
 }
+.sort-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;   /* exact gap control */
+}
+
+.arrow-up,
+.arrow-down {
+  width: 0;
+  height: 0;
+  cursor: pointer;
+}
+
+.arrow-up {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 7px solid #64748b;
+}
+
+.arrow-down {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 7px solid #64748b;
+}
+
+.arrow-up.active {
+  border-bottom-color: #7c3aed;
+}
+
+.arrow-down.active {
+  border-top-color: #7c3aed;
+}

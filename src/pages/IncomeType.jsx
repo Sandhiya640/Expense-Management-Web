@@ -1,16 +1,34 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./IncomeType.css";
-import { FaSearch,FaPlus, FaEdit, FaTimes, FaSave, FaTrash } from "react-icons/fa";
+import {
+  FaSearch,
+  FaPlus,
+  FaEdit,
+  FaTimes,
+  FaSave,
+  FaTrash,
+  FaSort,
+  FaSortUp,
+  FaSortDown,
+} from "react-icons/fa";
 
 const API_URL = "http://localhost:5001/api/income-types";
 function IncomeType() {
   const [incomeTypes, setIncomeTypes] = useState([]);
-
+const [sortOrder, setSortOrder] = useState("itid");
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState("");
   const [editIncomeType, setEditIncomeType] = useState(null);
-
+const toggleSort = () => {
+  if (sortOrder === "itid") {
+    setSortOrder("asc");
+  } else if (sortOrder === "asc") {
+    setSortOrder("desc");
+  } else {
+    setSortOrder("itid");
+  }
+};
 const [formData, setFormData] = useState({
   incomeType: "",
   activeStatus: "Active",
@@ -97,14 +115,26 @@ const handleDelete = async (id) => {
   }
 };
 
-const filteredIncomeTypes = incomeTypes.filter((item) => {
-  const value = search.toLowerCase();
+const filteredIncomeTypes = incomeTypes
+  .filter((item) => {
+    const value = search.toLowerCase();
 
-  return (
-    item.IT_ID?.toString().includes(value) ||
-    item.Income_Type?.toLowerCase().includes(value)
-  );
-});
+    return (
+      item.IT_ID?.toString().includes(value) ||
+      item.Income_Type?.toLowerCase().includes(value)
+    );
+  })
+  .sort((a, b) => {
+    if (sortOrder === "asc") {
+      return a.Income_Type.localeCompare(b.Income_Type);
+    }
+
+    if (sortOrder === "desc") {
+      return b.Income_Type.localeCompare(a.Income_Type);
+    }
+
+    return 0;
+  });
 
   return (
     <div className="income-page">
@@ -115,7 +145,7 @@ const filteredIncomeTypes = incomeTypes.filter((item) => {
       <div className="income-card">
         <div className="table-top">
           <div className="search-box">
-            <FaSearch/>
+            <FaSearch />
             <input
               type="text"
               placeholder="Search income types..."
@@ -134,7 +164,23 @@ const filteredIncomeTypes = incomeTypes.filter((item) => {
           <thead>
             <tr>
               <th>IT ID</th>
-              <th>INCOME TYPE</th>
+              <th>
+                <div className="sortable-header">
+                  <span>INCOME TYPE</span>
+
+                  <div className="sort-icons">
+                    <span
+                      className={`arrow-up ${sortOrder === "asc" ? "active" : ""}`}
+                      onClick={() => setSortOrder("asc")}
+                    ></span>
+
+                    <span
+                      className={`arrow-down ${sortOrder === "desc" ? "active" : ""}`}
+                      onClick={() => setSortOrder("desc")}
+                    ></span>
+                  </div>
+                </div>
+              </th>
               <th>STATUS</th>
               <th>CREATED BY</th>
               <th>ACTIONS</th>

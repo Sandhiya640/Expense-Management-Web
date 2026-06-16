@@ -12,7 +12,62 @@
   margin-top: 60px;
   font-family: "Poppins", sans-serif;
 }
+.sortable-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
 
+.sort-icon {
+  font-size: 16px;
+  color: #64748b;
+}
+
+/* Remove blue highlight while clicking */
+.sortable-header,
+.sortable-header:focus,
+.sortable-header:active {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sortable-header:hover .sort-icon {
+  color: #7c3aed;
+}
+.sort-icon:focus,
+.sort-icon:active,
+.sortable-header:focus,
+.sortable-header:active {
+  color: #64748b !important;
+  outline: none;
+}
+.sortable-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sort-icon {
+  cursor: pointer;
+  font-size: 15px;
+  color: #94a3b8;
+  transition: 0.3s;
+}
+
+.sort-icon:hover {
+  color: #7c3aed;
+}
+
+.sort-icon.active {
+  color: #7c3aed;
+}
+
+.sort-icon:focus,
+.sort-icon:active {
+  outline: none;
+}
 .expense-header h2 {
   font-size: 30px;
   color: #1f1f5c;
@@ -218,4 +273,57 @@ tbody tr:hover {
   align-items: center;
   gap: 8px;
   cursor: pointer;
+}
+.sortable-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sortable-header span:first-child {
+  color: #000;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.sort-icons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+}
+
+.arrow-up,
+.arrow-down {
+  width: 0;
+  height: 0;
+  cursor: pointer;
+}
+
+.arrow-up {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 6px solid #64748b;
+}
+
+.arrow-down {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #64748b;
+}
+
+.arrow-up.active {
+  border-bottom-color: #7c3aed;
+}
+
+.arrow-down.active {
+  border-top-color: #7c3aed;
+}
+
+.arrow-up:focus,
+.arrow-down:focus,
+.arrow-up:active,
+.arrow-down:active {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
 }

@@ -7,9 +7,10 @@ import {
   deleteRole,
 } from "../service/roleService";
 import { FaSearch,FaPlus, FaEdit, FaTrash, FaTimes, FaSave } from "react-icons/fa";
+import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 function Role() {
   const [showModal, setShowModal] = useState(false);
-
+const [sortOrder, setSortOrder] = useState("rid");
   const [searchTerm, setSearchTerm] = useState("");
 
   const [roles, setRoles] = useState([]);
@@ -39,7 +40,15 @@ function Role() {
 
     setShowModal(true);
   };
-
+const toggleSort = () => {
+  if (sortOrder === "rid") {
+    setSortOrder("asc");
+  } else if (sortOrder === "asc") {
+    setSortOrder("desc");
+  } else {
+    setSortOrder("rid");
+  }
+};
   const handleEdit = (role) => {
     setEditData(role);
 
@@ -98,15 +107,26 @@ function Role() {
       console.error("Delete Error:", error);
     }
   };
-  const filteredRoles = roles.filter(
-    (role) =>
-      role.Role_Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      String(role.RID).includes(searchTerm) ||
-      (role.Active_Status ? "active" : "inactive").includes(
-        searchTerm.toLowerCase(),
-      ),
-  );
+ const filteredRoles = roles
+   .filter(
+     (role) =>
+       role.Role_Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+       String(role.RID).includes(searchTerm) ||
+       (role.Active_Status ? "active" : "inactive").includes(
+         searchTerm.toLowerCase(),
+       ),
+   )
+   .sort((a, b) => {
+     if (sortOrder === "asc") {
+       return a.Role_Name.localeCompare(b.Role_Name);
+     }
 
+     if (sortOrder === "desc") {
+       return b.Role_Name.localeCompare(a.Role_Name);
+     }
+
+     return 0;
+   });
   return (
     <div className="role-page">
       <div className="role-header">
@@ -116,7 +136,7 @@ function Role() {
       <div className="role-card">
         <div className="card-header">
           <div className="search-box">
-            <FaSearch/>
+            <FaSearch />
             <input
               type="text"
               placeholder="Search roles..."
@@ -135,7 +155,23 @@ function Role() {
           <thead>
             <tr>
               <th>RID</th>
-              <th>ROLE NAME</th>
+              <th>
+                <div className="sortable-header">
+                  <span>ROLE</span>
+
+                  <div className="sort-icons">
+                    <span
+                      className={`arrow-up ${sortOrder === "asc" ? "active" : ""}`}
+                      onClick={() => setSortOrder("asc")}
+                    ></span>
+
+                    <span
+                      className={`arrow-down ${sortOrder === "desc" ? "active" : ""}`}
+                      onClick={() => setSortOrder("desc")}
+                    ></span>
+                  </div>
+                </div>
+              </th>{" "}
               <th>STATUS</th>
               <th>CREATED ON</th>
               <th>ACTIONS</th>
@@ -160,8 +196,8 @@ function Role() {
                 </td>
 
                 <td>
-                  {role.Created_On
-                    ? new Date(role.Created_On).toLocaleDateString()
+                  {role.Created_on
+                    ? new Date(role.Created_on).toLocaleDateString()
                     : ""}
                 </td>
 
@@ -174,8 +210,8 @@ function Role() {
                     className="edit-btn delete-icon-btn"
                     onClick={() => handleDelete(role.RID)}
                     style={{ marginLeft: "10px" }}
-                  ><FaTrash style={{ color: "#ef4444" }} />
-                   
+                  >
+                    <FaTrash style={{ color: "#ef4444" }} />
                   </button>
                 </td>
               </tr>

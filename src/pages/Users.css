@@ -12,6 +12,11 @@
   font-family: "Poppins", sans-serif;
 }
 
+
+
+.sortable-header:hover .sort-icon {
+  color: #7c3aed;
+}
 .users-header h2 {
   font-size: 30px;
   color: #1f1f5c;
@@ -58,6 +63,27 @@
   border-color: #8b5cf6;
 }
 
+.sort-icon:hover {
+  color: #7c3aed;
+}
+
+.sort-icon.active {
+  color: #7c3aed;
+}
+
+.sort-icon:focus,
+.sort-icon:active {
+  outline: none;
+}
+
+.sort-icon:hover {
+  color: #7c3aed;
+}
+
+.sort-icon.active {
+  color: #7c3aed;
+}
+
 .add-btn {
   border: none;
   background: linear-gradient(135deg, #7c3aed, #d946ef);
@@ -74,6 +100,18 @@
   transition: all 0.3s ease;
 }
 
+
+.sortable-header:hover .sort-icon {
+  color: #7c3aed;
+}
+
+.sortable-header:focus,
+.sortable-header:active,
+.sortable-header *:focus,
+.sortable-header *:active {
+  outline: none;
+  color: inherit;
+}
 .add-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 25px rgba(139, 92, 246, 0.6);
@@ -299,4 +337,75 @@ form {
   .users-card {
     overflow-x: auto;
   }
+}
+.sortable-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sort-icons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 0.6;
+}
+
+
+
+.sortable-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sortable-header span:first-child {
+  color: #000;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.sort-icons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;   /* control space between arrows */
+}
+
+.sort-icons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  margin-top: 1px;
+}
+
+.arrow-up,
+.arrow-down {
+  width: 0;
+  height: 0;
+  cursor: pointer;
+}
+
+.arrow-up {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 6px solid #64748b;
+}
+
+.arrow-down {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #64748b;
+}
+
+.arrow-up.active {
+  border-bottom-color: #7c3aed;
+}
+
+.arrow-down.active {
+  border-top-color: #7c3aed;
 }
