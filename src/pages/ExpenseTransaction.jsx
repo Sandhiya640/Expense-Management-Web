@@ -132,6 +132,17 @@ function ExpenseTransactions() {
     fetchExpenseTypes();
     fetchExpenses();
   }, []);
+
+  useEffect(() => {
+    if (activeTab === "records") {
+      setSearch("");
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    setSearch("");
+  }, [activeTab]);
+
   const [records, setRecords] = useState([]);
 
   const fetchExpenses = async () => {
@@ -148,11 +159,11 @@ function ExpenseTransactions() {
         uid: item.UID,
         userName: item.Emp_Name,
 
-    expType: item.Expense_Type,
-    expTypeId: item.EC_ID, 
+        expType: item.Expense_Type,
+        expTypeId: item.EC_ID,
 
-    expCategory: item.Expense_Name,
-    expCategoryId: item.ET_ID, 
+        expCategory: item.Expense_Name,
+        expCategoryId: item.ET_ID,
 
         expValue: item.Amount,
         expDate: item.Expense_Date,
@@ -190,7 +201,7 @@ function ExpenseTransactions() {
       return (
         String(item.uid) === String(newExpense.userId) &&
         String(item.expTypeId) === String(newExpense.expType) &&
-        String(item.expCategoryId) === String(newExpense.expCategory) && 
+        String(item.expCategoryId) === String(newExpense.expCategory) &&
         existingMonth === newMonth
       );
     });
@@ -366,7 +377,10 @@ function ExpenseTransactions() {
 
         <button
           className={activeTab === "records" ? "active" : ""}
-          onClick={() => setActiveTab("records")}
+          onClick={() => {
+            setActiveTab("records");
+            setSearch(""); // 👈 RESET SEARCH HERE
+          }}
         >
           All Records
         </button>
@@ -607,21 +621,33 @@ function ExpenseTransactions() {
 
               <button
                 className="save-btn"
-                onClick={() => {
-                  const updatedRecords = records.map((item) =>
-                    item.expId === editId
-                      ? {
-                          ...item,
-                          expValue: formData.expValue,
-                          remarks: formData.remarks,
-                        }
-                      : item,
-                  );
+                onClick={async () => {
+                  try {
+                    await axios.put(
+                      `http://localhost:5001/api/expense-transactions/${editId}`,
+                      {
+                        userId: records.find((r) => r.expId === editId)?.uid,
+                        expType: records.find((r) => r.expId === editId)
+                          ?.expTypeId,
+                        expCategory: records.find((r) => r.expId === editId)
+                          ?.expCategoryId,
+                        expValue: formData.expValue,
+                        expDate: records.find((r) => r.expId === editId)
+                          ?.expDate,
+                        remarks: formData.remarks,
+                      },
+                    );
 
-                  setRecords(updatedRecords);
+                    alert("Expense Updated Successfully");
 
-                  setShowEditModal(false);
-                  setEditId(null);
+                    fetchExpenses(); // refresh from DB
+
+                    setShowEditModal(false);
+                    setEditId(null);
+                  } catch (error) {
+                    console.error(error);
+                    alert("Update Failed");
+                  }
                 }}
               >
                 <FaSave />

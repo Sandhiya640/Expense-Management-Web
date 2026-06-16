@@ -83,6 +83,16 @@ function IncomeTransactions() {
     fetchIncomeTypes();
   }, []);
 
+  useEffect(() => {
+    if (activeTab === "records") {
+      setSearch("");
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    setSearch(""); 
+  }, [activeTab]);
+
   const formatDate = (date) => {
     if (!date) return "";
     const [year, month, day] = date.split("-");
@@ -323,7 +333,10 @@ function IncomeTransactions() {
 
           <button
             className={activeTab === "records" ? "active" : ""}
-            onClick={() => setActiveTab("records")}
+            onClick={() => {
+              setActiveTab("records");
+              setSearch(""); 
+            }}
           >
             All Records
           </button>
