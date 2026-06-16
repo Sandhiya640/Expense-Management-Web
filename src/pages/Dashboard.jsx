@@ -21,13 +21,12 @@ function Dashboard() {
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedYear, setSelectedYear] = useState("2026");
 
-  const [dashboardData, setDashboardData] = useState({
-    income: 0,
-    expense: 0,
-    savings: 0,
-    investment: 0,
-    loan: 0,
-  });
+ const [dashboardData, setDashboardData] = useState({
+   income: 0,
+   expense: 0,
+   savings: 0,
+   loan: 0,
+ });
 const [incomeData, setIncomeData] = useState([]);
 const [expenseData, setExpenseData] = useState([]);
 const [comparisonData, setComparisonData] = useState([]);
@@ -43,20 +42,20 @@ const COLORS = [
     "#ec4899", 
     "#9333ea",
   ];
-  const summaryData = [
-    {
-      name: "Savings",
-      value: dashboardData.savings || 0,
-    },
-    {
-      name: "Investment",
-      value: dashboardData.investment || 0,
-    },
-    {
-      name: "Loan",
-      value: dashboardData.loan || 0,
-    },
-  ];
+const summaryData = [
+  {
+    name: "Savings",
+    value: dashboardData.savings || 0,
+  },
+  {
+    name: "Income",
+    value: dashboardData.income || 0,
+  },
+  {
+    name: "Loan",
+    value: dashboardData.loan || 0,
+  },
+];
 
   const donutData = [
     {
@@ -114,7 +113,6 @@ const COLORS = [
         income: res.data.income || 0,
         expense: res.data.expense || 0,
         savings: res.data.savings || 0,
-        investment: res.data.investment || 0,
         loan: res.data.loan || 0,
       });
 
@@ -183,10 +181,9 @@ const COLORS = [
           <div className="kpi-card investment">
             <div className="card-content">
               <div>
-                <p>Net Investment</p>
-                <h2>
-                  ₹{Number(dashboardData.investment || 0).toLocaleString()}
-                </h2>
+                <p>Total Income</p>
+
+                <h2>₹{Number(dashboardData.income || 0).toLocaleString()}</h2>
               </div>
 
               <div className="card-icon investment-icon">
@@ -242,7 +239,7 @@ const COLORS = [
 
               <div>
                 <span className="dot green"></span>
-                Investment
+                Income
               </div>
 
               <div>
@@ -258,14 +255,14 @@ const COLORS = [
 
       <div className="level2">
         <div className="chart-card">
-          <h3>Monthly Income Trend (Lakhs)</h3>
+          <h3>Monthly Income Trend(₹)</h3>
 
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={incomeData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
-              <Tooltip formatter={(v) => [`₹${v} L`]} />
+              <Tooltip formatter={(v) => [`₹${Number(v).toLocaleString()}`]} />
 
               <Line
                 type="monotone"
@@ -278,14 +275,14 @@ const COLORS = [
         </div>
 
         <div className="chart-card">
-          <h3>Monthly Expense Trend (Lakhs)</h3>
+          <h3>Monthly Expense Trend (₹)</h3>
 
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={expenseData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
-              <Tooltip formatter={(v) => [`₹${v} L`]} />
+              <Tooltip formatter={(v) => [`₹${Number(v).toLocaleString()}`]} />
 
               <Line
                 type="monotone"
@@ -312,7 +309,7 @@ const COLORS = [
 
               <YAxis />
 
-              <Tooltip formatter={(v) => [`₹${v} L`]} />
+              <Tooltip formatter={(v) => [`₹${Number(v).toLocaleString()}`]} />
 
               <Legend />
 
