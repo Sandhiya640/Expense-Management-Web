@@ -10,6 +10,7 @@ import {
   FaDatabase,
   FaUserCircle,
   FaSignOutAlt,
+  FaHandHoldingUsd
 } from "react-icons/fa";
 
 import { BiTransfer } from "react-icons/bi";
@@ -50,6 +51,7 @@ function Topbar() {
         setShowProfile(false);
       }
     };
+  
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -101,7 +103,11 @@ function Topbar() {
 
       {/* MENU */}
       <div className="nav-menu" ref={menuRef}>
-        <Link to="/dashboard" className="nav-link">
+        <Link
+          to="/dashboard"
+          className="nav-link"
+          onClick={() => setActiveMenu(null)}
+        >
           <div
             className={`nav-item ${
               isDashboardActive ? "nav-item--active" : ""
@@ -188,14 +194,18 @@ function Topbar() {
               </Link>
               <Link to="/loan-transaction" className="dropdown-link">
                 <div className="dropdown-item">
-                  <GiPiggyBank className="sub-icon loan-icon" /> Loan
+                  <FaHandHoldingUsd className="sub-icon loan-icon" /> Loan
                 </div>
               </Link>
             </div>
           )}
         </div>
 
-        <Link to="/reports" className="nav-link">
+        <Link
+          to="/reports"
+          className="nav-link"
+          onClick={() => setActiveMenu(null)}
+        >
           <div
             className={`nav-item ${isReportsActive ? "nav-item--active" : ""}`}
           >

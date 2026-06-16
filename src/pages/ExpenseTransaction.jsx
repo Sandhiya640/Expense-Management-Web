@@ -149,10 +149,10 @@ function ExpenseTransactions() {
     userName: item.Emp_Name,
 
     expType: item.Expense_Type,
-    expTypeId: item.EC_ID, // ✅ REQUIRED
+    expTypeId: item.EC_ID, 
 
     expCategory: item.Expense_Name,
-    expCategoryId: item.ET_ID, // ✅ REQUIRED
+    expCategoryId: item.ET_ID, 
 
     expValue: item.Amount,
     expDate: item.Expense_Date,
@@ -183,7 +183,6 @@ function ExpenseTransactions() {
       return;
     }
 
-    // ✅ FIXED DUPLICATE LOGIC (like income)
     const duplicate = records.find((item) => {
       const existingMonth = item.expDate?.substring(0, 7); // YYYY-MM
       const newMonth = newExpense.expDate?.substring(0, 7);
@@ -191,7 +190,7 @@ function ExpenseTransactions() {
       return (
         String(item.uid) === String(newExpense.userId) &&
         String(item.expTypeId) === String(newExpense.expType) &&
-        String(item.expCategoryId) === String(newExpense.expCategory) && // ✅ ADDED
+        String(item.expCategoryId) === String(newExpense.expCategory) && 
         existingMonth === newMonth
       );
     });
@@ -239,7 +238,8 @@ function ExpenseTransactions() {
       setShowAddModal(false);
     } catch (error) {
       console.error(error);
-      alert("Error saving expense");
+
+      alert(error.response?.data?.message || "Error saving expense");
     }
   };
  
