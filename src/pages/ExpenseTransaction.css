@@ -12,7 +12,23 @@
   margin-top: 60px;
   font-family: "Poppins", sans-serif;
 }
+.sortable-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
 
+.sort-icon {
+  font-size: 16px;
+  color: #64748b;
+  transition: 0.3s;
+}
+
+.sortable-header:hover .sort-icon {
+  color: #7c3aed;
+}
 .expense-header h2 {
   font-size: 30px;
   color: #1f1f5c;
@@ -563,4 +579,42 @@ td {
 .header-actions {
   display: flex;
   gap: 12px;
+}
+.sortable-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sort-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.arrow-up,
+.arrow-down {
+  width: 0;
+  height: 0;
+  cursor: pointer;
+}
+
+.arrow-up {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 7px solid #94a3b8;
+}
+
+.arrow-down {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 7px solid #94a3b8;
+}
+
+.arrow-up.active {
+  border-bottom-color: #7c3aed;
+}
+
+.arrow-down.active {
+  border-top-color: #7c3aed;
 }

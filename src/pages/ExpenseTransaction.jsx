@@ -9,6 +9,7 @@ import {
   FaPlus,
   FaTimes,
   FaTrash,
+  FaSort,
 } from "react-icons/fa";
 import axios from "axios";
 
@@ -16,9 +17,13 @@ function ExpenseTransactions() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [users, setUsers] = useState([]);
   const [categories, setCategories] = useState([]);
-
+const [sortField, setSortField] = useState("");
+const [sortOrder, setSortOrder] = useState("");
   const fileInputRef = useRef(null);
-
+const handleSort = (field, order) => {
+  setSortField(field);
+  setSortOrder(order);
+};
   const fetchUsers = async () => {
     try {
       const response = await axios.get("http://localhost:5001/api/users");
@@ -93,7 +98,7 @@ function ExpenseTransactions() {
   };
 
   const [showAddModal, setShowAddModal] = useState(false);
-
+const [amountSort, setAmountSort] = useState("");
   const [expenseTypes, setExpenseTypes] = useState([]);
   const [newExpense, setNewExpense] = useState({
     userId: "",
@@ -331,17 +336,88 @@ function ExpenseTransactions() {
     });
   };
 
-  const monthlyRecords = records.filter((item) => {
-    if (!selectedMonth) return true;
+ const monthlyRecords = records
+   .filter((item) => {
+     if (!selectedMonth) return true;
 
-    return item.expDate?.substring(0, 7) === selectedMonth;
-  });
+     return item.expDate?.substring(0, 7) === selectedMonth;
+   })
+   .sort((a, b) => {
+     if (sortField === "expValue") {
+       return sortOrder === "asc"
+         ? Number(a.expValue) - Number(b.expValue)
+         : Number(b.expValue) - Number(a.expValue);
+     }
 
-  const filteredRecords = records.filter(
-    (item) =>
-      String(item.userId).toLowerCase().includes(search.toLowerCase()) ||
-      String(item.userName).toLowerCase().includes(search.toLowerCase()),
-  );
+     let valueA = "";
+     let valueB = "";
+
+     switch (sortField) {
+       case "userName":
+         valueA = a.userName || "";
+         valueB = b.userName || "";
+         break;
+
+       case "expType":
+         valueA = a.expType || "";
+         valueB = b.expType || "";
+         break;
+
+       case "expCategory":
+         valueA = a.expCategory || "";
+         valueB = b.expCategory || "";
+         break;
+
+       default:
+         return 0;
+     }
+
+     return sortOrder === "asc"
+       ? valueA.localeCompare(valueB)
+       : valueB.localeCompare(valueA);
+   });
+
+ const filteredRecords = records
+   .filter(
+     (item) =>
+       String(item.userId).toLowerCase().includes(search.toLowerCase()) ||
+       String(item.userName).toLowerCase().includes(search.toLowerCase()),
+   )
+   .sort((a, b) => {
+     // Amount Sorting
+     if (sortField === "expValue") {
+       return sortOrder === "asc"
+         ? Number(a.expValue) - Number(b.expValue)
+         : Number(b.expValue) - Number(a.expValue);
+     }
+
+     let valueA = "";
+     let valueB = "";
+
+     switch (sortField) {
+       case "userName":
+         valueA = a.userName || "";
+         valueB = b.userName || "";
+         break;
+
+       case "expType":
+         valueA = a.expType || "";
+         valueB = b.expType || "";
+         break;
+
+       case "expCategory":
+         valueA = a.expCategory || "";
+         valueB = b.expCategory || "";
+         break;
+
+       default:
+         return 0;
+     }
+
+     return sortOrder === "asc"
+       ? valueA.localeCompare(valueB)
+       : valueB.localeCompare(valueA);
+   });
   console.log("Selected Type:", newExpense.expType);
 
   console.log(
@@ -430,11 +506,107 @@ function ExpenseTransactions() {
                 <tr>
                   <th>EXP ID</th>
                   <th>USER ID</th>
-                  <th>USER NAME</th>
+                  <th>
+                    <div className="sortable-header">
+                      <span>USER NAME</span>
+
+                      <div className="sort-icons">
+                        <span
+                          className={`arrow-up ${
+                            sortField === "userName" && sortOrder === "asc"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() => handleSort("userName", "asc")}
+                        ></span>
+
+                        <span
+                          className={`arrow-down ${
+                            sortField === "userName" && sortOrder === "desc"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() => handleSort("userName", "desc")}
+                        ></span>
+                      </div>
+                    </div>
+                  </th>
                   <th>DATE</th>
-                  <th>EXPENSE TYPE</th>
-                  <th>EXPENSE NAME</th>
-                  <th>AMOUNT</th>
+                  <th>
+                    <div className="sortable-header">
+                      <span>EXPENSE TYPE</span>
+
+                      <div className="sort-icons">
+                        <span
+                          className={`arrow-up ${
+                            sortField === "expType" && sortOrder === "asc"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() => handleSort("expType", "asc")}
+                        ></span>
+
+                        <span
+                          className={`arrow-down ${
+                            sortField === "expType" && sortOrder === "desc"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() => handleSort("expType", "desc")}
+                        ></span>
+                      </div>
+                    </div>
+                  </th>
+                  <th>
+                    <div className="sortable-header">
+                      <span>EXPENSE NAME</span>
+
+                      <div className="sort-icons">
+                        <span
+                          className={`arrow-up ${
+                            sortField === "expCategory" && sortOrder === "asc"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() => handleSort("expCategory", "asc")}
+                        ></span>
+
+                        <span
+                          className={`arrow-down ${
+                            sortField === "expCategory" && sortOrder === "desc"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() => handleSort("expCategory", "desc")}
+                        ></span>
+                      </div>
+                    </div>
+                  </th>
+                  <th>
+                    <div className="sortable-header">
+                      <span>AMOUNT</span>
+
+                      <div className="sort-icons">
+                        <span
+                          className={`arrow-up ${
+                            sortField === "expValue" && sortOrder === "asc"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() => handleSort("expValue", "asc")}
+                        ></span>
+
+                        <span
+                          className={`arrow-down ${
+                            sortField === "expValue" && sortOrder === "desc"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() => handleSort("expValue", "desc")}
+                        ></span>
+                      </div>
+                    </div>
+                  </th>
                   <th>REMARKS</th>
                   <th>ACTION</th>
                 </tr>
@@ -505,9 +677,57 @@ function ExpenseTransactions() {
                 <tr>
                   <th>EXPENSE ID</th>
                   <th>USER ID</th>
-                  <th>USER NAME</th>
+                  <th>
+                    <div className="sortable-header">
+                      <span>USER NAME</span>
+
+                      <div className="sort-icons">
+                        <span
+                          className={`arrow-up ${
+                            sortField === "userName" && sortOrder === "asc"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() => handleSort("userName", "asc")}
+                        ></span>
+
+                        <span
+                          className={`arrow-down ${
+                            sortField === "userName" && sortOrder === "desc"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() => handleSort("userName", "desc")}
+                        ></span>
+                      </div>
+                    </div>
+                  </th>
                   <th>DATE</th>
-                  <th>AMOUNT</th>
+                  <th>
+                    <div className="sortable-header">
+                      <span>AMOUNT</span>
+
+                      <div className="sort-icons">
+                        <span
+                          className={`arrow-up ${
+                            sortField === "expValue" && sortOrder === "asc"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() => handleSort("expValue", "asc")}
+                        ></span>
+
+                        <span
+                          className={`arrow-down ${
+                            sortField === "expValue" && sortOrder === "desc"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() => handleSort("expValue", "desc")}
+                        ></span>
+                      </div>
+                    </div>
+                  </th>
                 </tr>
               </thead>
               <tbody>
