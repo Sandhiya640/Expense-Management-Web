@@ -6,6 +6,9 @@ import { FaSave, FaEdit, FaSearch } from "react-icons/fa";
 function LoanTransaction() {
   const [activeTab, setActiveTab] = useState("single");
   const [editId, setEditId] = useState(null);
+  const [loanTypeSort, setLoanTypeSort] = useState("");
+  const [userNameSort, setUserNameSort] = useState("");
+  const [amountSort, setAmountSort] = useState("");
   const [users, setUsers] = useState([]);
   const fetchUsers = async () => {
     try {
@@ -218,14 +221,41 @@ function LoanTransaction() {
     });
   };
 
-  const filteredRecords = records.filter(
+const filteredRecords = records
+  .filter(
     (r) =>
       r.userId?.toString().toLowerCase().includes(search.toLowerCase()) ||
       r.userName?.toLowerCase().includes(search.toLowerCase()) ||
       r.loanCategory?.toLowerCase().includes(search.toLowerCase()) ||
       r.bankName?.toLowerCase().includes(search.toLowerCase()) ||
       r.status?.toLowerCase().includes(search.toLowerCase()),
-  );
+  )
+  .sort((a, b) => {
+    if (userNameSort === "asc") {
+      return a.userName.localeCompare(b.userName);
+    }
+
+    if (userNameSort === "desc") {
+      return b.userName.localeCompare(a.userName);
+    }
+
+    if (loanTypeSort === "asc") {
+      return a.loanCategory.localeCompare(b.loanCategory);
+    }
+
+    if (loanTypeSort === "desc") {
+      return b.loanCategory.localeCompare(a.loanCategory);
+    }
+     if (amountSort === "asc") {
+       return Number(a.loanAmount) - Number(b.loanAmount);
+     }
+
+     if (amountSort === "desc") {
+       return Number(b.loanAmount) - Number(a.loanAmount);
+     }
+
+    return 0;
+  });
 
   return (
     <div className="expense-page">
@@ -428,9 +458,77 @@ function LoanTransaction() {
               <tr>
                 <th>LOAN ID</th>
                 <th>USER ID</th>
-                <th>USER NAME</th>
-                <th>LOAN TYPE</th>
-                <th>LOAN AMOUNT</th>
+                <th>
+                  <div className="sortable-header">
+                    <span>USER NAME</span>
+
+                    <div className="sort-icons">
+                      <span
+                        className={`arrow-up ${
+                          userNameSort === "asc" ? "active" : ""
+                        }`}
+                        onClick={() => {
+                          setUserNameSort("asc");
+                          setLoanTypeSort("");
+                        }}
+                      ></span>
+
+                      <span
+                        className={`arrow-down ${
+                          userNameSort === "desc" ? "active" : ""
+                        }`}
+                        onClick={() => {
+                          setUserNameSort("desc");
+                          setLoanTypeSort("");
+                        }}
+                      ></span>
+                    </div>
+                  </div>
+                </th>
+                <th>
+                  <div className="sortable-header">
+                    <span>LOAN TYPE</span>
+
+                    <div className="sort-icons">
+                      <span
+                        className={`arrow-up ${
+                          loanTypeSort === "asc" ? "active" : ""
+                        }`}
+                        onClick={() => {
+                          setLoanTypeSort("asc");
+                          setUserNameSort("");
+                        }}
+                      ></span>
+
+                      <span
+                        className={`arrow-down ${
+                          loanTypeSort === "desc" ? "active" : ""
+                        }`}
+                        onClick={() => {
+                          setLoanTypeSort("desc");
+                          setUserNameSort("");
+                        }}
+                      ></span>
+                    </div>
+                  </div>
+                </th>
+                <th>
+                  <div className="sortable-header">
+                    <span>LOAN AMOUNT</span>
+
+                    <div className="sort-icons">
+                      <span
+                        className={`arrow-up ${amountSort === "asc" ? "active" : ""}`}
+                        onClick={() => setAmountSort("asc")}
+                      ></span>
+
+                      <span
+                        className={`arrow-down ${amountSort === "desc" ? "active" : ""}`}
+                        onClick={() => setAmountSort("desc")}
+                      ></span>
+                    </div>
+                  </div>
+                </th>
                 <th>BANK NAME</th>
                 <th>EMI START DATE</th>
                 <th>TENURE</th>

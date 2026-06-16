@@ -307,3 +307,47 @@ tbody td {
 .upload-btn:hover {
     transform: translateY(-2px);
 }
+.sortable-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sort-icons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+}
+
+.arrow-up,
+.arrow-down {
+  width: 0;
+  height: 0;
+  cursor: pointer;
+}
+
+.arrow-up {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 6px solid #64748b;
+}
+
+.arrow-down {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #64748b;
+}
+
+.arrow-up.active {
+  border-bottom-color: #7c3aed;
+}
+
+.arrow-down.active {
+  border-top-color: #7c3aed;
+}
+.arrow-up,
+.arrow-down {
+  cursor: pointer;
+  pointer-events: auto;
+}

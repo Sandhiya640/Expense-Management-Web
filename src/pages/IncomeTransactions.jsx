@@ -9,6 +9,7 @@ import {
   FaUpload,
   FaPlus,
   FaTimes,
+  FaSort,
 } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa6";
 
@@ -16,9 +17,10 @@ const API_URL = "http://localhost:5001/api/income-trn";
 
 function IncomeTransactions() {
   const [activeTab, setActiveTab] = useState("single");
-
+const [userSortOrder, setUserSortOrder] = useState("");
+const [incomeTypeSortOrder, setIncomeTypeSortOrder] = useState("");
   const [records, setRecords] = useState([]);
-
+const [amountSort, setAmountSort] = useState("");
   const [search, setSearch] = useState("");
   const [editId, setEditId] = useState(null);
 
@@ -195,12 +197,41 @@ function IncomeTransactions() {
     reader.readAsArrayBuffer(file);
   };
 
-  const monthlyRecords = records.filter((item) => {
+const monthlyRecords = [...records]
+  .filter((item) => {
     if (!selectedMonth) return true;
 
     const [day, month, year] = item.incomeDate.split("-");
 
     return `${year}-${month}` === selectedMonth;
+  })
+  .sort((a, b) => {
+    if (userSortOrder === "asc") {
+      return a.username.localeCompare(b.username);
+    }
+
+    if (userSortOrder === "desc") {
+      return b.username.localeCompare(a.username);
+    }
+
+    if (incomeTypeSortOrder === "asc") {
+      return a.incomeTypeName.localeCompare(b.incomeTypeName);
+    }
+
+    if (incomeTypeSortOrder === "desc") {
+      return b.incomeTypeName.localeCompare(a.incomeTypeName);
+    }
+
+    // Amount Sorting
+    if (amountSort === "asc") {
+      return Number(a.amount) - Number(b.amount);
+    }
+
+    if (amountSort === "desc") {
+      return Number(b.amount) - Number(a.amount);
+    }
+
+    return 0;
   });
 
   const handleSubmit = async (e) => {
@@ -294,12 +325,41 @@ function IncomeTransactions() {
     setShowAddModal(true);
   };
 
-  const filteredRecords = records.filter(
-    (record) =>
-      record.username.toLowerCase().includes(search.toLowerCase()) ||
-      record.userId.toLowerCase().includes(search.toLowerCase()),
-  );
+  const filteredRecords = [...records]
+    .filter(
+      (record) =>
+        record.username.toLowerCase().includes(search.toLowerCase()) ||
+        record.userId.toLowerCase().includes(search.toLowerCase()),
+    )
+    .sort((a, b) => {
+  if (userSortOrder === "asc") {
+    return a.username.localeCompare(b.username);
+  }
 
+  if (userSortOrder === "desc") {
+    return b.username.localeCompare(a.username);
+  }
+
+  if (incomeTypeSortOrder === "asc") {
+    return a.incomeTypeName.localeCompare(b.incomeTypeName);
+  }
+
+  if (incomeTypeSortOrder === "desc") {
+    return b.incomeTypeName.localeCompare(a.incomeTypeName);
+  }
+
+  if (amountSort === "asc") {
+    return Number(a.amount) - Number(b.amount);
+  }
+
+  if (amountSort === "desc") {
+    return Number(b.amount) - Number(a.amount);
+  }
+
+  return 0;
+});
+
+     
   const incomeSummary = Object.values(
     records.reduce((acc, item) => {
       if (!acc[item.userId]) {
@@ -335,7 +395,7 @@ function IncomeTransactions() {
             className={activeTab === "records" ? "active" : ""}
             onClick={() => {
               setActiveTab("records");
-              setSearch(""); 
+              setSearch("");
             }}
           >
             All Records
@@ -389,10 +449,86 @@ function IncomeTransactions() {
                   <tr>
                     <th>ID</th>
                     <th>USER ID</th>
-                    <th>USERNAME</th>
+                    <th>
+                      <div className="sortable-header">
+                        <span>USERNAME</span>
+
+                        <div className="sort-icons">
+                          <span
+                            className={`arrow-up ${
+                              userSortOrder === "asc" ? "active" : ""
+                            }`}
+                            onClick={() => {
+                              setUserSortOrder("asc");
+                              setIncomeTypeSortOrder("");
+                            }}
+                          ></span>
+
+                          <span
+                            className={`arrow-down ${
+                              userSortOrder === "desc" ? "active" : ""
+                            }`}
+                            onClick={() => {
+                              setUserSortOrder("desc");
+                              setIncomeTypeSortOrder("");
+                            }}
+                          ></span>
+                        </div>
+                      </div>
+                    </th>
                     <th>DATE</th>
-                    <th>INCOME TYPE</th>
-                    <th>AMOUNT</th>
+                    <th>
+                      <div className="sortable-header">
+                        <span>INCOME TYPE</span>
+
+                        <div className="sort-icons">
+                          <span
+                            className={`arrow-up ${
+                              incomeTypeSortOrder === "asc" ? "active" : ""
+                            }`}
+                            onClick={() => {
+                              setIncomeTypeSortOrder("asc");
+                              setUserSortOrder("");
+                            }}
+                          ></span>
+
+                          <span
+                            className={`arrow-down ${
+                              incomeTypeSortOrder === "desc" ? "active" : ""
+                            }`}
+                            onClick={() => {
+                              setIncomeTypeSortOrder("desc");
+                              setUserSortOrder("");
+                            }}
+                          ></span>
+                        </div>
+                      </div>
+                    </th>
+                    <th>
+                      <div className="sortable-header">
+                        <span> AMOUNT</span>
+
+                        <div className="sort-icons">
+                          <span
+  className={`arrow-up ${amountSort === "asc" ? "active" : ""}`}
+  onClick={() => {
+    setAmountSort("asc");
+    setUserSortOrder("");
+    setIncomeTypeSortOrder("");
+  }}
+></span>
+
+<span
+  className={`arrow-down ${amountSort === "desc" ? "active" : ""}`}
+  onClick={() => {
+    setAmountSort("desc");
+    setUserSortOrder("");
+    setIncomeTypeSortOrder("");
+  }}
+></span>
+                      </div>
+                      </div>
+                    </th>
                     <th>REMARKS</th>
                     <th>ACTION</th>
                   </tr>
@@ -452,10 +588,78 @@ function IncomeTransactions() {
                   <tr>
                     <th>ID</th>
                     <th>USER ID</th>
-                    <th>USERNAME</th>
+                    <th>
+                      <div className="sortable-header">
+                        <span>USERNAME</span>
+
+                        <div className="sort-icons">
+                          <span
+                            className={`arrow-up ${
+                              userSortOrder === "asc" ? "active" : ""
+                            }`}
+                            onClick={() => {
+                              setUserSortOrder("asc");
+                              setIncomeTypeSortOrder("");
+                            }}
+                          ></span>
+
+                          <span
+                            className={`arrow-down ${
+                              userSortOrder === "desc" ? "active" : ""
+                            }`}
+                            onClick={() => {
+                              setUserSortOrder("desc");
+                              setIncomeTypeSortOrder("");
+                            }}
+                          ></span>
+                        </div>
+                      </div>
+                    </th>
                     <th>DATE</th>
-                    <th>INCOME TYPE</th>
-                    <th>AMOUNT</th>
+                    <th>
+                      <div className="sortable-header">
+                        <span>INCOME TYPE</span>
+
+                        <div className="sort-icons">
+                          <span
+                            className={`arrow-up ${
+                              incomeTypeSortOrder === "asc" ? "active" : ""
+                            }`}
+                            onClick={() => {
+                              setIncomeTypeSortOrder("asc");
+                              setUserSortOrder("");
+                            }}
+                          ></span>
+
+                          <span
+                            className={`arrow-down ${
+                              incomeTypeSortOrder === "desc" ? "active" : ""
+                            }`}
+                            onClick={() => {
+                              setIncomeTypeSortOrder("desc");
+                              setUserSortOrder("");
+                            }}
+                          ></span>
+                        </div>
+                      </div>
+                    </th>
+                    <th>
+                      <div className="sortable-header">
+                        <span> AMOUNT</span>
+
+                        <div className="sort-icons">
+                          <span
+                            className={`arrow-up ${amountSort === "asc" ? "active" : ""}`}
+                            onClick={() => setAmountSort("asc")}
+                          ></span>
+
+                          <span
+                            className={`arrow-down ${amountSort === "desc" ? "active" : ""}`}
+                            onClick={() => setAmountSort("desc")}
+                          ></span>
+                        </div>
+                      </div>
+                    </th>
                     <th>REMARKS</th>
                   </tr>
                 </thead>
