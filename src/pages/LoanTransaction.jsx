@@ -48,6 +48,16 @@ function LoanTransaction() {
     fetchLoans();
   }, []);
 
+  useEffect(() => {
+    if (activeTab === "records") {
+      setSearch(""); 
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    setSearch(""); 
+  }, [activeTab]);
+
   const [records, setRecords] = useState([]);
 
   const [search, setSearch] = useState("");
@@ -232,7 +242,10 @@ function LoanTransaction() {
         </button>
         <button
           className={activeTab === "records" ? "active" : ""}
-          onClick={() => setActiveTab("records")}
+          onClick={() => {
+            setActiveTab("records");
+            setSearch(""); // 👈 RESET SEARCH HERE
+          }}
         >
           All Records
         </button>
@@ -309,7 +322,6 @@ function LoanTransaction() {
                   <option value="Canara">Canara</option>
                   <option value="Indian Bank">Indian Bank</option>
                   <option value="Kvb">Kvb</option>
-              
                 </select>
               </div>
 
@@ -418,6 +430,7 @@ function LoanTransaction() {
                 <th>USER ID</th>
                 <th>USER NAME</th>
                 <th>LOAN TYPE</th>
+                <th>LOAN AMOUNT</th>
                 <th>BANK NAME</th>
                 <th>EMI START DATE</th>
                 <th>TENURE</th>
@@ -437,6 +450,8 @@ function LoanTransaction() {
                   <td>{item.userName}</td>
 
                   <td>{item.loanCategory}</td>
+
+                  <td>{item.loanAmount}</td>
 
                   <td>{item.bankName}</td>
 
