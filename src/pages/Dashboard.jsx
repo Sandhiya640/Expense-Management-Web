@@ -32,9 +32,17 @@ const [incomeData, setIncomeData] = useState([]);
 const [expenseData, setExpenseData] = useState([]);
 const [comparisonData, setComparisonData] = useState([]);
 
-  const COLORS = ["#16a34a", "#2563eb", "#ef4444"];
-  const donutColors = ["#2563eb", "#ef4444", "#16a34a", "#f59e0b"];
-
+const COLORS = [
+  "#ec4899",
+  "#16a34a",
+  "#9333ea", 
+];
+  const donutColors = [
+    "#16a34a", 
+    "#ef4444", 
+    "#ec4899", 
+    "#9333ea",
+  ];
   const summaryData = [
     {
       name: "Savings",
@@ -228,17 +236,17 @@ const [comparisonData, setComparisonData] = useState([]);
 
             <div className="pie-legend">
               <div>
-                <span className="dot green"></span>
+                <span className="dot pink"></span>
                 Savings
               </div>
 
               <div>
-                <span className="dot blue"></span>
+                <span className="dot green"></span>
                 Investment
               </div>
 
               <div>
-                <span className="dot red"></span>
+                <span className="dot purple"></span>
                 Loans
               </div>
             </div>
@@ -353,7 +361,7 @@ const [comparisonData, setComparisonData] = useState([]);
 
             <div className="donut-legend">
               <div>
-                <span className="dot blue"></span>
+                <span className="dot green"></span>
                 Income
               </div>
 
@@ -363,13 +371,13 @@ const [comparisonData, setComparisonData] = useState([]);
               </div>
 
               <div>
-                <span className="dot green"></span>
+                <span className="dot pink"></span>
                 Savings
               </div>
 
               <div>
-                <span className="dot yellow"></span>
-                Loans
+                <span className="dot purple"></span>
+                Loan
               </div>
             </div>
           </div>

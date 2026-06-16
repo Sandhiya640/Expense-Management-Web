@@ -1,7 +1,7 @@
 .dashboard {
-  background:#fff6fb;
+  background: #ffffff;
   min-height: 100vh;
-  font-family: "Times New Roman", Times, serif;;
+  font-family: "Times New Roman", Times, serif;
   padding: 20px;
 }
 
@@ -15,13 +15,19 @@
 }
 
 .dashboard-header h1 {
-  color: #7e22ce;
-  font-size: 32px;
+  color:#1f1f5c;
+  font-size: 30px;
+  font-weight: bold;
+  text-align: left;
+  font-family: "Times New Roman", Times, serif;
+  margin: 0;
+  padding-top: 30px;
 }
 
 .filters {
   display: flex;
   gap: 10px;
+ padding-top: 30px;
 }
 
 .filters select {
@@ -29,6 +35,7 @@
   border: 1px solid #dbe2ea;
   border-radius: 8px;
   background: white;
+  
 }
 
 .level1 {
@@ -47,7 +54,6 @@
   box-shadow: 0 5px 15px rgba(168,85,247,.2);
 }
 
-/* ALL KPI CARDS SAME STYLE */
 
 .kpi-card {
   flex: 1;
@@ -168,6 +174,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  
 }
 
 .pie-legend {
@@ -215,7 +222,7 @@
   background: #fff;
   border-radius: 14px;
   padding: 30px;
-  height: 220px;   /* increased */
+  height: 220px;
 
   display: flex;
   align-items: center;
@@ -297,21 +304,20 @@
   display: inline-block;
   margin-right: 10px;
 }
-
 .green {
-  background: #9333ea;
-}
-
-.blue {
-  background: #2563eb;
+  background: #16a34a;
 }
 
 .red {
-  background:#ec4899;
+  background: #ef4444;
 }
 
-.yellow {
-  background: #f59e0b;
+.pink {
+  background: #ec4899;
+}
+
+.purple {
+  background: #9333ea;
 }
 .pie-card {
   height: 220px;
@@ -343,13 +349,11 @@
   align-items: center;
   white-space: nowrap;
 }
-/* REMOVE ANY BLUE OR PINK BACKGROUND */
+
 
 .loan {
   background: #fff !important;
 }
-
-/* LOAN ICON */
 
 .loan-icon {
   width: 58px;

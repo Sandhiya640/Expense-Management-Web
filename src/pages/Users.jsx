@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Users.css";
-import { FaPlus, FaSearch, FaEdit, FaTimes, FaSave, FaTrash } from "react-icons/fa";
+import {
+  FaPlus,
+  FaSearch,
+  FaEdit,
+  FaTimes,
+  FaSave,
+  FaTrash,
+  FaSort,
+  FaSortUp,
+  FaSortDown,
+} from "react-icons/fa";
 
 const API_URL = "http://localhost:5001/api/users";
 
@@ -10,6 +20,17 @@ function Users() {
 
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState("");
+const [sortOrder, setSortOrder] = useState("empcode");
+
+const toggleSort = () => {
+  if (sortOrder === "empcode") {
+    setSortOrder("asc");
+  } else if (sortOrder === "asc") {
+    setSortOrder("desc");
+  } else {
+    setSortOrder("empcode");
+  }
+};
   const [editUser, setEditUser] = useState(null);
   const [roles, setRoles] = useState([]);
 
@@ -38,7 +59,9 @@ function Users() {
     fetchUsers();
     fetchRoles();
   }, []);
-
+const handleNameSort = (order) => {
+  setSortOrder(order);
+};
   const getNextEmpCode = () => {
     const maxCode =
       users.length > 0
@@ -165,7 +188,8 @@ function Users() {
     }
   };
 
-  const filteredUsers = users.filter((user) => {
+const filteredUsers = users
+  .filter((user) => {
     const value = search.toLowerCase();
 
     return (
@@ -174,8 +198,22 @@ function Users() {
       user.Mail_ID?.toLowerCase().includes(value) ||
       user.Mobile_No?.includes(value)
     );
-  });
+  })
+  .sort((a, b) => {
+    if (sortOrder === "asc") {
+      return a.Emp_Name.localeCompare(b.Emp_Name);
+    }
 
+    if (sortOrder === "desc") {
+      return b.Emp_Name.localeCompare(a.Emp_Name);
+    }
+
+    // Default EMP CODE sorting
+    const empA = parseInt(a.Emp_Code?.replace("EMP", "") || 0);
+    const empB = parseInt(b.Emp_Code?.replace("EMP", "") || 0);
+
+    return empA - empB;
+  });
   return (
     <div className="users-page">
       <div className="users-header">
@@ -185,7 +223,7 @@ function Users() {
       <div className="users-card">
         <div className="table-top">
           <div className="search-box">
-            <FaSearch/>
+            <FaSearch />
             <input
               type="text"
               placeholder="Search users..."
@@ -204,7 +242,12 @@ function Users() {
           <thead>
             <tr>
               <th>EMP CODE</th>
-              <th>NAME</th>
+              <th>
+                <div className="sortable-header" onClick={toggleSort}>
+                  NAME
+                  <FaSort className="sort-icon" />
+                </div>
+              </th>
               <th>EMAIL</th>
               <th>MOBILE</th>
               <th>ROLE</th>

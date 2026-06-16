@@ -32,6 +32,7 @@ function App() {
           <Route path="/expense" element={<ExpenseTransactions />} />
           <Route path="/loan-transaction" element={<LoanTransaction />} />
           <Route path="/reports" element={<Reports />} />
+          
         </Route>
       </Routes>
     </BrowserRouter>
