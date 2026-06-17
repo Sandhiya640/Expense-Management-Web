@@ -6,19 +6,27 @@ import {
   updateRole,
   deleteRole,
 } from "../service/roleService";
-import { FaSearch,FaPlus, FaEdit, FaTrash, FaTimes, FaSave } from "react-icons/fa";
-import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
+import {
+  FaSearch,
+  FaPlus,
+  FaEdit,
+  FaTrash,
+  FaTimes,
+  FaSave,
+} from "react-icons/fa";
+
 function Role() {
   const [showModal, setShowModal] = useState(false);
-const [sortOrder, setSortOrder] = useState("rid");
+  const [sortOrder, setSortOrder] = useState("rid");
   const [searchTerm, setSearchTerm] = useState("");
 
   const [roles, setRoles] = useState([]);
   const [editData, setEditData] = useState(null);
 
   const [roleName, setRoleName] = useState("");
-
   const [status, setStatus] = useState("Active");
+  const [errors, setErrors] = useState({});
+
   useEffect(() => {
     fetchRoles();
   }, []);
@@ -31,39 +39,45 @@ const [sortOrder, setSortOrder] = useState("rid");
       console.error("Error loading roles:", error);
     }
   };
-  const openAddModal = () => {
-    setEditData(null);
 
+  // 🔹 Reset form completely
+  const resetForm = () => {
     setRoleName("");
-
     setStatus("Active");
+    setErrors({});
+    setEditData(null);
+  };
 
+  const openAddModal = () => {
+    resetForm();
     setShowModal(true);
   };
-const toggleSort = () => {
-  if (sortOrder === "rid") {
-    setSortOrder("asc");
-  } else if (sortOrder === "asc") {
-    setSortOrder("desc");
-  } else {
-    setSortOrder("rid");
-  }
-};
+
   const handleEdit = (role) => {
     setEditData(role);
-
     setRoleName(role.Role_Name);
-
     setStatus(role.Active_Status ? "Active" : "Inactive");
-
+    setErrors({});
     setShowModal(true);
   };
 
-  const saveRole = async () => {
+  // 🔹 Form submit (like Users page)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const newErrors = {};
+
     if (!roleName.trim()) {
-      alert("Role Name Required");
-      return;
+      newErrors.roleName = "Role Name is required";
     }
+
+    if (!status) {
+      newErrors.status = "Status is required";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) return;
 
     try {
       if (editData) {
@@ -80,53 +94,44 @@ const toggleSort = () => {
 
       await fetchRoles();
 
-      setRoleName("");
-      setStatus("Active");
-      setEditData(null);
+      resetForm();
       setShowModal(false);
     } catch (error) {
       console.error("Save Error:", error);
-
       alert(error.response?.data?.message || "Unable to save role");
     }
   };
-  const handleDelete = async (rid) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this role?",
-    );
 
-    if (!confirmDelete) return;
+  const handleDelete = async (rid) => {
+    if (!window.confirm("Are you sure you want to delete this role?")) return;
 
     try {
       await deleteRole(rid);
-
       await fetchRoles();
-
-      alert("Role deleted successfully");
     } catch (error) {
       console.error("Delete Error:", error);
     }
   };
- const filteredRoles = roles
-   .filter(
-     (role) =>
-       role.Role_Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-       String(role.RID).includes(searchTerm) ||
-       (role.Active_Status ? "active" : "inactive").includes(
-         searchTerm.toLowerCase(),
-       ),
-   )
-   .sort((a, b) => {
-     if (sortOrder === "asc") {
-       return a.Role_Name.localeCompare(b.Role_Name);
-     }
 
-     if (sortOrder === "desc") {
-       return b.Role_Name.localeCompare(a.Role_Name);
-     }
+  const filteredRoles = roles
+    .filter(
+      (role) =>
+        role.Role_Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        String(role.RID).includes(searchTerm) ||
+        (role.Active_Status ? "active" : "inactive").includes(
+          searchTerm.toLowerCase(),
+        ),
+    )
+    .sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a.Role_Name.localeCompare(b.Role_Name);
+      }
+      if (sortOrder === "desc") {
+        return b.Role_Name.localeCompare(a.Role_Name);
+      }
+      return 0;
+    });
 
-     return 0;
-   });
   return (
     <div className="role-page">
       <div className="role-header">
@@ -158,20 +163,22 @@ const toggleSort = () => {
               <th>
                 <div className="sortable-header">
                   <span>ROLE</span>
-
                   <div className="sort-icons">
                     <span
-                      className={`arrow-up ${sortOrder === "asc" ? "active" : ""}`}
+                      className={`arrow-up ${
+                        sortOrder === "asc" ? "active" : ""
+                      }`}
                       onClick={() => setSortOrder("asc")}
                     ></span>
-
                     <span
-                      className={`arrow-down ${sortOrder === "desc" ? "active" : ""}`}
+                      className={`arrow-down ${
+                        sortOrder === "desc" ? "active" : ""
+                      }`}
                       onClick={() => setSortOrder("desc")}
                     ></span>
                   </div>
                 </div>
-              </th>{" "}
+              </th>
               <th>STATUS</th>
               <th>CREATED ON</th>
               <th>ACTIONS</th>
@@ -179,12 +186,10 @@ const toggleSort = () => {
           </thead>
 
           <tbody>
-            {filteredRoles.map((role, index) => (
-              <tr key={index}>
+            {filteredRoles.map((role) => (
+              <tr key={role.RID}>
                 <td>{role.RID}</td>
-
                 <td>{role.Role_Name}</td>
-
                 <td>
                   <span
                     className={
@@ -194,20 +199,18 @@ const toggleSort = () => {
                     {role.Active_Status ? "Active" : "Inactive"}
                   </span>
                 </td>
-
                 <td>
-                  {role.Created_on
-                    ? new Date(role.Created_on).toLocaleDateString()
+                  {role.Created_On
+                    ? new Date(role.Created_On).toLocaleDateString()
                     : ""}
                 </td>
-
                 <td>
                   <button className="edit-btn" onClick={() => handleEdit(role)}>
                     <FaEdit />
                   </button>
 
                   <button
-                    className="edit-btn delete-icon-btn"
+                    className="edit-btn"
                     onClick={() => handleDelete(role.RID)}
                     style={{ marginLeft: "10px" }}
                   >
@@ -220,55 +223,98 @@ const toggleSort = () => {
         </table>
       </div>
 
+      {/* 🔥 MODAL */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
             <div className="modal-header">
               <h2>{editData ? "Edit Role" : "Add Role"}</h2>
-
               <FaTimes
                 style={{ cursor: "pointer" }}
                 onClick={() => {
+                  resetForm();
                   setShowModal(false);
-                  setEditData(null);
                 }}
               />
             </div>
-            <div className="form-row">
-              <label>ROLE NAME :</label>
-              <input
-                type="text"
-                value={roleName}
-                placeholder="Enter role name"
-                onChange={(e) => setRoleName(e.target.value)}
-              />
-            </div>
 
-            <div className="form-row">
-              <label>STATUS :</label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                <option>Active</option>
-                <option>Inactive</option>
-              </select>
-            </div>
-            <div className="modal-buttons">
-              <button
-                className="cancel-btn"
-                onClick={() => {
-                  setShowModal(false);
-                  setEditData(null);
-                }}
-              >
-                Cancel
-              </button>
+            <form noValidate onSubmit={handleSubmit}>
+              <div className="form-body">
+                {/* ROLE NAME ROW */}
+                <div
+                  className={`form-row ${errors.roleName ? "has-error" : ""}`}
+                >
+                  <label>ROLE NAME :</label>
+                  {/* Add style inline directly here */}
+                  <div className="input-container">
+                    <input
+                      type="text"
+                      value={roleName}
+                      placeholder="Enter role name"
+                      onChange={(e) => {
+                        setRoleName(e.target.value);
+                        if (errors.roleName) {
+                          setErrors({ ...errors, roleName: "" });
+                        }
+                      }}
+                      className={errors.roleName ? "input-error" : ""}
+                    />
+                    {errors.roleName && (
+                      <div className="tooltip-error-box">
+                        <div className="tooltip-arrow"></div>
+                        <span className="tooltip-icon">!</span>
+                        <span className="tooltip-text">{errors.roleName}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
 
-              <button className="save-btn" onClick={saveRole}>
-                <FaSave /> Save
-              </button>
-            </div>
+                {/* STATUS ROW */}
+                <div className="form-row">
+                  <label>STATUS :</label>
+                  {/* Add style inline directly here */}
+                  <div className="input-container">
+                    <select
+                      value={status}
+                      onChange={(e) => {
+                        setStatus(e.target.value);
+                        if (errors.status) {
+                          setErrors({ ...errors, status: "" });
+                        }
+                      }}
+                      className={errors.status ? "input-error" : ""}
+                    >
+                      <option value="">Select Status</option>
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                    </select>
+                    {errors.status && (
+                      <div className="tooltip-error-box">
+                        <div className="tooltip-arrow"></div>
+                        <span className="tooltip-icon">!</span>
+                        <span className="tooltip-text">{errors.status}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="modal-buttons">
+                <button
+                  type="button"
+                  className="cancel-btn"
+                  onClick={() => {
+                    resetForm();
+                    setShowModal(false);
+                  }}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="save-btn">
+                  <FaSave /> Save
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

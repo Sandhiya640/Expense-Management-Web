@@ -12,6 +12,7 @@
   margin-top: 60px;
   font-family: "Poppins", sans-serif;
 }
+
 .sortable-header {
   display: flex;
   align-items: center;
@@ -36,6 +37,7 @@
 .sortable-header:hover .sort-icon {
   color: #7c3aed;
 }
+
 .sort-icon:focus,
 .sort-icon:active,
 .sortable-header:focus,
@@ -43,6 +45,7 @@
   color: #64748b !important;
   outline: none;
 }
+
 .sortable-header {
   display: flex;
   align-items: center;
@@ -68,6 +71,7 @@
 .sort-icon:active {
   outline: none;
 }
+
 .expense-header h2 {
   font-size: 30px;
   color: #1f1f5c;
@@ -110,11 +114,9 @@
 
 .add-btn {
   border: none;
-  background: linear-gradient(
-    135deg,
-    #8b5cf6,
-    #d946ef
-  );
+  background: linear-gradient(135deg,
+      #8b5cf6,
+      #d946ef);
   color: white;
   padding: 12px 20px;
   border-radius: 10px;
@@ -183,12 +185,10 @@ tbody tr:hover {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(
-    0,
-    0,
-    0,
-    0.5
-  );
+  background: rgba(0,
+      0,
+      0,
+      0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -217,9 +217,11 @@ tbody tr:hover {
 .form-row {
   display: flex;
   align-items: center;
-  margin-bottom: 22px;
+  margin-bottom: 25px;
 }
-
+.form-row.has-error {
+  margin-bottom: 60px;
+}
 .form-row label {
   width: 180px;
   font-size: 16px;
@@ -260,11 +262,9 @@ tbody tr:hover {
 }
 
 .save-btn {
-  background: linear-gradient(
-    135deg,
-    #8b5cf6,
-    #7c3aed
-  );
+  background: linear-gradient(135deg,
+      #8b5cf6,
+      #7c3aed);
   color: white;
   border: none;
   padding: 12px 25px;
@@ -274,6 +274,7 @@ tbody tr:hover {
   gap: 8px;
   cursor: pointer;
 }
+
 .sortable-header {
   display: inline-flex;
   align-items: center;

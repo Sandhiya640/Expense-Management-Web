@@ -218,7 +218,7 @@ const toggleSort = () => {
                     </span>
                   </td>
 
-                  <td>{cat.Created_by}</td>
+                  <td>{cat.Created_By}</td>
                   <td>
                     <button
                       className="edit-btn"
