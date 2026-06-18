@@ -6,12 +6,34 @@ const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const handleLogin = (e) => {
-    e.preventDefault();
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("username", username);
-    navigate("/dashboard");
-  };
+ const handleLogin = (e) => {
+   e.preventDefault();
+
+   if (!username.trim() || !password.trim()) {
+     alert("Username and Password are required");
+     return;
+   }
+
+   if (username.trim().length < 4) {
+     alert("Username must be at least 4 characters");
+     return;
+   }
+
+   if (password.length < 4) {
+     alert("Password must be at least 4 characters");
+     return;
+   }
+
+   if (!/\d/.test(password)) {
+     alert("Password must contain at least one number");
+     return;
+   }
+
+   localStorage.setItem("isLoggedIn", "true");
+   localStorage.setItem("username", username);
+   navigate("/dashboard");
+ };
+
   return (
     <div className="login-page">
       {" "}
