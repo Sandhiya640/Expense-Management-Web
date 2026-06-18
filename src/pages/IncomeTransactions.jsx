@@ -17,10 +17,10 @@ const API_URL = "http://localhost:5001/api/income-trn";
 
 function IncomeTransactions() {
   const [activeTab, setActiveTab] = useState("single");
-const [userSortOrder, setUserSortOrder] = useState("");
-const [incomeTypeSortOrder, setIncomeTypeSortOrder] = useState("");
+  const [userSortOrder, setUserSortOrder] = useState("");
+  const [incomeTypeSortOrder, setIncomeTypeSortOrder] = useState("");
   const [records, setRecords] = useState([]);
-const [amountSort, setAmountSort] = useState("");
+  const [amountSort, setAmountSort] = useState("");
   const [search, setSearch] = useState("");
   const [editId, setEditId] = useState(null);
 
@@ -92,7 +92,7 @@ const [amountSort, setAmountSort] = useState("");
   }, [activeTab]);
 
   useEffect(() => {
-    setSearch(""); 
+    setSearch("");
   }, [activeTab]);
 
   const formatDate = (date) => {
@@ -197,42 +197,42 @@ const [amountSort, setAmountSort] = useState("");
     reader.readAsArrayBuffer(file);
   };
 
-const monthlyRecords = [...records]
-  .filter((item) => {
-    if (!selectedMonth) return true;
+  const monthlyRecords = [...records]
+    .filter((item) => {
+      if (!selectedMonth) return true;
 
-    const [day, month, year] = item.incomeDate.split("-");
+      const [day, month, year] = item.incomeDate.split("-");
 
-    return `${year}-${month}` === selectedMonth;
-  })
-  .sort((a, b) => {
-    if (userSortOrder === "asc") {
-      return a.username.localeCompare(b.username);
-    }
+      return `${year}-${month}` === selectedMonth;
+    })
+    .sort((a, b) => {
+      if (userSortOrder === "asc") {
+        return a.username.localeCompare(b.username);
+      }
 
-    if (userSortOrder === "desc") {
-      return b.username.localeCompare(a.username);
-    }
+      if (userSortOrder === "desc") {
+        return b.username.localeCompare(a.username);
+      }
 
-    if (incomeTypeSortOrder === "asc") {
-      return a.incomeTypeName.localeCompare(b.incomeTypeName);
-    }
+      if (incomeTypeSortOrder === "asc") {
+        return a.incomeTypeName.localeCompare(b.incomeTypeName);
+      }
 
-    if (incomeTypeSortOrder === "desc") {
-      return b.incomeTypeName.localeCompare(a.incomeTypeName);
-    }
+      if (incomeTypeSortOrder === "desc") {
+        return b.incomeTypeName.localeCompare(a.incomeTypeName);
+      }
 
-    // Amount Sorting
-    if (amountSort === "asc") {
-      return Number(a.amount) - Number(b.amount);
-    }
+      // Amount Sorting
+      if (amountSort === "asc") {
+        return Number(a.amount) - Number(b.amount);
+      }
 
-    if (amountSort === "desc") {
-      return Number(b.amount) - Number(a.amount);
-    }
+      if (amountSort === "desc") {
+        return Number(b.amount) - Number(a.amount);
+      }
 
-    return 0;
-  });
+      return 0;
+    });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -248,8 +248,8 @@ const monthlyRecords = [...records]
     }
 
     const duplicate = records.find((item) => {
-      const existingMonth = item.incomeDate.split("-"); 
-      const newMonth = formData.incomeDate.split("-"); 
+      const existingMonth = item.incomeDate.split("-");
+      const newMonth = formData.incomeDate.split("-");
 
       return (
         item.userId === formData.userId &&
@@ -261,9 +261,9 @@ const monthlyRecords = [...records]
     });
 
     if (duplicate) {
-     alert(
-       "This Income Type already exists for this user for the selected month",
-     );
+      alert(
+        "This Income Type already exists for this user for the selected month",
+      );
       return;
     }
 
@@ -332,34 +332,33 @@ const monthlyRecords = [...records]
         record.userId.toLowerCase().includes(search.toLowerCase()),
     )
     .sort((a, b) => {
-  if (userSortOrder === "asc") {
-    return a.username.localeCompare(b.username);
-  }
+      if (userSortOrder === "asc") {
+        return a.username.localeCompare(b.username);
+      }
 
-  if (userSortOrder === "desc") {
-    return b.username.localeCompare(a.username);
-  }
+      if (userSortOrder === "desc") {
+        return b.username.localeCompare(a.username);
+      }
 
-  if (incomeTypeSortOrder === "asc") {
-    return a.incomeTypeName.localeCompare(b.incomeTypeName);
-  }
+      if (incomeTypeSortOrder === "asc") {
+        return a.incomeTypeName.localeCompare(b.incomeTypeName);
+      }
 
-  if (incomeTypeSortOrder === "desc") {
-    return b.incomeTypeName.localeCompare(a.incomeTypeName);
-  }
+      if (incomeTypeSortOrder === "desc") {
+        return b.incomeTypeName.localeCompare(a.incomeTypeName);
+      }
 
-  if (amountSort === "asc") {
-    return Number(a.amount) - Number(b.amount);
-  }
+      if (amountSort === "asc") {
+        return Number(a.amount) - Number(b.amount);
+      }
 
-  if (amountSort === "desc") {
-    return Number(b.amount) - Number(a.amount);
-  }
+      if (amountSort === "desc") {
+        return Number(b.amount) - Number(a.amount);
+      }
 
-  return 0;
-});
+      return 0;
+    });
 
-     
   const incomeSummary = Object.values(
     records.reduce((acc, item) => {
       if (!acc[item.userId]) {
@@ -510,23 +509,23 @@ const monthlyRecords = [...records]
 
                         <div className="sort-icons">
                           <span
-  className={`arrow-up ${amountSort === "asc" ? "active" : ""}`}
-  onClick={() => {
-    setAmountSort("asc");
-    setUserSortOrder("");
-    setIncomeTypeSortOrder("");
-  }}
-></span>
+                            className={`arrow-up ${amountSort === "asc" ? "active" : ""}`}
+                            onClick={() => {
+                              setAmountSort("asc");
+                              setUserSortOrder("");
+                              setIncomeTypeSortOrder("");
+                            }}
+                          ></span>
 
-<span
-  className={`arrow-down ${amountSort === "desc" ? "active" : ""}`}
-  onClick={() => {
-    setAmountSort("desc");
-    setUserSortOrder("");
-    setIncomeTypeSortOrder("");
-  }}
-></span>
-                      </div>
+                          <span
+                            className={`arrow-down ${amountSort === "desc" ? "active" : ""}`}
+                            onClick={() => {
+                              setAmountSort("desc");
+                              setUserSortOrder("");
+                              setIncomeTypeSortOrder("");
+                            }}
+                          ></span>
+                        </div>
                       </div>
                     </th>
                     <th>REMARKS</th>
