@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./ExpenseType.css";
-
-import {
-  getExpenseTypes,
-  addExpenseType,
-  updateExpenseType,
-  deleteExpenseType,
-} from "../service/expenseTypeService";
-
 import {
   FaSearch,
   FaPlus,
@@ -17,6 +9,8 @@ import {
   FaTimes,
   FaSave,
 } from "react-icons/fa";
+
+const API_URL = "http://localhost:5001/api/expense-types";
 
 function ExpenseType() {
   const [showModal, setShowModal] = useState(false);
@@ -49,25 +43,29 @@ function ExpenseType() {
     fetchCategories();
   }, []);
 
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5001/api/expense-categories",
-      );
-      setCategories(response.data);
-    } catch (error) {
-      console.error("Error loading categories:", error);
-    }
-  };
+const fetchCategories = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:5001/api/expense-categories/allCategories",
+    );
 
-  const fetchExpenseTypes = async () => {
-    try {
-      const response = await getExpenseTypes();
-      setExpenseTypes(response.data);
-    } catch (error) {
-      console.error("Error loading expense types:", error);
-    }
-  };
+    setCategories(response.data);
+  } catch (error) {
+    console.error("Error loading categories:", error);
+  }
+};
+
+const fetchExpenseTypes = async () => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/allExpenseTypes`
+    );
+
+    setExpenseTypes(response.data);
+  } catch (error) {
+    console.error("Error loading expense types:", error);
+  }
+};
 
   const openAddModal = () => {
     setEditData(null);
@@ -109,11 +107,14 @@ function ExpenseType() {
     };
 
     try {
-      if (editData) {
-        await updateExpenseType(editData.ET_ID, payload);
-      } else {
-        await addExpenseType(payload);
-      }
+     if (editData) {
+       await axios.put(
+         `${API_URL}/updateExpenseType/${editData.ET_ID}`,
+         payload,
+       );
+     } else {
+       await axios.post(`${API_URL}/createExpenseType`, payload);
+     }
 
       await fetchExpenseTypes();
       setShowModal(false);
@@ -135,7 +136,7 @@ function ExpenseType() {
     if (!confirmDelete) return;
 
     try {
-      await deleteExpenseType(id);
+     await axios.delete(`${API_URL}/${id}`);
       await fetchExpenseTypes();
       alert("Expense Type deleted successfully");
     } catch (error) {
@@ -155,7 +156,7 @@ function ExpenseType() {
         return a.Expense_Name.localeCompare(b.Expense_Name);
       }
       if (sortOrder === "desc") {
-        return b.Expense_Name.localeCompare(b.Expense_Name);
+      return b.Expense_Name.localeCompare(a.Expense_Name);
       }
       return 0;
     });

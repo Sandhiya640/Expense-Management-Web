@@ -36,7 +36,7 @@ const [formData, setFormData] = useState({
 
   const fetchIncomeTypes = async () => {
     try {
-      const response = await axios.get(API_URL);
+     const response = await axios.get(`${API_URL}/allIncomeTypes`);
       setIncomeTypes(response.data);
     } catch (error) {
       console.log("Error fetching income types:", error);
@@ -77,11 +77,14 @@ const [formData, setFormData] = useState({
         Active_Status: formData.activeStatus === "Active" ? 1 : 0,
       };
 
-      if (editIncomeType) {
-        await axios.put(`${API_URL}/${editIncomeType.IT_ID}`, payload);
-      } else {
-        await axios.post(API_URL, payload);
-      }
+    if (editIncomeType) {
+      await axios.put(
+        `${API_URL}/updateIncomeType/${editIncomeType.IT_ID}`,
+        payload,
+      );
+    } else {
+      await axios.post(`${API_URL}/createIncomeType`, payload);
+    }
 
       await fetchIncomeTypes();
 

@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Role.css";
-import {
-  getRoles,
-  addRole,
-  updateRole,
-  deleteRole,
-} from "../service/roleService";
+import axios from "axios";
 import {
   FaSearch,
   FaPlus,
@@ -14,6 +9,7 @@ import {
   FaTimes,
   FaSave,
 } from "react-icons/fa";
+const API_URL = "http://localhost:5001/api/roles";
 
 function Role() {
   const [showModal, setShowModal] = useState(false);
@@ -33,7 +29,7 @@ function Role() {
 
   const fetchRoles = async () => {
     try {
-      const response = await getRoles();
+      const response = await axios.get(`${API_URL}/allRoles`);
       setRoles(response.data);
     } catch (error) {
       console.error("Error loading roles:", error);
@@ -81,12 +77,12 @@ function Role() {
 
     try {
       if (editData) {
-        await updateRole(editData.RID, {
+        await axios.put(`${API_URL}/updateRole/${editData.RID}`, {
           Role_Name: roleName,
           Active_Status: status === "Active",
         });
       } else {
-        await addRole({
+        await axios.post(`${API_URL}/createRole`, {
           Role_Name: roleName,
           Active_Status: status === "Active",
         });
@@ -106,7 +102,7 @@ function Role() {
     if (!window.confirm("Are you sure you want to delete this role?")) return;
 
     try {
-      await deleteRole(rid);
+      await axios.delete(`${API_URL}/${rid}`);
       await fetchRoles();
     } catch (error) {
       console.error("Delete Error:", error);
