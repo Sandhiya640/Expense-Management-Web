@@ -33,7 +33,7 @@ const toggleSort = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(API_URL);
+    const response = await axios.get(`${API_URL}/allUsers`);
 
       console.log("API Response:", response.data);
 
@@ -42,15 +42,19 @@ const toggleSort = () => {
       console.log("Error fetching users:", error);
     }
   };
-  const fetchRoles = async () => {
-    try {
-      const response = await axios.get("http://localhost:5001/api/roles");
+ const fetchRoles = async () => {
+   try {
+     const response = await axios.get(
+       "http://localhost:5001/api/roles/allRoles",
+     );
 
-      setRoles(response.data);
-    } catch (error) {
-      console.log("Error fetching roles:", error);
-    }
-  };
+     console.log("Roles:", response.data);
+
+     setRoles(response.data);
+   } catch (error) {
+     console.log("Error fetching roles:", error);
+   }
+ };
 
   useEffect(() => {
     fetchUsers();
@@ -140,11 +144,11 @@ const handleNameSort = (order) => {
         Password: formData.password,
         Active_Status: formData.status === "Active" ? 1 : 0,
       };
-      if (editUser) {
-        await axios.put(`${API_URL}/${editUser.UID}`, payload);
-      } else {
-        await axios.post(API_URL, payload);
-      }
+     if (editUser) {
+       await axios.put(`${API_URL}/updateUser/${editUser.UID}`, payload);
+     } else {
+       await axios.post(`${API_URL}/createUser`, payload);
+     }
 
       await fetchUsers();
 

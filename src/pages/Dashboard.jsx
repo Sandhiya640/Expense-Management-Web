@@ -82,9 +82,7 @@ const summaryData = [
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:5001/api/users/all"
-      );
+     const res = await axios.get("http://localhost:5001/api/users/allUsers");
 
       console.log("Users:", res.data);
 
@@ -101,36 +99,28 @@ const summaryData = [
     }
   }, [selectedUser, selectedYear]);
 
-  const fetchDashboard = async () => {
-    try {
-      const res = await axios.get(
-        `http://localhost:5001/api/dashboard?uid=${selectedUser}&year=${selectedYear}`
-      );
+const fetchDashboard = async () => {
+  try {
+    const res = await axios.get(
+      `http://localhost:5001/api/dashboard/dashboardData?uid=${selectedUser}&year=${selectedYear}`,
+    );
 
-      console.log("Dashboard:", res.data);
+    console.log("Dashboard:", res.data);
 
-      setDashboardData({
-        income: res.data.income || 0,
-        expense: res.data.expense || 0,
-        savings: res.data.savings || 0,
-        loan: res.data.loan || 0,
-      });
+    setDashboardData({
+      income: res.data.income || 0,
+      expense: res.data.expense || 0,
+      savings: res.data.savings || 0,
+      loan: res.data.loan || 0,
+    });
 
-      if (res.data.incomeData) {
-        setIncomeData(res.data.incomeData);
-      }
-
-      if (res.data.expenseData) {
-        setExpenseData(res.data.expenseData);
-      }
-
-      if (res.data.comparisonData) {
-        setComparisonData(res.data.comparisonData);
-      }
-    } catch (err) {
-      console.log("Dashboard API Error:", err);
-    }
-  };
+    setIncomeData(res.data.incomeData || []);
+    setExpenseData(res.data.expenseData || []);
+    setComparisonData(res.data.comparisonData || []);
+  } catch (err) {
+    console.log("Dashboard API Error:", err);
+  }
+};
 
   return (
     <div className="dashboard">

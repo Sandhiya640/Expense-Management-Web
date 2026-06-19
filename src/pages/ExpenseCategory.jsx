@@ -23,7 +23,7 @@ function ExpenseCategory() {
   const [editCategory, setEditCategory] = useState(null);
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(API_URL);
+      const response = await axios.get(`${API_URL}/allCategories`);
 
       setCategories(response.data);
     } catch (error) {
@@ -40,20 +40,20 @@ function ExpenseCategory() {
       ? Math.max(...categories.map((c) => c.EC_ID)) + 1
       : 1;
   };
-const toggleSort = () => {
-  if (sortOrder === "ecid") {
-    setSortOrder("asc");
-  } else if (sortOrder === "asc") {
-    setSortOrder("desc");
-  } else {
-    setSortOrder("ecid");
-  }
-};
- const [formData, setFormData] = useState({
-   ecId: "",
-   name: "",
-   status: "Active",
- });
+  const toggleSort = () => {
+    if (sortOrder === "ecid") {
+      setSortOrder("asc");
+    } else if (sortOrder === "asc") {
+      setSortOrder("desc");
+    } else {
+      setSortOrder("ecid");
+    }
+  };
+  const [formData, setFormData] = useState({
+    ecId: "",
+    name: "",
+    status: "Active",
+  });
 
   const handleChange = (e) => {
     setFormData({
@@ -77,75 +77,78 @@ const toggleSort = () => {
     setShowModal(true);
   };
 
- const handleSubmit = async (e) => {
-   e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-   try {
-     const payload = {
-       Expense_Type: formData.name,
-       Active_Status: formData.status === "Active" ? 1 : 0,
-     };
+    try {
+      const payload = {
+        Expense_Type: formData.name,
+        Active_Status: formData.status === "Active" ? 1 : 0,
+      };
 
-     if (editCategory) {
-       await axios.put(`${API_URL}/${editCategory.EC_ID}`, payload);
-     } else {
-       await axios.post(API_URL, payload);
-     }
+      if (editCategory) {
+        await axios.put(
+          `${API_URL}/updateCategory/${editCategory.EC_ID}`,
+          payload,
+        );
+      } else {
+        await axios.post(`${API_URL}/addCategory`, payload);
+      }
 
-     await fetchCategories();
+      await fetchCategories();
 
-     setShowModal(false);
-     resetForm();
-   } catch (error) {
-     alert(error.response?.data?.message || "Operation Failed");
-   }
- };
+      setShowModal(false);
+      resetForm();
+    } catch (error) {
+      alert(error.response?.data?.message || "Operation Failed");
+    }
+  };
 
- const handleEdit = (cat) => {
-   setEditCategory(cat);
+  const handleEdit = (cat) => {
+    setEditCategory(cat);
 
-   setFormData({
-     ecId: cat.EC_ID,
-     name: cat.Expense_Type,
-     status: Number(cat.Active_Status) === 1 ? "Active" : "Inactive",
-   });
+    setFormData({
+      ecId: cat.EC_ID,
+      name: cat.Expense_Type,
+      status: Number(cat.Active_Status) === 1 ? "Active" : "Inactive",
+    });
 
-   setShowModal(true);
- };
+    setShowModal(true);
+  };
 
- const handleDelete = async (id) => {
-   if (!window.confirm("Delete this category?")) return;
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this category?")) return;
 
-   try {
-     await axios.delete(`${API_URL}/${id}`);
+    try {
+      await axios.delete(`${API_URL}/${id}`);
 
-     fetchCategories();
-   } catch (error) {
-     console.log(error);
-     alert("Delete Failed");
-   }
- };
+      fetchCategories();
+    } catch (error) {
+      console.log(error);
+      alert("Delete Failed");
+    }
+  };
 
- const filteredCategories = categories
-   .filter((cat) => {
-     const val = search.toLowerCase();
+  const filteredCategories = categories
+    .filter((cat) => {
+      const val = search.toLowerCase();
 
-     return (
-       cat.EC_ID?.toString().includes(val) ||
-       cat.Expense_Type?.toLowerCase().includes(val)
-     );
-   })
-   .sort((a, b) => {
-     if (sortOrder === "asc") {
-       return a.Expense_Type.localeCompare(b.Expense_Type);
-     }
+      return (
+        cat.EC_ID?.toString().includes(val) ||
+        cat.Expense_Type?.toLowerCase().includes(val)
+      );
+    })
+    .sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a.Expense_Type.localeCompare(b.Expense_Type);
+      }
 
-     if (sortOrder === "desc") {
-       return b.Expense_Type.localeCompare(a.Expense_Type);
-     }
+      if (sortOrder === "desc") {
+        return b.Expense_Type.localeCompare(a.Expense_Type);
+      }
 
-     return 0;
-   });
+      return 0;
+    });
 
   return (
     <div className="category-page">
