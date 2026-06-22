@@ -34,14 +34,12 @@ function Topbar() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // 🔹 Initials
   const getInitials = (name) => {
     const words = name.trim().split(" ");
     if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
     return (words[0][0] + words[1][0]).toUpperCase();
   };
 
-  // 🔹 Click outside close
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -215,7 +213,6 @@ function Topbar() {
         </Link>
       </div>
 
-      {/* RIGHT (ONLY PROFILE) */}
       <div className="nav-right">
         <div className="profile-wrapper" ref={profileRef}>
           <div className="profile-box" onClick={openProfile}>

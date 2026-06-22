@@ -25,7 +25,6 @@ function ExpenseType() {
   const [categories, setCategories] = useState([]);
   const [editStatus, setEditStatus] = useState("Active");
 
-  // 🔹 Added state tracker for fields validation
   const [errors, setErrors] = useState({});
 
   const toggleSort = () => {
@@ -72,7 +71,7 @@ const fetchExpenseTypes = async () => {
     setEditExpenseName("");
     setEditCategoryId("");
     setEditStatus("Active");
-    setErrors({}); // 🔹 Clear on open
+    setErrors({}); 
     setShowModal(true);
   };
 
@@ -81,12 +80,12 @@ const fetchExpenseTypes = async () => {
     setEditCategoryId(item.EC_ID);
     setEditExpenseName(item.Expense_Name);
     setEditStatus(item.Active_Status ? "Active" : "Inactive");
-    setErrors({}); // 🔹 Clear on edit
+    setErrors({}); 
     setShowModal(true);
   };
 
   const saveExpenseType = async () => {
-    // 🔹 Verification validation logic matching Roles interface
+    
     const newErrors = {};
 
     if (!editCategoryId) {
@@ -226,7 +225,7 @@ const fetchExpenseTypes = async () => {
                     {item.Active_Status ? "Active" : "Inactive"}
                   </span>
                 </td>
-                <td>{item.Created_By}</td>
+                <td>{item.Created_by}</td>
                 <td>
                   <button className="edit-btn" onClick={() => handleEdit(item)}>
                     <FaEdit />
@@ -261,7 +260,7 @@ const fetchExpenseTypes = async () => {
             </div>
 
             <div className="form-layout">
-              {/* EXPENSE CATEGORY ROW */}
+             
               <div className="form-row">
                 <label>EXPENSE CATEGORY :</label>
                 <div className="input-container">
@@ -292,7 +291,6 @@ const fetchExpenseTypes = async () => {
                 </div>
               </div>
 
-              {/* EXPENSE NAME ROW */}
               <div className="form-row">
                 <label>EXPENSE NAME :</label>
                 <div className="input-container">
@@ -317,7 +315,6 @@ const fetchExpenseTypes = async () => {
                 </div>
               </div>
 
-              {/* STATUS ROW */}
               <div className="form-row">
                 <label>STATUS :</label>
                 <div className="input-container">

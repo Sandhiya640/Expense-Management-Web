@@ -152,7 +152,6 @@ const fetchDashboard = async () => {
         </div>
       </div>
 
-      {/* LEVEL 1 */}
       <div className="level1">
         <div className="kpi-cards">
           <div className="kpi-card savings">
@@ -241,7 +240,7 @@ const fetchDashboard = async () => {
         </div>
       </div>
 
-      {/* LEVEL 2 */}
+    
 
       <div className="level2">
         <div className="chart-card">
@@ -285,7 +284,6 @@ const fetchDashboard = async () => {
         </div>
       </div>
 
-      {/* LEVEL 3 */}
 
       <div className="level3">
         <div className="chart-card">

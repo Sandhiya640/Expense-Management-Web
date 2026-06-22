@@ -319,7 +319,7 @@ tbody td {
 .sortable-header span:first-child {
   color: #000;
   font-size: 14px;
-  font-weight: 600; /* same as other headers */
+  font-weight: 600; 
 }
 
 .sort-icons {

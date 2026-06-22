@@ -274,7 +274,7 @@ const filteredRecords = records
           className={activeTab === "records" ? "active" : ""}
           onClick={() => {
             setActiveTab("records");
-            setSearch(""); // 👈 RESET SEARCH HERE
+            setSearch(""); 
           }}
         >
           All Records

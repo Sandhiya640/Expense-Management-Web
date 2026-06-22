@@ -222,7 +222,6 @@ function IncomeTransactions() {
         return b.incomeTypeName.localeCompare(a.incomeTypeName);
       }
 
-      // Amount Sorting
       if (amountSort === "asc") {
         return Number(a.amount) - Number(b.amount);
       }

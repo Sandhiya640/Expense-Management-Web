@@ -200,7 +200,7 @@ const [amountSort, setAmountSort] = useState("");
     }
 
     const duplicate = records.find((item) => {
-      const existingMonth = item.expDate?.substring(0, 7); // YYYY-MM
+      const existingMonth = item.expDate?.substring(0, 7); 
       const newMonth = newExpense.expDate?.substring(0, 7);
 
       return (
@@ -384,7 +384,6 @@ const [amountSort, setAmountSort] = useState("");
        String(item.userName).toLowerCase().includes(search.toLowerCase()),
    )
    .sort((a, b) => {
-     // Amount Sorting
      if (sortField === "expValue") {
        return sortOrder === "asc"
          ? Number(a.expValue) - Number(b.expValue)
@@ -455,7 +454,7 @@ const [amountSort, setAmountSort] = useState("");
           className={activeTab === "records" ? "active" : ""}
           onClick={() => {
             setActiveTab("records");
-            setSearch(""); // 👈 RESET SEARCH HERE
+            setSearch(""); 
           }}
         >
           All Records
@@ -860,7 +859,7 @@ const [amountSort, setAmountSort] = useState("");
 
                     alert("Expense Updated Successfully");
 
-                    fetchExpenses(); // refresh from DB
+                    fetchExpenses();
 
                     setShowEditModal(false);
                     setEditId(null);

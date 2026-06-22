@@ -36,7 +36,6 @@ function Role() {
     }
   };
 
-  // 🔹 Reset form completely
   const resetForm = () => {
     setRoleName("");
     setStatus("Active");
@@ -57,7 +56,6 @@ function Role() {
     setShowModal(true);
   };
 
-  // 🔹 Form submit (like Users page)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -196,8 +194,8 @@ function Role() {
                   </span>
                 </td>
                 <td>
-                  {role.Created_On
-                    ? new Date(role.Created_On).toLocaleDateString()
+                  {role.Created_on
+                    ? new Date(role.Created_on).toLocaleDateString()
                     : ""}
                 </td>
                 <td>
@@ -219,7 +217,6 @@ function Role() {
         </table>
       </div>
 
-      {/* 🔥 MODAL */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
@@ -236,12 +233,12 @@ function Role() {
 
             <form noValidate onSubmit={handleSubmit}>
               <div className="form-body">
-                {/* ROLE NAME ROW */}
+                
                 <div
                   className={`form-row ${errors.roleName ? "has-error" : ""}`}
                 >
                   <label>ROLE NAME :</label>
-                  {/* Add style inline directly here */}
+                
                   <div className="input-container">
                     <input
                       type="text"
@@ -265,10 +262,9 @@ function Role() {
                   </div>
                 </div>
 
-                {/* STATUS ROW */}
                 <div className="form-row">
                   <label>STATUS :</label>
-                  {/* Add style inline directly here */}
+                 
                   <div className="input-container">
                     <select
                       value={status}
