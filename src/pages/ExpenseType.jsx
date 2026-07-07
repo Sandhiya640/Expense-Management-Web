@@ -225,7 +225,7 @@ const fetchExpenseTypes = async () => {
                     {item.Active_Status ? "Active" : "Inactive"}
                   </span>
                 </td>
-                <td>{item.Created_by}</td>
+                <td>{item.Created_By}</td>
                 <td>
                   <button className="edit-btn" onClick={() => handleEdit(item)}>
                     <FaEdit />
